@@ -18,7 +18,7 @@ const MainSection = () => {
               </p>
             </div>
             <div className="flex flex-col md:flex-row  md:justify-self-start items-center gap-4 md:gap-8 ">
-              <button className="bg-[#dddddd] capitalize md:text-[16px] py-3 px-8 text-[#333333] rounded-lg font-bold border border-[#dddddd]">start shopping</button>
+              <button className="bg-[#dddddd] capitalize md:text-[16px] py-3 px-8 text-[#333333] rounded-lg font-bold border border-[#333333]">start shopping</button>
               <button className="bg-[#333333] capitalize md:text-[16px] py-3 px-8 text-[#dddddd] rounded-lg font-bold border border-[#dddddd]">
                 join as <span className="uppercase">shg</span>
               </button>

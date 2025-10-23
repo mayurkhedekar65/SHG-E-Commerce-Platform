@@ -60,7 +60,7 @@ function App() {
       </section>
 
       <section className=" py-14 bg-[#333333]">
-        <div className="text-center md:text-left md:pl-32">
+        <div className="text-center">
           <h2 className="font-bold text-[#F5C469] font-sans text-2xl md:text-3xl ">
             Featured Products
           </h2>
@@ -234,7 +234,7 @@ function App() {
           </p>
         </div>
         <div className="flex flex-col md:flex-row justify-center items-center gap-5 md:gap-10 text-center pt-8">
-          <button className="bg-[#dddddd] capitalize md:text-[17px] py-3 px-8 text-[#333333] rounded-3xl font-bold border border-[#dddddd]">
+          <button className="bg-[#dddddd] capitalize md:text-[17px] py-3 px-8 text-[#333333] border-[#333333] rounded-3xl font-bold border">
             start shopping
           </button>
           <button className="bg-[#333333] capitalize md:text-[17px] py-3 px-8 text-[#dddddd] rounded-3xl font-bold border border-[#dddddd]">
