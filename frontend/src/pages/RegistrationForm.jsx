@@ -9,7 +9,7 @@ const RegistrationForm = () => {
       <div className=" bg-[#dddddd]">
         <div className="text-center pt-35">
           <h1 className="font-bold md:text-3xl text-2xl">
-            *SHG Registration Form*
+            SHG Registration Form
           </h1>
         </div>
         <div className="pt-10 pb-30 flex justify-center items-center bg-[#dddddd]">
