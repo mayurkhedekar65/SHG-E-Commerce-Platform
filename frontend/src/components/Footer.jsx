@@ -1,10 +1,46 @@
 import React from "react";
 
-const Footer = () => {
+const Footer = ({ Logo }) => {
   return (
     <>
-      <div className="bg-[#333333]  text-center pt-20 pb-10">
-        <p className="text-[#FAF9F6] text-wrap md:text-lg text-sm">
+      <div className="flex flex-col md:flex-row justify-center items-center bg-[#333333] pt-5 md:pb-5 gap-8 md:gap-20 ">
+        <div className="text-left  pl-6 md:pl-0 pr-10 md:pr-100">
+          <div>
+            <img src={Logo} className="h-10 w-10 md:w-12 md:h-12" alt="" />
+          </div>
+          <div className=" text-left flex-wrap pt-3 md:pl-0   text-[#dddddd]">
+            <p className="">
+              Connecting communities through authentic local products.
+            </p>
+            <p>Supporting Self Help Groups across Goa.</p>
+          </div>
+        </div>
+        <div className="text-[#dddddd] text-left mr-45 md:mr-0">
+          <div className="font-bold text-lg text-[#F5C469]">
+            <p>Quick Links</p>
+          </div>
+          <div className="pt-2 text-left">
+            <div className="pt-1">
+              <button>Register Your Group</button>
+            </div>
+            <div className="pt-1">
+              <button>Add Products</button>
+            </div>
+            <div className="pt-1">
+              <button>Browse Products</button>
+            </div>
+            <div className="pt-1">
+              <button>SHG Groups</button>
+            </div>
+            <div className="pt-1">
+              <button>Categories</button>
+            </div>
+          </div>
+        </div>
+        <div></div>
+      </div>
+      <div className="bg-[#000000]  text-center py-4">
+        <p className="text-[#FAF9F6] text-wrap md:text-[14px] text-sm">
           © 2025 SHG Bazaar. All rights reserved.
         </p>
       </div>

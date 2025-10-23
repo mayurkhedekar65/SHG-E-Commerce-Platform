@@ -1,15 +1,14 @@
 import React,{useState} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faBars, faXmark} from "@fortawesome/free-solid-svg-icons";
-import logo from "../assets/shg_baazar_logo.png"
-const Navbar = () => {
+const Navbar = ({Logo}) => {
 const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <>
       <header className="flex justify-center items-center gap-70 md:gap-160 py-2  md:bg-linear-to-l  md:to-[#333333]  md:from-[#F5C469]  bg-linear-to-b from-[#333333]  to-[#3d3c3c]   fixed w-full z-0">
            <div>
-            <img className=" w-12 h-12 md:w-15 md:h-15" src={logo} alt="" />
+            <img className=" w-12 h-12 md:w-15 md:h-15" src={Logo} alt="" />
           </div>
           <div className="md:hidden">
             <FontAwesomeIcon 
@@ -29,7 +28,7 @@ const [menuOpen, setMenuOpen] = useState(false);
             <button className="capitalize">categories</button>
             <button className="capitalize">SHG Groups</button>
             <button className="capitalize">about</button>
-            <button className="capitalize bg-[#333333] text-[#dddddd] border border-[#dddddd] py-2 px-6 rounded-4xl">
+            <button className="capitalize bg-[#F5C469] text-[#333333]  md:bg-[#333333] md:text-[#dddddd] border border-[#dddddd] py-2 px-30 md:px-6 rounded-lg md:rounded-4xl">
               + Register SHG
             </button>
           </div>

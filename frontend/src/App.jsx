@@ -11,6 +11,7 @@ import Footer from "./components/Footer";
 import { faUtensils,faPalette,faShirt,faLeaf,faHouse,faGift,faUser,faBox,faHeart,faRupeeSign} from "@fortawesome/free-solid-svg-icons";
 import {faWhatsapp} from "@fortawesome/free-brands-svg-icons"
 import image  from "./assets/ChatGPT Image Oct 22, 2025, 06_20_44 PM.png"
+import logo from "./assets/shg_baazar_logo.png"
 
 
 
@@ -19,7 +20,7 @@ function App() {
 
   return (
     <>
-    <Navbar></Navbar>
+    <Navbar Logo={logo}></Navbar>
       <MainSection></MainSection>
       <section className="text-center py-14 bg-[#dddddd]">
         <div>
@@ -242,7 +243,7 @@ function App() {
           </button>
         </div>
       </section>
-      <Footer></Footer>
+      <Footer Logo={logo}></Footer>
     </>
   );
 }
