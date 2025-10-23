@@ -1,12 +1,12 @@
 import React from "react";
-
-const Footer = ({ Logo }) => {
+import logo from "../assets/shg_baazar_logo.png"
+const Footer = () => {
   return (
     <>
       <div className="flex flex-col md:flex-row justify-center items-center bg-[#333333] pt-5 md:pb-5 gap-8 md:gap-20 ">
         <div className="text-left  pl-6 md:pl-0 pr-10 md:pr-100">
           <div>
-            <img src={Logo} className="h-10 w-10 md:w-12 md:h-12" alt="" />
+            <img src={logo} className="h-10 w-10 md:w-12 md:h-12" alt="" />
           </div>
           <div className=" text-left flex-wrap pt-3 md:pl-0   text-[#dddddd]">
             <p className="">
