@@ -9,8 +9,8 @@ const Products = () => {
       <Navbar></Navbar>
       <section className=" py-35 bg-[#dddddd]">
         <div className="text-center">
-          <h2 className="font-bold text-[#333333] font-sans text-xl md:text-3xl ">
-            *Featured Products*
+          <h2 className="font-bold text-[#333333] font-sans text-2xl md:text-3xl ">
+            *Products*
           </h2>
         </div>
         <div className="flex flex-col md:flex-row justify-center items-center gap-5 md:gap-10 text-center pt-10">

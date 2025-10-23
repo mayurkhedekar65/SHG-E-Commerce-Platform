@@ -13,7 +13,7 @@ const MainSection = () => {
     }, 1500);
   };
 
-    const showProduct = () => {
+  const showProduct = () => {
     activateLoader(true);
     setTimeout(() => {
       activateLoader(false);
@@ -38,7 +38,8 @@ const MainSection = () => {
               </p>
             </div>
             <div className="flex flex-col md:flex-row  md:justify-self-start items-center gap-4 md:gap-8 ">
-              <button className="bg-[#dddddd] capitalize md:text-[16px] py-3 px-8 text-[#333333] rounded-lg font-bold border border-[#333333]"
+              <button
+                className="bg-[#dddddd] capitalize md:text-[16px] py-3 px-8 text-[#333333] rounded-lg font-bold border border-[#333333]"
                 onClick={showProduct}
               >
                 start shopping

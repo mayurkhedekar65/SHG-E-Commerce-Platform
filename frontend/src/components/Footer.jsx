@@ -1,8 +1,53 @@
-import React from "react";
-import logo from "../assets/shg_baazar_logo.png"
+import React, { useState } from "react";
+import logo from "../assets/shg_baazar_logo.png";
+import Loader from "./Loader";
+import { useNavigate } from "react-router-dom";
+
 const Footer = () => {
+  const navigate = useNavigate();
+  const [loader, activateLoader] = useState(false);
+  const showRegistration = () => {
+    activateLoader(true);
+    setTimeout(() => {
+      activateLoader(false);
+      navigate("/registrationform");
+    }, 1500);
+  };
+
+  const showSngGroups = () => {
+    activateLoader(true);
+    setTimeout(() => {
+      activateLoader(false);
+      navigate("/snggroups");
+    }, 1500);
+  };
+
+  const showContact = () => {
+    activateLoader(true);
+    setTimeout(() => {
+      activateLoader(false);
+      navigate("/contact");
+    }, 1500);
+  };
+
+  const showProduct = () => {
+    activateLoader(true);
+    setTimeout(() => {
+      activateLoader(false);
+      navigate("/products");
+    }, 1500);
+  };
+
+  const showAbout = () => {
+    activateLoader(true);
+    setTimeout(() => {
+      activateLoader(false);
+      navigate("/about");
+    }, 1500);
+  };
   return (
     <>
+      {loader && <Loader />}
       <div className="flex flex-col md:flex-row justify-center items-center bg-[#333333] pt-5 md:pb-5 gap-8 md:gap-20 ">
         <div className="text-left  pl-6 md:pl-0 pr-10 md:pr-100">
           <div>
@@ -21,19 +66,19 @@ const Footer = () => {
           </div>
           <div className="pt-2 text-left">
             <div className="pt-1">
-              <button>Register Your Group</button>
+              <button onClick={showRegistration}>Register Your Group</button>
             </div>
             <div className="pt-1">
-              <button>Add Products</button>
+              <button onClick={showProduct}>Browse Products</button>
             </div>
             <div className="pt-1">
-              <button>Browse Products</button>
+              <button onClick={showSngGroups}>SHG Groups</button>
             </div>
             <div className="pt-1">
-              <button>SHG Groups</button>
+              <button onClick={showContact}>Contact</button>
             </div>
-            <div className="pt-1">
-              <button>Categories</button>
+               <div className="pt-1">
+              <button onClick={showAbout}>About</button>
             </div>
           </div>
         </div>
