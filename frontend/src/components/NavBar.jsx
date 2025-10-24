@@ -71,7 +71,7 @@ const Navbar = () => {
                 className="capitalize bg-[#F5C469] text-[#333333]  md:bg-[#333333] md:text-[#dddddd] border border-[#dddddd] py-2 px-30 md:px-6 rounded-lg md:rounded-4xl"
                 onClick={() => showLoader("/registrationform")}
               >
-                + Register SHG
+                Register SHG
               </button>
             </div>
           </nav>
