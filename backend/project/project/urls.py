@@ -20,5 +20,7 @@ from main import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('products/',views.product_data)
+    path('products/',views.product_data),
+    path('snggroups/',views.group_data)
+    
 ]
