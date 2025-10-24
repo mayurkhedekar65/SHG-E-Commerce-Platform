@@ -1,53 +1,20 @@
 import React, { useState } from "react";
 import logo from "../assets/shg_baazar_logo.png";
-import Loader from "./Loader";
 import { useNavigate } from "react-router-dom";
 
-const Footer = () => {
+const Footer = ({ setLoading }) => {
   const navigate = useNavigate();
-  const [loader, activateLoader] = useState(false);
-  const showRegistration = () => {
-    activateLoader(true);
+
+  const showLoader = (path) => {
+    setLoading(true);
     setTimeout(() => {
-      activateLoader(false);
-      navigate("/registrationform");
+      setLoading(false);
+      navigate(path);
     }, 1500);
   };
 
-  const showSngGroups = () => {
-    activateLoader(true);
-    setTimeout(() => {
-      activateLoader(false);
-      navigate("/snggroups");
-    }, 1500);
-  };
-
-  const showContact = () => {
-    activateLoader(true);
-    setTimeout(() => {
-      activateLoader(false);
-      navigate("/contact");
-    }, 1500);
-  };
-
-  const showProduct = () => {
-    activateLoader(true);
-    setTimeout(() => {
-      activateLoader(false);
-      navigate("/products");
-    }, 1500);
-  };
-
-  const showAbout = () => {
-    activateLoader(true);
-    setTimeout(() => {
-      activateLoader(false);
-      navigate("/about");
-    }, 1500);
-  };
   return (
     <>
-      {loader && <Loader />}
       <div className="flex flex-col md:flex-row justify-center items-center bg-[#333333] pt-5 md:pb-5 gap-8 md:gap-20 ">
         <div className="text-left  pl-6 md:pl-0 pr-10 md:pr-100">
           <div>
@@ -66,19 +33,25 @@ const Footer = () => {
           </div>
           <div className="pt-2 text-left">
             <div className="pt-1">
-              <button onClick={showRegistration}>Register Your Group</button>
+              <button onClick={() => showLoader("/registrationform")}>
+                Register Your Group
+              </button>
             </div>
             <div className="pt-1">
-              <button onClick={showProduct}>Browse Products</button>
+              <button onClick={() => showLoader("/products")}>
+                Browse Products
+              </button>
             </div>
             <div className="pt-1">
-              <button onClick={showSngGroups}>SHG Groups</button>
+              <button onClick={() => showLoader("/snggroups")}>
+                SHG Groups
+              </button>
             </div>
             <div className="pt-1">
-              <button onClick={showContact}>Contact</button>
+              <button onClick={() => showLoader("/contact")}>Contact</button>
             </div>
-               <div className="pt-1">
-              <button onClick={showAbout}>About</button>
+            <div className="pt-1">
+              <button onClick={() => showLoader("/about")}>About</button>
             </div>
           </div>
         </div>

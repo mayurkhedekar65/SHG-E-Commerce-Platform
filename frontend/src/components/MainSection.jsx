@@ -1,28 +1,18 @@
 import React, { useState } from "react";
 import image from "../assets/ChatGPT Image Oct 22, 2025, 06_20_44 PM.png";
 import { useNavigate } from "react-router-dom";
-import Loader from "./Loader";
-const MainSection = () => {
+const MainSection = ({ setLoading }) => {
   const navigate = useNavigate();
-  const [loader, activateLoader] = useState(false);
-  const showRegistration = () => {
-    activateLoader(true);
-    setTimeout(() => {
-      activateLoader(false);
-      navigate("/registrationform");
-    }, 1500);
-  };
 
-  const showProduct = () => {
-    activateLoader(true);
+  const showLoader = (path) => {
+    setLoading(true);
     setTimeout(() => {
-      activateLoader(false);
-      navigate("/products");
+      setLoading(false);
+      navigate(path);
     }, 1500);
   };
   return (
     <>
-      {loader && <Loader />}
       <section className="md:py-45 py-30 bg-linear-to-t md:bg-linear-to-l to-[#333333] from-[#F5C469]">
         <div className="  flex flex-col md:flex-row  justify-center items-center md:pl-28 font-sans">
           <div>
@@ -40,13 +30,13 @@ const MainSection = () => {
             <div className="flex flex-col md:flex-row  md:justify-self-start items-center gap-4 md:gap-8 ">
               <button
                 className="bg-[#dddddd] capitalize md:text-[16px] py-3 px-8 text-[#333333] rounded-lg font-bold border border-[#333333]"
-                onClick={showProduct}
+                onClick={() => showLoader("/products")}
               >
                 start shopping
               </button>
               <button
                 className="bg-[#333333] capitalize md:text-[16px] py-3 px-8 text-[#dddddd] rounded-lg font-bold border border-[#dddddd]"
-                onClick={showRegistration}
+                onClick={() => showLoader("/registrationform")}
               >
                 join as <span className="uppercase">shg</span>
               </button>

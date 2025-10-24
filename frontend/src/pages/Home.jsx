@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Navbar from "../components/NavBar";
 import MainSection from "../components/MainSection";
 import ShopCategoryCard from "../components/ShopCategoryCard";
@@ -23,12 +23,20 @@ import {
   faRupeeSign,
 } from "@fortawesome/free-solid-svg-icons";
 import image from "../assets/ChatGPT Image Oct 22, 2025, 06_20_44 PM.png";
+import Loader from "../components/Loader";
 
 const Home = () => {
+const [loading,setLoading]=useState(false)
   return (
     <>
+    {loading?(
+        <div className="flex justify-center items-center h-screen">
+          <Loader/>
+        </div>
+    ):(
+      <>
       <Navbar></Navbar>
-      <MainSection></MainSection>
+      <MainSection setLoading={setLoading}/>
       <section className="text-center py-14 bg-[#dddddd]">
         <div>
           <h2 className="font-bold text-[#333333] font-sans text-2xl md:text-3xl ">
@@ -236,8 +244,10 @@ const Home = () => {
           ></ProcessCard>
         </div>
       </section>
-      <BottomButtonSection></BottomButtonSection>
-      <Footer></Footer>
+      <BottomButtonSection setLoading={setLoading}/>
+      <Footer setLoading={setLoading}/>
+      </>
+          )}
     </>
   );
 };
