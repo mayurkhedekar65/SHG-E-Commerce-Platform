@@ -1,16 +1,19 @@
 from django.shortcuts import render
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework import status
+from groups.models import Shg_Group_Registration
+from groups.serializers import ContactFormSerializer
 
 # Create your views here.
 
 
-def shg_registration(request):
-    if request.method == 'POST':
-        name_of_sng = request.POST.get("")
-        date_of_formation =request.POST.get("")
-        registration_number =request.POST.get("")
-        contact_number =request.POST.get("")
-        village =request.POST.get("")
-        taluka =request.POST.get("")
-        district =request.POST.get("")
-        type_of_shg =request.POST.get("")
-        Address =request.POST.get("")
+class SubmitRegistrationForm(APIView):
+    def post(self, request, format=None):
+        serializer = ContactFormSerializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "form submitted successfully!"}, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.error, status=status.HTTP_400_BAD_REQUEST)

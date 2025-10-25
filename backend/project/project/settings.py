@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'main',
+    'groups'
 ]
 
 MIDDLEWARE = [
@@ -131,3 +132,4 @@ CORS_ALLOWED_ORIGINS = [
     "http://192.168.1.2:5173",   # optional - some systems use this
     
 ]
+CORS_ALLOW_CREDENTIALS = True

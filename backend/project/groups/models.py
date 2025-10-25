@@ -3,6 +3,8 @@ from django.db import models
 # Create your models here.
 
 # SHG registration model
+
+
 class Shg_Group_Registration(models.Model):
     name_of_sng = models.CharField(max_length=50, null=False, blank=False)
     date_of_formation = models.CharField(null=False, blank=False)
