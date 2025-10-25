@@ -8,7 +8,7 @@ class ContactFormSerializer(serializers.ModelSerializer):
         fields = ['name_of_sng',
                   'date_of_formation',
                  'registration_number',
-                 ' contact_number',
+                 'contact_number',
                   'village',
                  'taluka',
                   'district',

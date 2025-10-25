@@ -13,6 +13,6 @@ class Shg_Group_Registration(models.Model):
     contact_number = models.CharField(max_length=10, null=False, blank=False)
     village = models.CharField(max_length=15, null=False, blank=False)
     taluka = models.CharField(max_length=15, null=False, blank=False)
-    district = models.CharField(max_length=15, null=False, blank=False)
-    type_of_shg = models.CharField(max_length=10, null=False, blank=False)
+    district = models.CharField( null=False, blank=False)
+    type_of_shg = models.CharField(null=False, blank=False)
     Address = models.CharField(max_length=50, null=False, blank=False)
