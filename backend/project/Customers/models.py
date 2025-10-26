@@ -8,10 +8,9 @@ class Customer(models.Model):
     phone_number = models.CharField(max_length=15, null=False, blank=False)
     address = models.CharField(max_length=100, null=True, blank=True)
 
-class customer_orders(models.Model):
-    customer_name = models.ForeignKey(Customer)
-    shg_groups = models.ForeignKey('groups.Shg_Group_Registration', on_delete=models.CASCADEs)
+class Customer_Orders(models.Model):
+    customer_id = models.ForeignKey(Customer, on_delete=models.CASCADE)
     order_date = models.DateField(auto_now_add=True)
     total_amount = models.DecimalField(max_digits=10, decimal_places=2, null=False, blank=False)
     shipping_address = models.CharField(max_length=100, null=False, blank=False)
-    order_status = models.ChoiceField( choices=[('PENDING', 'Pending'), ('SHIPPED', 'Shipped'), ('DELIVERED', 'Delivered')], default='PENDING')
+    order_status = models.CharField(choices=[('PENDING', 'Pending'), ('SHIPPED', 'Shipped'), ('DELIVERED', 'Delivered')], max_length=10, default='PENDING')
