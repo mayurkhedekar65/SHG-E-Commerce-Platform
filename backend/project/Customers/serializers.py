@@ -5,6 +5,6 @@ from Customers.models import CustomerForm
 
 
 class UserFormSerializer(serializers.ModelSerializer):
-    class meta:
+    class Meta:
        model=CustomerForm
-       fields=['customer_name','email','phone_number','address']
+       fields=['customer_name','email','phone_number','password']
