@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import axios from "axios";
 
 const Signup = () => {
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [FormData, setFormData] = useState({
     customer_name: "",
     email: "",
@@ -14,12 +15,36 @@ const Signup = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (
+      FormData["customer_name"] == "" ||
+      FormData["email"] == "" ||
+      FormData["phone_number"] == "" ||
+      FormData["password"] == "" ||
+      confirmPassword == ""
+    ){
+      if (FormData["customer_name"] == "") {
+        alert("please enter your name !");
+      } else if (FormData["email"] == "") {
+        alert("please enter your email !");
+      } else if (FormData["phone_number"] == "") {
+        alert("please enter your phone number !");
+      }else if (FormData["phone_number"].length < 10) {
+        alert("contact number length cannot be less than 10 !");
+      } else if (FormData["password"] == "") {
+        alert("please enter your password !");
+      } else if (FormData["password"].length < 8) {
+        alert("passsword size should be minimum 8 characters !");
+      } else if (FormData["password"] != confirmPassword) {
+        alert("passsword did match !");
+      }
+    }
+    else{
     try {
       await axios.post(
         "http://127.0.0.1:8000/userform/user_registration_form/",
         FormData
       );
-      alert("form submitted");
+      alert("form submitted !");
       setFormData({
         customer_name: "",
         email: "",
@@ -28,8 +53,8 @@ const Signup = () => {
       });
     } catch (error) {
       console.error("error in submitting form", error);
-      alert("error in submitting form.please tru again");
-    }
+      alert("error in submitting form.please try again !");
+    }}
   };
   return (
     <>
@@ -39,7 +64,7 @@ const Signup = () => {
         transition={{ duration: 3 }}
       >
         <main className="py-15  min-h-screen bg-[#dddddd]">
-          <div className=" bg-[#F5C469] text-center  pt-8 pb-8  md:pt-8 md:pb-8 pr-8 pl-8 rounded-2xl  mx-140">
+          <div className=" bg-[#F5C469] text-center  pt-8 pb-8  md:pt-8 md:pb-8 pr-10 pl-10 rounded-2xl  mx-140">
             <h3 className="capitalize font-bold md:text-3xl text-2xl mb-5 text-[#333333]">
               sign up
             </h3>
@@ -59,6 +84,7 @@ const Signup = () => {
                   type="text"
                   placeholder="enter your name"
                   onChange={handleChange}
+                  value={FormData.customer_name}
                 />
               </div>
               <div>
@@ -76,7 +102,7 @@ const Signup = () => {
                   type="email"
                   placeholder="enter your email"
                   onChange={handleChange}
-
+                  value={FormData.email}
                 />
               </div>
               <div>
@@ -91,10 +117,10 @@ const Signup = () => {
                 <input
                   name="phone_number"
                   className="border  bg-[#dddddd] border-[#333333]  w-70 h-13 md:w-80 md:h-12 mb-6 rounded-xl pl-3 placeholder:capitalize placeholder:text-[14px] placeholder:text-[#585858]"
-                  type="password"
+                  type="text"
                   placeholder="enter your phone number"
                   onChange={handleChange}
-
+                  value={FormData.phone_number}
                 />
               </div>
               <div>
@@ -112,11 +138,11 @@ const Signup = () => {
                   type="password"
                   placeholder="enter your password"
                   onChange={handleChange}
-
+                  value={FormData.password}
                 />
               </div>
               <div>
-                {/* <div>
+                <div>
                   <div className="text-left mb-2">
                     <label
                       htmlFor="confirm password"
@@ -126,11 +152,13 @@ const Signup = () => {
                     </label>
                   </div>
                   <input
+                    onChange={(e) => setConfirmPassword(e.target.value)}
                     className="border  bg-[#dddddd] border-[#333333]  w-70 h-13 md:w-80 md:h-12 mb-10 rounded-xl pl-3 placeholder:capitalize placeholder:text-[14px] placeholder:text-[#585858]"
                     type="password"
                     placeholder="enter your confirm password"
+                    value={confirmPassword}
                   />
-                </div> */}
+                </div>
                 <div></div>
                 <button className="hover:bg-[#dddddd] hover:border-[#333333] hover:border  hover:rounded-lg  hover:text-[#333333] bg-accent bg-[#333333] text-[#F5C469] font-semibold capitalize border pt-2 pb-2 md:px-33 px-28 rounded-xl md:text-[17px] text-[17px]">
                   submit

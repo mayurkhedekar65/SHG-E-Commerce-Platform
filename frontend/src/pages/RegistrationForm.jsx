@@ -7,7 +7,7 @@ import axios from "axios";
 
 const RegistrationForm = () => {
   const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState({
+  const [FormData, setFormData] = useState({
     name_of_sng: "",
     date_of_formation: "",
     registration_number: "",
@@ -24,26 +24,60 @@ const RegistrationForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      await axios.post(
-        "http://127.0.0.1:8000/groupform/submit_registration_form/",
-        formData
-      );
-      alert("form submitted");
-      setFormData({
-        name_of_sng: "",
-        date_of_formation: "",
-        registration_number: "",
-        contact_number: "",
-        village: "",
-        taluka: "",
-        district: "",
-        type_of_shg: "",
-        Address: "",
-      });
-    } catch (error) {
-      console.error("error in submitting form", error);
-      alert("error in submitting form.please tru again");
+    if (
+      FormData["name_of_sng"]  == ""||
+      FormData["date_of_formation"] == "" ||
+      FormData["registration_number"] == "" ||
+      FormData["contact_number"] == "" ||
+      FormData["village"] == "" ||
+      FormData["taluka"]  == ""||
+      FormData["district"] == "" ||
+      FormData["type_of_shg"] == "" ||
+      FormData["Address"] == ""
+    ) {
+      if (FormData["name_of_sng"] == "") {
+        alert("please enter group name !");
+      } else if (FormData["date_of_formation"] == "") {
+        alert("please enter group registration date !");
+      } else if (FormData["registration_number"] == "") {
+        alert("please enter group registration number !");
+      } else if (FormData["contact_number"] == "") {
+        alert("please enter group contact number !");
+      } else if (FormData["contact_number"].length < 10) {
+        alert("contact number length cannot be less than 10 !");
+      } else if (FormData["village"] == "") {
+        alert("please enter village!");
+      } else if (FormData["taluka"] == "") {
+        alert("please enter taluka !");
+      } else if (FormData["district"] == "") {
+        alert("please enter village !");
+      } else if (FormData["type_of_shg"] == "") {
+        alert("please enter type_of_shge !");
+      } else if (FormData["Address"] == "") {
+        alert("please enter Address !");
+      }
+    } else {
+      try {
+        await axios.post(
+          "http://127.0.0.1:8000/groupform/submit_registration_form/",
+          FormData
+        );
+        alert("form submitted !");
+        setFormData({
+          name_of_sng: "",
+          date_of_formation: "",
+          registration_number: "",
+          contact_number: "",
+          village: "",
+          taluka: "",
+          district: "",
+          type_of_shg: "",
+          Address: "",
+        });
+      } catch (error) {
+        console.error("error in submitting form !", error);
+        alert("error in submitting form.please try again !");
+      }
     }
   };
   return (
@@ -84,7 +118,7 @@ const RegistrationForm = () => {
                           type="text"
                           placeholder="eg., Mahalaxmi Mahila SHG"
                           onChange={handleChange}
-                          value={formData.name_of_sng}
+                          value={FormData.name_of_sng}
                           name="name_of_sng"
                         />
                       </div>
@@ -102,10 +136,9 @@ const RegistrationForm = () => {
                           className="border bg-[#dddddd] border-[#333333] w-70 h-13 md:w-80 md:h-12 mb-6 rounded-xl pl-3 placeholder:capitalize placeholder:text-[14px] text-[#585858]"
                           type="date"
                           onChange={handleChange}
-                          value={formData.date_of_formation}
+                          value={FormData.date_of_formation}
                           name="date_of_formation"
                         />
-
                       </div>
                     </div>
 
@@ -124,7 +157,7 @@ const RegistrationForm = () => {
                           type="text"
                           placeholder="eg., SHG-GOA-2025-017"
                           onChange={handleChange}
-                          value={formData.registration_number}
+                          value={FormData.registration_number}
                           name="registration_number"
                         />
                       </div>
@@ -142,7 +175,7 @@ const RegistrationForm = () => {
                           type="text"
                           placeholder="eg., 9146228061"
                           onChange={handleChange}
-                          value={formData.contact_number}
+                          value={FormData.contact_number}
                           name="contact_number"
                         />
                       </div>
@@ -163,7 +196,7 @@ const RegistrationForm = () => {
                           type="text"
                           placeholder="eg., Keri,Panchawadi"
                           onChange={handleChange}
-                          value={formData.village}
+                          value={FormData.village}
                           name="village"
                         />
                       </div>
@@ -181,7 +214,7 @@ const RegistrationForm = () => {
                           type="text"
                           placeholder="eg., Sattari"
                           onChange={handleChange}
-                          value={formData.taluka}
+                          value={FormData.taluka}
                           name="taluka"
                         />
                       </div>
@@ -202,11 +235,10 @@ const RegistrationForm = () => {
                           name="district"
                           id=""
                           onChange={handleChange}
-                          value={formData.district}
-                     
+                          value={FormData.district}
                         >
-                          <option  value="North Goa">North Goa</option>
-                          <option   value="South Goa">South Goa</option>
+                          <option value="North Goa">North Goa</option>
+                          <option value="South Goa">South Goa</option>
                         </select>
                       </div>
                       <div>
@@ -223,12 +255,11 @@ const RegistrationForm = () => {
                           name="type_of_shg"
                           id=""
                           onChange={handleChange}
-                          value={formData.type_of_shg}
-     
+                          value={FormData.type_of_shg}
                         >
-                          <option  value="Women">Women</option>
-                          <option  value="Men">Men</option>
-                          <option  value="Mixed">Mixed</option>
+                          <option value="Women">Women</option>
+                          <option value="Men">Men</option>
+                          <option value="Mixed">Mixed</option>
                         </select>
                       </div>
                     </div>
@@ -245,9 +276,10 @@ const RegistrationForm = () => {
                         </div>
                         <textarea
                           className="mb-10 w-70 h-30 md:w-2xl md:h-35 p-3 border bg-[#dddddd]  border-[#333333] rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent resize-none placeholder:capitalize placeholder:text-[14px] placeholder:text-[#585858]"
-                          placeholder="eg., House No. 56, Near Primary School, Keri, Valpoi – 403505"       onChange={handleChange}
-                            value={formData.Address}
-                            name="Address"
+                          placeholder="eg., House No. 56, Near Primary School, Keri, Valpoi – 403505"
+                          onChange={handleChange}
+                          value={FormData.Address}
+                          name="Address"
                         ></textarea>
                       </div>
                       <div></div>
