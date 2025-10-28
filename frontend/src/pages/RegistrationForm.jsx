@@ -26,7 +26,7 @@ const RegistrationForm = () => {
     e.preventDefault();
     try {
       await axios.post(
-        "http://127.0.0.1:8000/api/submit_registration_form/",
+        "http://127.0.0.1:8000/groupform/submit_registration_form/",
         formData
       );
       alert("form submitted");
