@@ -71,7 +71,13 @@ const Navbar = () => {
                 className="capitalize bg-[#F5C469] text-[#333333]  md:bg-[#333333] md:text-[#dddddd] border border-[#dddddd] py-2 px-30 md:px-6 rounded-lg md:rounded-4xl"
                 onClick={() => showLoader("/registrationform")}
               >
-                Register SHG
+                register SHG
+              </button>
+                    <button
+                className="capitalize text-[#F5C469] bg-[#333333]  md:text-[#333333] md:bg-[#dddddd] border border-[#333333] py-2 px-30 md:px-6 rounded-lg md:rounded-4xl"
+                onClick={() => showLoader("/signup")}
+              >
+                signup
               </button>
             </div>
           </nav>
