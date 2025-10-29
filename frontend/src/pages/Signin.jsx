@@ -37,10 +37,9 @@ const Signin = () => {
     else{
     try {
       await axios.post(
-        // "http://127.0.0.1:8000/userform/user_registration_form/",
-        // FormData
-      );
-      alert("form submitted !");
+        "http://127.0.0.1:8000/loginform/user_login/",
+        FormData
+      ).then((Response)=>alert(Response.data['message']))
       setFormData({
         email: "",
         password: ""
