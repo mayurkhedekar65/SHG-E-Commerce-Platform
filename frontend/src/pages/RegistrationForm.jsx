@@ -8,7 +8,7 @@ import axios from "axios";
 const RegistrationForm = () => {
   const [loading, setLoading] = useState(false);
   const [FormData, setFormData] = useState({
-    name_of_sng: "",
+    name_of_shg: "",
     date_of_formation: "",
     registration_number: "",
     contact_number: "",
@@ -16,26 +16,30 @@ const RegistrationForm = () => {
     taluka: "",
     district: "",
     type_of_shg: "",
-    Address: "",
+    email: "",
+    password: "",
+    address: "",
   });
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData({ ...FormData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (
-      FormData["name_of_sng"]  == ""||
+      FormData["name_of_shg"] == "" ||
       FormData["date_of_formation"] == "" ||
       FormData["registration_number"] == "" ||
       FormData["contact_number"] == "" ||
       FormData["village"] == "" ||
-      FormData["taluka"]  == ""||
+      FormData["taluka"] == "" ||
       FormData["district"] == "" ||
       FormData["type_of_shg"] == "" ||
-      FormData["Address"] == ""
+      FormData["email"] == "" ||
+      FormData["password"] == "" ||
+      FormData["address"] == ""
     ) {
-      if (FormData["name_of_sng"] == "") {
+      if (FormData["name_of_shg"] == "") {
         alert("please enter group name !");
       } else if (FormData["date_of_formation"] == "") {
         alert("please enter group registration date !");
@@ -52,8 +56,12 @@ const RegistrationForm = () => {
       } else if (FormData["district"] == "") {
         alert("please enter village !");
       } else if (FormData["type_of_shg"] == "") {
-        alert("please enter type_of_shge !");
-      } else if (FormData["Address"] == "") {
+        alert("please enter type_of_shg !");
+      } else if (FormData["email"] == "") {
+        alert("please enter email !");
+      } else if (FormData["password"] == "") {
+        alert("please enter password !");
+      } else if (FormData["address"] == "") {
         alert("please enter Address !");
       }
     } else {
@@ -61,10 +69,9 @@ const RegistrationForm = () => {
         await axios.post(
           "http://127.0.0.1:8000/groupform/submit_registration_form/",
           FormData
-        );
-        alert("form submitted !");
+        ).then((Response)=>alert(Response.data['message']))
         setFormData({
-          name_of_sng: "",
+          name_of_shg: "",
           date_of_formation: "",
           registration_number: "",
           contact_number: "",
@@ -72,7 +79,9 @@ const RegistrationForm = () => {
           taluka: "",
           district: "",
           type_of_shg: "",
-          Address: "",
+          email: "",
+          password: "",
+          address: ""
         });
       } catch (error) {
         console.error("error in submitting form !", error);
@@ -118,8 +127,8 @@ const RegistrationForm = () => {
                           type="text"
                           placeholder="eg., Mahalaxmi Mahila SHG"
                           onChange={handleChange}
-                          value={FormData.name_of_sng}
-                          name="name_of_sng"
+                          value={FormData.name_of_shg}
+                          name="name_of_shg"
                         />
                       </div>
 
@@ -264,6 +273,45 @@ const RegistrationForm = () => {
                       </div>
                     </div>
 
+                    <div className="flex flex-col md:flex-row justify-center items-center md:gap-8">
+                      <div>
+                        <div className="text-left mb-2">
+                          <label
+                            htmlFor="text"
+                            className="capitalize text-[#333333] md:text-[15px] text-[14px]"
+                          >
+                            email*
+                          </label>
+                        </div>
+                        <input
+                          className="border bg-[#dddddd] border-[#333333] w-70 h-13 md:w-80 md:h-12 mb-6 rounded-xl pl-3 placeholder:capitalize placeholder:text-[14px] placeholder:text-[#585858]"
+                          type="text"
+                          placeholder="eg., shaktienterprises@gmail.com"
+                          onChange={handleChange}
+                          value={FormData.email}
+                          name="email"
+                        />
+                      </div>
+                      <div>
+                        <div className="text-left mb-2">
+                          <label
+                            htmlFor="text"
+                            className="capitalize text-[#333333] md:text-[15px] text-[14px]"
+                          >
+                            password*
+                          </label>
+                        </div>
+                        <input
+                          className="border bg-[#dddddd] border-[#333333] w-70 h-13 md:w-80 md:h-12 mb-6 rounded-xl pl-3 placeholder:capitalize placeholder:text-[14px] placeholder:text-[#585858]"
+                          type="password"
+                          placeholder="password"
+                          onChange={handleChange}
+                          value={FormData.password}
+                          name="password"
+                        />
+                      </div>
+                    </div>
+
                     <div className="flex flex-col md:flex-row justify-center items-center">
                       <div>
                         <div className="text-left mb-2">
@@ -278,8 +326,8 @@ const RegistrationForm = () => {
                           className="mb-10 w-70 h-30 md:w-2xl md:h-35 p-3 border bg-[#dddddd]  border-[#333333] rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent resize-none placeholder:capitalize placeholder:text-[14px] placeholder:text-[#585858]"
                           placeholder="eg., House No. 56, Near Primary School, Keri, Valpoi – 403505"
                           onChange={handleChange}
-                          value={FormData.Address}
-                          name="Address"
+                          value={FormData.address}
+                          name="address"
                         ></textarea>
                       </div>
                       <div></div>

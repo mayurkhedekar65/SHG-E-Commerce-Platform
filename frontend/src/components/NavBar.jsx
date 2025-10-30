@@ -51,7 +51,7 @@ const Navbar = () => {
               </button>
               <button
                 className="capitalize"
-                onClick={() => showLoader("/snggroups")}
+                onClick={() => showLoader("/shggroups")}
               >
                 SHG Groups
               </button>

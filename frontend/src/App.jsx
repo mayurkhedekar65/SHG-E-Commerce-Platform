@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
 
-// Import all your pages
 import Home from "./pages/Home";
 import RegistrationForm from "./pages/RegistrationForm";
 import ShgGroups from "./pages/ShgGroups";
@@ -13,23 +12,9 @@ import Signup from "./pages/Signup";
 import Signin from "./pages/Signin";
 import AdminPanel from "./pages/AdminPanel";
 
-// Import components
-import AdminProductCard from "./components/AdminProductCard";
 
-export default function App() {
-  const [count, setCount] = useState(0);
 
-  // Example product for AdminProductCard demo
-  const product = {
-    id: 1,
-    name: "Wireless Headphones",
-    category: "Electronics",
-    price: 1999,
-    stock: 12,
-    status: "Active",
-    image: "https://placehold.co/600x400/87CEEB/000?text=Headphones",
-  };
-
+function App() {
   return (
     <Router>
       <Routes>
@@ -42,23 +27,8 @@ export default function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/signin" element={<Signin />} />
         <Route path="/adminpanel" element={<AdminPanel />} />
-
-        
-
-        {/* Admin Product Demo Route */}
-        <Route
-          path="/adminproduct"
-          element={
-            <div className="min-h-screen bg-gray-100 p-6 flex items-center justify-center">
-              <AdminProductCard
-                productInfo={product}
-                onEdit={() => alert("Edit clicked")}
-                onDelete={() => alert("Delete clicked")}
-              />
-            </div>
-          }
-        />
       </Routes>
     </Router>
   );
 }
+export default App;

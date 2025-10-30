@@ -18,7 +18,7 @@ const ShgGroups = () => {
 
   useEffect(() => {
     try {
-      fetch("http://127.0.0.1:8000/snggroups/")
+      fetch("http://127.0.0.1:8000/shggroups/")
         .then((response) => response.json())
         .then((data) => setGroups(data))
         .catch((error) => console.error("Error", error));
