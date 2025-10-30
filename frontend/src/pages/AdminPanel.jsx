@@ -7,28 +7,8 @@ import Products from './Products';
 
 
 
-        // <Route
-        //   path="/adminproduct"
-        //   element={
-        //     <div className="min-h-screen bg-gray-100 p-6 flex items-center justify-center">
-        //       <AdminProductCard
-        //         productInfo={product}
-        //         onEdit={() => alert("Edit clicked")}
-        //         onDelete={() => alert("Delete clicked")}
-        //       />
-        //     </div>
-        //   }
-        // />
 
-//  const product = {
-//     id: 1,
-//     name: "Wireless Headphones",
-//     category: "Electronics",
-//     price: 1999,
-//     stock: 12,
-//     status: "Active",
-//     image: "https://placehold.co/600x400/87CEEB/000?text=Headphones",
-//   };
+
 
 const SAMPLE_PRODUCTS = [
   { id: 1, name: "Coconut Oil", price: 250, stock: 30, status: "Active" },

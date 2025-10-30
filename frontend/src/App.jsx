@@ -11,6 +11,7 @@ import About from "./pages/About";
 import Signup from "./pages/Signup";
 import Signin from "./pages/Signin";
 import AdminPanel from "./pages/AdminPanel";
+import ShgLogin from "./pages/ShgLogin";
 
 
 
@@ -27,6 +28,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/signin" element={<Signin />} />
         <Route path="/adminpanel" element={<AdminPanel />} />
+        <Route path="/shglogin" element={<ShgLogin />} />
       </Routes>
     </Router>
   );

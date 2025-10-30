@@ -4,9 +4,18 @@ import Footer from "../components/Footer";
 import Loader from "../components/Loader";
 import { motion } from "framer-motion";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const RegistrationForm = () => {
-  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(null);
+  const showLoader = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      navigate("/shglogin");
+    }, 1500);
+  };
   const [FormData, setFormData] = useState({
     name_of_shg: "",
     date_of_formation: "",
@@ -66,10 +75,12 @@ const RegistrationForm = () => {
       }
     } else {
       try {
-        await axios.post(
-          "http://127.0.0.1:8000/groupform/submit_registration_form/",
-          FormData
-        ).then((Response)=>alert(Response.data['message']))
+        await axios
+          .post(
+            "http://127.0.0.1:8000/groupform/submit_registration_form/",
+            FormData
+          )
+          .then((Response) => alert(Response.data["message"]));
         setFormData({
           name_of_shg: "",
           date_of_formation: "",
@@ -81,7 +92,7 @@ const RegistrationForm = () => {
           type_of_shg: "",
           email: "",
           password: "",
-          address: ""
+          address: "",
         });
       } catch (error) {
         console.error("error in submitting form !", error);
@@ -102,7 +113,7 @@ const RegistrationForm = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 3 }}
           >
-            <Navbar></Navbar>
+            {/* <Navbar></Navbar> */}
             <div className=" bg-[#dddddd]">
               <div className="text-center pt-35">
                 <h1 className="font-bold md:text-3xl text-2xl">
@@ -110,7 +121,7 @@ const RegistrationForm = () => {
                 </h1>
               </div>
               <div className="pt-10 pb-30 flex justify-center items-center bg-[#dddddd]">
-                <div className="bg-[#F5C469] pt-10 pb-8 md:pt-12 md:pb-10 pr-8 pl-8  md:pr-100 md:pl-100 rounded-2xl max-w-md border border-[#333333] shadow-2xl">
+                <div className="bg-[#F5C469] pt-10 pb-8 md:pt-12 md:pb-10 pr-8 pl-8  rounded-2xl border border-[#333333] shadow-2xl">
                   <form className="text-center" onSubmit={handleSubmit}>
                     <div className="flex flex-col md:flex-row justify-center items-center md:gap-8">
                       <div>
@@ -338,10 +349,24 @@ const RegistrationForm = () => {
                       </button>
                     </div>
                   </form>
+                  <div className="flex justify-center  items-center  gap-2 capitalize mt-5  text-[15px]">
+                    <div  className="text-[#333333]">
+                      <p>already have an account ?</p>
+                    </div>
+                    <div>
+                      <button
+                        type="button"
+                        className="capitalize text-blue-500"
+                        onClick={showLoader}
+                      >
+                        shg login
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-            <Footer setLoading={setLoading} />
+            {/* <Footer setLoading={setLoading} /> */}
           </motion.div>
         </>
       )}
