@@ -44,27 +44,27 @@ const AdminProductCard = ({ productInfo = {}, onEdit, onDelete }) => {
           <span className="text-sm text-zinc-600">Stock: {stock}</span>
         </div>
 
-        <h3 className="text-xl font-bold text-zinc-900 truncate ">{name}</h3>
+        <h3 className="text-xl font-bold text-[#333333] truncate ">{name}</h3>
         <p className="text-sm text-zinc-600 mb-2">{category}</p>
-        <p className="text-lg font-semibold text-zinc-900 mb-4">
+        <p className="text-lg font-semibold text-[#333333] mb-4">
           ₹{parseFloat(price).toFixed(2)}
         </p>
 
         <div className="flex justify-between gap-2">
           <button
             onClick={() => onEdit && onEdit(productInfo)}
-            className="flex-1 inline-flex justify-center items-center gap-2 px-3 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700"
+            className="flex-1 inline-flex justify-center items-center gap-2 px-3 py-2 bg-[#42a6f8] text-[#dddddd] text-sm font-medium rounded-md hover:bg-blue-500"
           >
             <Edit2 size={16} /> Edit
           </button>
 
-          <button className="flex-1 inline-flex justify-center items-center gap-2 px-3 py-2 bg-zinc-600 text-white text-sm font-medium rounded-md hover:bg-zinc-700">
+          <button className="flex-1 inline-flex justify-center items-center gap-2 px-3 py-2 bg-[#333333] text-[#dddddd] text-sm font-medium rounded-md hover:bg-zinc-700">
             <Eye size={16} /> View
           </button>
 
           <button
             onClick={() => onDelete && onDelete(id)}
-            className="flex-1 inline-flex justify-center items-center gap-2 px-3 py-2 bg-red-600 text-white text-sm font-medium rounded-md hover:bg-red-700"
+            className="flex-1 inline-flex justify-center items-center gap-2 px-3 py-2 bg-[#f84242] text-[#dddddd] text-sm font-medium rounded-md hover:bg-red-700"
           >
             <Trash2 size={16} /> Delete
           </button>
