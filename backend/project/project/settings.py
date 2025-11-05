@@ -136,6 +136,10 @@ CORS_ALLOWED_ORIGINS = [
 ]
 CORS_ALLOW_CREDENTIALS = True
 
+CSRF_TRUSTED_ORIGINS = [
+"http://localhost:5173",
+"http://127.0.0.1:3000",
+]
 
 # Media files (uploads)
 MEDIA_URL = '/media/'

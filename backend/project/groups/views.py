@@ -76,7 +76,7 @@ class AdminPanelView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, format=None):
-        session_key = request.session.session_key
+        user = request.user
         serializer = AdminPanelSerializer(data=request.data)
         product_name = request.data.get('product_name')
         price = request.data.get('price')
@@ -87,7 +87,7 @@ class AdminPanelView(APIView):
         try:
             if serializer.is_valid():
                 Products.objects.create(
-                    shg_group_id=session_key,
+                    shg_group_id=user,
                     product_name=product_name,
                     price=price,
                     stock_quantity=stock_quantity,
