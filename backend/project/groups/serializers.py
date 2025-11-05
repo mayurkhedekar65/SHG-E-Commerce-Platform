@@ -25,4 +25,4 @@ class AdminPanelSerializer(serializers.Serializer):
             'stock_quantity',
             'description',
             'category',
-            'image',]
+            'image']

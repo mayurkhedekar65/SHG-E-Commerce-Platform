@@ -135,3 +135,8 @@ CORS_ALLOWED_ORIGINS = [
     
 ]
 CORS_ALLOW_CREDENTIALS = True
+
+
+# Media files (uploads)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
