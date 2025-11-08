@@ -1,3 +1,20 @@
+// --- ADD THIS FUNCTION AT THE TOP ---
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== "") {
+    const cookies = document.cookie.split(";");
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.substring(0, name.length + 1) === name + "=") {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+// ---------------------------------
+
 import React, { useState } from "react";
 import Navbar from "../components/NavBar";
 import Footer from "../components/Footer";
@@ -75,25 +92,23 @@ const RegistrationForm = () => {
       }
     } else {
       try {
-        await axios
-          .post(
-            "http://127.0.0.1:8000/groupform/submit_registration_form/",
-            FormData
-          )
-          .then((Response) => alert(Response.data["message"]));
-        setFormData({
-          name_of_shg: "",
-          date_of_formation: "",
-          registration_number: "",
-          contact_number: "",
-          village: "",
-          taluka: "",
-          district: "",
-          type_of_shg: "",
-          email: "",
-          password: "",
-          address: "",
-        });
+        // --- FIX: ADDED withCredentials AND REDIRECT ON SUCCESS ---
+        const response = await axios.post(
+          "http://127.0.0.1:8000/groupform/submit_registration_form/",
+          FormData,
+          {
+            withCredentials: true,
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRFToken": getCookie("csrftoken"),
+            },
+          }
+        );
+        
+        alert(response.data["message"]);
+        navigate("/adminpanel"); // Redirect to dashboard
+        // -----------------------------------------------------
+
       } catch (error) {
         console.error("error in submitting form !", error);
         alert("error in submitting form.please try again !");

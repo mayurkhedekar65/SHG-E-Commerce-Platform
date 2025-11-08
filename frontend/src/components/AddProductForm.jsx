@@ -25,23 +25,36 @@ import {
 } from "lucide-react";
 import axios from "axios";
 
+// This fixes the React "uncontrolled input" warning
+const initialState = {
+  product_name: "",
+  category: "",
+  price: "",
+  stock_quantity: "",
+  description: "",
+  image: null,
+};
+
 const AddProductForm = ({ isOpen, onClose, onSubmit, initialData }) => {
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState(initialState);
   const [imagePreview, setImagePreview] = useState(null);
   const isEditing = initialData ? true : false;
+
   useEffect(() => {
     if (isEditing) {
       setFormData(initialData);
       setImagePreview(initialData.image);
     } else {
-      setFormData({});
+      setFormData(initialState);
       setImagePreview(null);
     }
-  }, [initialData, isEditing]);
+  }, [initialData, isEditing, isOpen]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -49,22 +62,26 @@ const AddProductForm = ({ isOpen, onClose, onSubmit, initialData }) => {
       setImagePreview(URL.createObjectURL(file));
     }
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const data = new FormData();
     for (const key in formData) {
-      data.append(key, formData[key]);
+      if (formData[key] !== null) {
+        data.append(key, formData[key]);
+      }
     }
     try {
       const response = await axios.post(
         "http://127.0.0.1:8000/adminpanel/addproduct/",
         data,
         {
+          // --- FIX 4: THIS IS ESSENTIAL TO SEND COOKIES ---
           withCredentials: true,
-
+          // -----------------------------------------------
           headers: {
-            "Content-Type": "multipart/form-data", // for image upload
-            "X-CSRFToken": getCookie("csrftoken"), // add CSRF token if using session auth
+            "Content-Type": "multipart/form-data",
+            "X-CSRFToken": getCookie("csrftoken"), // This is also essential
           },
         }
       );
@@ -73,7 +90,12 @@ const AddProductForm = ({ isOpen, onClose, onSubmit, initialData }) => {
       onClose();
     } catch (error) {
       console.error("Error submitting form:", error);
-      alert("Error in submitting form. Please try again!");
+      if (error.response && error.response.data) {
+        console.error("Backend validation errors:", error.response.data);
+        alert("Error: " + JSON.stringify(error.response.data));
+      } else {
+        alert("Error in submitting form. Please try again!");
+      }
     }
   };
   return (
@@ -92,7 +114,7 @@ const AddProductForm = ({ isOpen, onClose, onSubmit, initialData }) => {
           </button>
         </div>
 
-        {/* Form Body - Styled like your screenshot */}
+        {/* Form Body */}
         <form onSubmit={handleSubmit} className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
             {/* Product Name */}
@@ -258,3 +280,4 @@ const AddProductForm = ({ isOpen, onClose, onSubmit, initialData }) => {
   );
 };
 export default AddProductForm;
+// added comment just to push
