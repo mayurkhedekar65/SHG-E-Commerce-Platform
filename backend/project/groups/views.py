@@ -9,6 +9,7 @@ from django.contrib.auth import login
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from rest_framework.permissions import IsAuthenticated
+# --- FIX 1: CORRECTED TYPO AND IMPORTED PARSERS/AUTH ---
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.authentication import SessionAuthentication
 
@@ -16,6 +17,7 @@ from rest_framework.authentication import SessionAuthentication
 
 
 class SubmitRegistrationForm(APIView):
+    # (This class is fine)
     def post(self, request, format=None):
         serializer = ShgFormSerializer(data=request.data)
 
@@ -36,7 +38,6 @@ class SubmitRegistrationForm(APIView):
                 username=shg_username, email=shg_username, is_staff=True)
             shg_user.set_password(shg_password)
             shg_user.save()
-            
             Shg_Group_Registration.objects.create(shg=shg_user,
                                                   name_of_shg=name_of_shg,
                                                   date_of_formation=date_of_formation,
@@ -48,13 +49,12 @@ class SubmitRegistrationForm(APIView):
                                                   type_of_shg=type_of_shg,
                                                   address=address)
             
+            # Auto-login the user after registration
             user = authenticate(username=shg_username, password=shg_password)
             if user is not None:
                 login(request, user)
                 return Response({"message": "Group Registered successfully! You are now logged in."}, status=status.HTTP_201_CREATED)
-            # -----------------------------------------------------------------
             
-
             return Response({"message": "Group Registered successfully! Please log in."}, status=status.HTTP_201_CREATED)
         else:
             print(serializer.errors)
@@ -62,7 +62,7 @@ class SubmitRegistrationForm(APIView):
 
 
 class AdminLogin(APIView):
-
+    # (This class is fine)
     def post(self, request, format=None):
         username = request.data.get('email')
         password = request.data.get('password')
@@ -86,7 +86,7 @@ class AdminLogin(APIView):
 
 
 class AdminPanelView(APIView):
-
+    # --- FIX 2: ADD AUTH, PERMISSIONS, AND PARSERS ---
     authentication_classes = [SessionAuthentication] 
     permission_classes = [IsAuthenticated]
     parser_classes = [MultiPartParser, FormParser]
@@ -101,11 +101,12 @@ class AdminPanelView(APIView):
         except Shg_Group_Registration.DoesNotExist:
             return Response({'message': 'No SHG profile found for this user.'}, status=status.HTTP_400_BAD_REQUEST)
 
+        # --- FIX 3: USE SERIALIZER TO VALIDATE AND SAVE ---
         if serializer.is_valid():
-
+            # Pass the shg_group object to the save() method
             serializer.save(shg_group_id=shg_group)
             return Response({'message': 'Product added Successfully'}, status=status.HTTP_201_CREATED)
         else:
-  
+            # If the form is invalid, print the errors
             print("Serializer Errors:", serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
