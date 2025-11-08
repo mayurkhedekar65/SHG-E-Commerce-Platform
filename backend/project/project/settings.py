@@ -136,11 +136,18 @@ CORS_ALLOWED_ORIGINS = [
 ]
 CORS_ALLOW_CREDENTIALS = True
 
+# --- THIS IS THE FIX ---
+# We are adding "http://127.0.0.1:5173" to this list.
 CSRF_TRUSTED_ORIGINS = [
-"http://localhost:5173",
-"http://127.0.0.1:3000",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173", # <-- THIS IS THE NEW, CORRECT LINE
 ]
+# ----------------------
 
 # Media files (uploads)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# This allows the browser to send cookies between 127.0.0.1:5173 and 127.0.0.1:8000
+SESSION_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_SAMESITE = 'Lax'

@@ -9,7 +9,9 @@ from django.contrib.auth import login
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from rest_framework.permissions import IsAuthenticated
-from rest_frameowork.parsers import  MultiPartParser, FormParser
+from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.authentication import SessionAuthentication
+
 # Create your views here.
 
 
@@ -34,6 +36,7 @@ class SubmitRegistrationForm(APIView):
                 username=shg_username, email=shg_username, is_staff=True)
             shg_user.set_password(shg_password)
             shg_user.save()
+            
             Shg_Group_Registration.objects.create(shg=shg_user,
                                                   name_of_shg=name_of_shg,
                                                   date_of_formation=date_of_formation,
@@ -44,13 +47,22 @@ class SubmitRegistrationForm(APIView):
                                                   district=district,
                                                   type_of_shg=type_of_shg,
                                                   address=address)
-            return Response({"message": "Group Registered successfully!"}, status=status.HTTP_201_CREATED)
+            
+            user = authenticate(username=shg_username, password=shg_password)
+            if user is not None:
+                login(request, user)
+                return Response({"message": "Group Registered successfully! You are now logged in."}, status=status.HTTP_201_CREATED)
+            # -----------------------------------------------------------------
+            
+
+            return Response({"message": "Group Registered successfully! Please log in."}, status=status.HTTP_201_CREATED)
         else:
             print(serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class AdminLogin(APIView):
+
     def post(self, request, format=None):
         username = request.data.get('email')
         password = request.data.get('password')
@@ -74,31 +86,26 @@ class AdminLogin(APIView):
 
 
 class AdminPanelView(APIView):
+
+    authentication_classes = [SessionAuthentication] 
     permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]
 
     def post(self, request, format=None):
         user = request.user
         serializer = AdminPanelSerializer(data=request.data)
-        product_name = request.data.get('product_name')
-        price = request.data.get('price')
-        stock_quantity = request.data.get('stock_quantity')
-        description = request.data.get('description')
-        category = request.data.get('category')
-        image = request.FILES.get('image')
+
         try:
-            if serializer.is_valid():
-                Products.objects.create(
-                    shg_group_id=user,
-                    product_name=product_name,
-                    price=price,
-                    stock_quantity=stock_quantity,
-                    description=description,
-                    category=category,
-                    image=image
-                )
-                return Response({'message': 'Product added Successfully'})
-            else:
-                print(serializer.errors)
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        except:
-            return Response({'message': 'You Entered Wrong Details'}, status=status.HTTP_400_BAD_REQUEST)
+            # Get the SHG profile linked to the user
+            shg_group = Shg_Group_Registration.objects.get(shg=user)
+        except Shg_Group_Registration.DoesNotExist:
+            return Response({'message': 'No SHG profile found for this user.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if serializer.is_valid():
+
+            serializer.save(shg_group_id=shg_group)
+            return Response({'message': 'Product added Successfully'}, status=status.HTTP_201_CREATED)
+        else:
+  
+            print("Serializer Errors:", serializer.errors)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

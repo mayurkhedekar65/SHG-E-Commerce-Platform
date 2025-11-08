@@ -16,13 +16,24 @@ class ShgFormSerializer(serializers.ModelSerializer):
                   'type_of_shg',
                   'address']
 
-class AdminPanelSerializer(serializers.Serializer):
+class AdminPanelSerializer(serializers.ModelSerializer):
     class Meta:
         model = Products
+        
+   
+        read_only_fields = ('shg_group_id',)
+        
         fields = [
+            'shg_group_id', 
             'product_name',
             'price',
             'stock_quantity',
             'description',
             'category',
-            'image']
+            'image'
+        ]
+        
+
+        extra_kwargs = {
+            'image': {'required': False, 'allow_null': True}
+        }
