@@ -6,5 +6,12 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   plugins: [react(),    
     tailwindcss(),
-],
+  ],
+  // --- ADD THIS 'server' BLOCK ---
+  // This forces Vite to run on 127.0.0.1
+  server: {
+    host: '127.0.0.1',
+    port: 5173
+  }
+  // ---------------------------------
 })
