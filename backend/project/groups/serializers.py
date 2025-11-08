@@ -37,3 +37,4 @@ class AdminPanelSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'image': {'required': False, 'allow_null': True}
         }
+        # jldm;mmdd
