@@ -1,16 +1,16 @@
 import React from "react";
 import { Edit2, Eye, Trash2 } from "lucide-react";
 
-const AdminProductCard = ({ productInfo = {}, onEdit, onDelete }) => {
-  const {
-    id = null,
-    image = "https://placehold.co/600x400/FBBF24/333?text=No+Image",
-    name = "No name",
-    category = "No category",
-    price = 0,
-    stock = 0,
-    status = "Unknown"
-  } = productInfo || {};
+const AdminProductCard = ({image,price,category,stock, onEdit, onDelete }) => {
+  // const {
+  //   id = null,
+  //   // image = "https://placehold.co/600x400/FBBF24/333?text=No+Image",
+  //   name = "No name",
+  //   category = "No category",
+  //   price = 0,
+  //   stock = 0,
+  //   status = "Unknown"
+  // } = productInfo || {};
 
   const getStatusClass = (s) => {
     switch (s) {
@@ -24,14 +24,15 @@ const AdminProductCard = ({ productInfo = {}, onEdit, onDelete }) => {
   return (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl w-full max-w-xs">
       <img
-        src={image}
-        alt={name}
+        src={`http://127.0.0.1:8000/media/${image}`}
+        alt={"j"}
         className="w-full h-48 object-cover"
         onError={(e) =>
           (e.target.src =
             "https://placehold.co/600x400/FBBF24/333?text=Image+Error")
         }
       />
+      {console.log(`http://127.0.0.1:8000/media/product_images/${image}`)}
       <div className="p-4">
         <div className="flex justify-between items-center mb-2">
           <span
