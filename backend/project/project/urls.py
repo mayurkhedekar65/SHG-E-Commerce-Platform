@@ -16,19 +16,22 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
-from main import views
+from main.views import group_data,product_data
+from Products.views import get_products_data
 from django.conf import settings 
 from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('products/',views.product_data),
-    path('shggroups/',views.group_data),
+    path('products/',product_data),
+    path('shggroups/',group_data),
     path('groupform/',include('groups.urls')),
     path('userform/',include('Customers.urls')),
     path('loginform/',include('Customers.urls')),
     path('shgloginform/',include('groups.urls')),
     path('adminpanel/',include('groups.urls')),
+    path('get_products/',get_products_data),
+    
 ]
 
 

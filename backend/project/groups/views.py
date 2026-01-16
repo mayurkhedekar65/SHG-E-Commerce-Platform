@@ -94,17 +94,19 @@ class AdminPanelView(APIView):
     def post(self, request, format=None):
         user = request.user
         serializer = AdminPanelSerializer(data=request.data)
-
+        user_id=user.id
         try:
             # Get the SHG profile linked to the user
-            shg_group = Shg_Group_Registration.objects.get(shg=user)
+            shg_group = Shg_Group_Registration.objects.get(shg=user_id)
+            
         except Shg_Group_Registration.DoesNotExist:
             return Response({'message': 'No SHG profile found for this user.'}, status=status.HTTP_400_BAD_REQUEST)
 
         # --- FIX 3: USE SERIALIZER TO VALIDATE AND SAVE ---
         if serializer.is_valid():
             # Pass the shg_group object to the save() method
-            serializer.save(shg_group_id=shg_group)
+            print(shg_group.id)
+            serializer.save(shg_group_id=shg_group,)
             return Response({'message': 'Product added Successfully'}, status=status.HTTP_201_CREATED)
         else:
             # If the form is invalid, print the errors
