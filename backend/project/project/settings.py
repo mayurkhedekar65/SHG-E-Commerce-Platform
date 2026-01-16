@@ -149,5 +149,8 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 # This allows the browser to send cookies between 127.0.0.1:5173 and 127.0.0.1:8000
-SESSION_COOKIE_SAMESITE = 'Lax'
-CSRF_COOKIE_SAMESITE = 'Lax'
+SESSION_COOKIE_SAMESITE = "None"
+SESSION_COOKIE_SECURE = False
+
+CSRF_COOKIE_SAMESITE = "None"
+CSRF_COOKIE_SECURE = False

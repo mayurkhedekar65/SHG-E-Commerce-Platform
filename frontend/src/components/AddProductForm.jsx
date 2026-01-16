@@ -85,6 +85,7 @@ const AddProductForm = ({ isOpen, onClose, onSubmit, initialData }) => {
           },
         }
       );
+      console.log(getCookie("csrftoken"))
       alert(response.data.message);
       onSubmit(formData);
       onClose();
