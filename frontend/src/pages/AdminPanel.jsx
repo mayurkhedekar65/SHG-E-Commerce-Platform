@@ -4,11 +4,7 @@ import { Plus } from "lucide-react";
 import AddProductForm from "../components/addproductform.jsx";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-// const SAMPLE_PRODUCTS = [
-//   { id: 1, name: "Coconut Oil", price: 250, stock: 30, status: "Active" },
-//   { id: 2, name: "Spice Mix", price: 180, stock: 20, status: "Active" },
-//   { id: 3, name: "Table Runner", price: 450, stock: 5, status: "Draft" },
-// ];
+
 
 const AdminPanel = () => {
   const [productList, setProductList] = useState([]);

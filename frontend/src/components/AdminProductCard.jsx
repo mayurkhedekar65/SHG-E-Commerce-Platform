@@ -20,6 +20,7 @@ const AdminProductCard = ({image,price,category,stock, onEdit, onDelete }) => {
       default: return "bg-gray-100 text-gray-800";
     }
   };
+  
 
   return (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl w-full max-w-xs">
