@@ -1,18 +1,3 @@
-function getCookie(name) {
-  let cookieValue = null;
-  if (document.cookie && document.cookie !== "") {
-    const cookies = document.cookie.split(";");
-    for (let i = 0; i < cookies.length; i++) {
-      const cookie = cookies[i].trim();
-      if (cookie.substring(0, name.length + 1) === name + "=") {
-        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-        break;
-      }
-    }
-  }
-  return cookieValue;
-}
-
 import React, { useState, useEffect } from "react";
 import {
   Plus,
@@ -39,6 +24,7 @@ const AddProductForm = ({ isOpen, onClose, onSubmit, initialData }) => {
   const [formData, setFormData] = useState(initialState);
   const [imagePreview, setImagePreview] = useState(null);
   const isEditing = initialData ? true : false;
+  // const token = localStorage.getItem("access_token");
 
   useEffect(() => {
     if (isEditing) {
@@ -76,16 +62,13 @@ const AddProductForm = ({ isOpen, onClose, onSubmit, initialData }) => {
         "http://127.0.0.1:8000/adminpanel/addproduct/",
         data,
         {
-          // --- FIX 4: THIS IS ESSENTIAL TO SEND COOKIES ---
-          withCredentials: true,
-          // -----------------------------------------------
           headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
             "Content-Type": "multipart/form-data",
-            "X-CSRFToken": getCookie("csrftoken"), // This is also essential
           },
-        }
+        },
       );
-      console.log(getCookie("csrftoken"))
+   
       alert(response.data.message);
       onSubmit(formData);
       onClose();
