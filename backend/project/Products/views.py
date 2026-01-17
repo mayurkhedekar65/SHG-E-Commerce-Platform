@@ -11,7 +11,7 @@ from django.core import serializers
 
 
 @api_view(['GET'])
-@authentication_classes([SessionAuthentication])
+# @authentication_classes([SessionAuthentication])
 @permission_classes([IsAuthenticated])
 def get_products_data(request, format=None):
     shg_group = Shg_Group_Registration.objects.get(shg_id=request.user.id)
@@ -21,7 +21,7 @@ def get_products_data(request, format=None):
 
 
 @api_view(['GET'])
-@authentication_classes([SessionAuthentication])
+# @authentication_classes([SessionAuthentication])
 @permission_classes([IsAuthenticated])
 def get_group_profile_data(request, format=None):
     shg_grp_details = Shg_Group_Registration.objects.filter(shg_id=request.user.id).values(
