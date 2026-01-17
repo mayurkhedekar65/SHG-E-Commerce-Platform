@@ -5,13 +5,13 @@ from rest_framework import status
 from groups.models import Shg_Group_Registration
 from Products.models import Products
 from groups.serializers import ShgFormSerializer, AdminPanelSerializer
-from django.contrib.auth import login
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate
 from rest_framework.permissions import IsAuthenticated
 # --- FIX 1: CORRECTED TYPO AND IMPORTED PARSERS/AUTH ---
 from rest_framework.parsers import MultiPartParser, FormParser
-from rest_framework.authentication import SessionAuthentication
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework_simplejwt.tokens import RefreshToken
 
 # Create your views here.
 
@@ -52,7 +52,6 @@ class SubmitRegistrationForm(APIView):
             # Auto-login the user after registration
             user = authenticate(username=shg_username, password=shg_password)
             if user is not None:
-                login(request, user)
                 return Response({"message": "Group Registered successfully! You are now logged in."}, status=status.HTTP_201_CREATED)
             
             return Response({"message": "Group Registered successfully! Please log in."}, status=status.HTTP_201_CREATED)
@@ -62,7 +61,9 @@ class SubmitRegistrationForm(APIView):
 
 
 class AdminLogin(APIView):
-    # (This class is fine)
+    
+    permission_classes = [] 
+    authentication_classes = []  
     def post(self, request, format=None):
         username = request.data.get('email')
         password = request.data.get('password')
@@ -77,8 +78,8 @@ class AdminLogin(APIView):
                     user = authenticate(
                         username=user_obj.username, password=password)
                     if user is not None:
-                        login(request, user)
-                        return Response({'message': 'shg logged in successfully'}, status=status.HTTP_201_CREATED)
+                        refresh=RefreshToken.for_user(user)
+                        return Response({'message': 'shg logged in successfully',  'access': str(refresh.access_token),'refresh': str(refresh)}, status=status.HTTP_201_CREATED)
                     else:
                         return Response({'message': 'invalid creditials'}, status=status.HTTP_400_BAD_REQUEST)
         except:
@@ -87,17 +88,17 @@ class AdminLogin(APIView):
 
 class AdminPanelView(APIView):
     # --- FIX 2: ADD AUTH, PERMISSIONS, AND PARSERS ---
-    authentication_classes = [SessionAuthentication] 
+    authentication_classes = [JWTAuthentication] 
     permission_classes = [IsAuthenticated]
     parser_classes = [MultiPartParser, FormParser]
 
     def post(self, request, format=None):
         user = request.user
         serializer = AdminPanelSerializer(data=request.data)
-        user_id=user.id
+        
         try:
             # Get the SHG profile linked to the user
-            shg_group = Shg_Group_Registration.objects.get(shg=user_id)
+            shg_group = Shg_Group_Registration.objects.get(shg=user)
             
         except Shg_Group_Registration.DoesNotExist:
             return Response({'message': 'No SHG profile found for this user.'}, status=status.HTTP_400_BAD_REQUEST)
@@ -105,8 +106,7 @@ class AdminPanelView(APIView):
         # --- FIX 3: USE SERIALIZER TO VALIDATE AND SAVE ---
         if serializer.is_valid():
             # Pass the shg_group object to the save() method
-            print(shg_group.id)
-            serializer.save(shg_group_id=shg_group,)
+            serializer.save(shg_group_id=shg_group)
             return Response({'message': 'Product added Successfully'}, status=status.HTTP_201_CREATED)
         else:
             # If the form is invalid, print the errors
