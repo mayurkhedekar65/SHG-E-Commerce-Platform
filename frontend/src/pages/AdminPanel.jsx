@@ -16,12 +16,15 @@ const AdminPanel = () => {
   const [loggedIn, setloggedIn] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
+
   useEffect(() => {
     const fetchProductsData = async () => {
       try {
         await axios
-          .get("http://127.0.0.1:8000/get_products", {
-            withCredentials: true,
+          .get("http://127.0.0.1:8000/get_products/", {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            },
           })
           .then((response) => response.data)
           .then((data) => setProductList(data["products_list"]));
@@ -40,7 +43,7 @@ const AdminPanel = () => {
 
   const handleDelete = (id) => {
     const confirmDelete = window.confirm(
-      "Are You Sure To Delete This Product?"
+      "Are You Sure To Delete This Product?",
     );
     if (confirmDelete) {
       setProduct((prev) => prev.filter((p) => p.id !== id));
@@ -52,12 +55,8 @@ const AdminPanel = () => {
   };
 
   const logOut = () => {
-    setloggedIn(false)
-    clearCookie("csrftoken");
+    localStorage.removeItem("access_token");
     navigate("/");
-    localStorage.clear();
-    sessionStorage.clear();
-    window.location.reload();
   };
   const handleFormSubmit = (data) => {
     const newProduct = {
@@ -220,42 +219,39 @@ const AdminPanel = () => {
           </ul>
         </div>
       </aside>
-     {/* {!loggedIn &&(
+      {/* {!loggedIn &&(
        <h2>please login to get data</h2>
     //  )} */}
       {/* {loggedIn && ( */}
-        <main className=" grow max-w-7xl mx-auto p-6">
-          <div className="flex justify-between items-center mb-6">
-            <h1 className="text-3xl font-bold text-[#333333]">
-              Admin Dashboard
-            </h1>
-            <button
-              onClick={handleAdd}
-              className="flex items-center gap-2 bg-[#F5C469] hover:bg-[#F5C469] text-[#333333] font-semibold px-4 py-2 rounded-md"
-            >
-              <Plus size={18} /> Add Product
-            </button>
+      <main className=" grow max-w-7xl mx-auto p-6">
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-3xl font-bold text-[#333333]">Admin Dashboard</h1>
+          <button
+            onClick={handleAdd}
+            className="flex items-center gap-2 bg-[#F5C469] hover:bg-[#F5C469] text-[#333333] font-semibold px-4 py-2 rounded-md"
+          >
+            <Plus size={18} /> Add Product
+          </button>
+        </div>
+
+        {isLoading ? (
+          <p className="text-zinc-600">Loading products...</p>
+        ) : (
+          <div className=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {productList.map((product, index) => (
+              <AdminProductCard
+                key={index + 1}
+                image={product["image"]}
+                price={product["price"]}
+                category={product["category"]}
+                stock={product["stock_quantity"]}
+                onDelete={handleDelete}
+              />
+            ))}
           </div>
-
-          {isLoading ? (
-            <p className="text-zinc-600">Loading products...</p>
-          ) : (
-            <div className=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {productList.map((product, index) => (
-                <AdminProductCard
-                  key={index + 1}
-                  image={product["image"]}
-                  price={product["price"]}
-                  category={product["category"]}
-                  stock={product["stock_quantity"]}
-                  onDelete={handleDelete}
-                />
-              ))}
-            </div>
-          )}
-        </main>
+        )}
+      </main>
       {/* )} */}
-
 
       {isModalOpen && (
         <AddProductForm
