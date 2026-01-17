@@ -3,7 +3,7 @@ import AdminProductCard from "../components/AdminProductCard";
 import { Plus } from "lucide-react";
 import AddProductForm from "../components/addproductform.jsx";
 import axios from "axios";
-
+import { useNavigate } from "react-router-dom";
 // const SAMPLE_PRODUCTS = [
 //   { id: 1, name: "Coconut Oil", price: 250, stock: 30, status: "Active" },
 //   { id: 2, name: "Spice Mix", price: 180, stock: 20, status: "Active" },
@@ -13,25 +13,28 @@ import axios from "axios";
 const AdminPanel = () => {
   const [productList, setProductList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loggedIn, setloggedIn] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchProductsData = async () => {
       try {
         await axios
-          .get("http://127.0.0.1:8000/get_products",{
-            withCredentials:true
+          .get("http://127.0.0.1:8000/get_products", {
+            withCredentials: true,
           })
           .then((response) => response.data)
           .then((data) => setProductList(data["products_list"]));
-          setIsLoading(false)
+        setIsLoading(false);
+        setloggedIn(true);
       } catch {
         console.error("products not found. please add products..");
       }
     };
+    fetchProductsData();
     const t = setTimeout(() => {
       fetchProductsData();
-    }, 1000);
+    }, 10000);
     return () => clearTimeout(t);
   }, [setProductList]);
 
@@ -48,6 +51,14 @@ const AdminPanel = () => {
     setIsModalOpen(true);
   };
 
+  const logOut = () => {
+    setloggedIn(false)
+    clearCookie("csrftoken");
+    navigate("/");
+    localStorage.clear();
+    sessionStorage.clear();
+    window.location.reload();
+  };
   const handleFormSubmit = (data) => {
     const newProduct = {
       id: Date.now(),
@@ -85,7 +96,6 @@ const AdminPanel = () => {
           ></path>
         </svg>
       </button>
-    {console.log(productList)}
       <aside
         id="default-sidebar"
         className="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0"
@@ -133,7 +143,7 @@ const AdminPanel = () => {
             </li>
             <li>
               <a
-                href="#"
+                onClick={() => navigate("/shgprofile")}
                 className="flex items-center p-2 text-[#dddddd] rounded-lg bg-[#333333] hover:bg-[#F5C469] hover:text-[#333333] focus:bg-[#F5C469] focus:text-[#333333] group"
               >
                 <svg
@@ -145,7 +155,7 @@ const AdminPanel = () => {
                 >
                   <path d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z" />
                 </svg>
-                <span className="flex-1 ms-3 whitespace-nowrap">Users</span>
+                <span className="flex-1 ms-3 whitespace-nowrap">Profile</span>
               </a>
             </li>
             <li>
@@ -167,7 +177,7 @@ const AdminPanel = () => {
             </li>
             <li>
               <a
-                href="#"
+                onClick={logOut}
                 className="flex items-center p-2 text-[#dddddd] rounded-lg bg-[#333333] hover:bg-[#F5C469] hover:text-[#333333] focus:bg-[#F5C469] focus:text-[#333333]  group"
               >
                 <svg
@@ -185,7 +195,7 @@ const AdminPanel = () => {
                     d="M1 8h11m0 0L8 4m4 4-4 4m4-11h3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-3"
                   />
                 </svg>
-                <span className="flex-1 ms-3 whitespace-nowrap">Sign In</span>
+                <span className="flex-1 ms-3 whitespace-nowrap">Logout</span>
               </a>
             </li>
             <li>
@@ -210,35 +220,42 @@ const AdminPanel = () => {
           </ul>
         </div>
       </aside>
-
-      <main className=" grow max-w-7xl mx-auto p-6">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold text-[#333333]">Admin Dashboard</h1>
-          <button
-            onClick={handleAdd}
-            className="flex items-center gap-2 bg-[#F5C469] hover:bg-[#F5C469] text-[#333333] font-semibold px-4 py-2 rounded-md"
-          >
-            <Plus size={18} /> Add Product
-          </button>
-        </div>
-
-        {isLoading ? (
-          <p className="text-zinc-600">Loading products...</p>
-        ) : (
-          <div className=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {productList.map((product,index) => (
-              <AdminProductCard
-                key={index+1}
-                image={product["image"]}
-                price={product["price"]}
-                category={product["category"]}
-                stock={product["stock_quantity"]}
-                onDelete={handleDelete}
-              />
-            ))}
+     {!loggedIn &&(
+       <h2>please login to get data</h2>
+     )}
+      {loggedIn && (
+        <main className=" grow max-w-7xl mx-auto p-6">
+          <div className="flex justify-between items-center mb-6">
+            <h1 className="text-3xl font-bold text-[#333333]">
+              Admin Dashboard
+            </h1>
+            <button
+              onClick={handleAdd}
+              className="flex items-center gap-2 bg-[#F5C469] hover:bg-[#F5C469] text-[#333333] font-semibold px-4 py-2 rounded-md"
+            >
+              <Plus size={18} /> Add Product
+            </button>
           </div>
-        )}
-      </main>
+
+          {isLoading ? (
+            <p className="text-zinc-600">Loading products...</p>
+          ) : (
+            <div className=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {productList.map((product, index) => (
+                <AdminProductCard
+                  key={index + 1}
+                  image={product["image"]}
+                  price={product["price"]}
+                  category={product["category"]}
+                  stock={product["stock_quantity"]}
+                  onDelete={handleDelete}
+                />
+              ))}
+            </div>
+          )}
+        </main>
+      )}
+
 
       {isModalOpen && (
         <AddProductForm
