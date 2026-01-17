@@ -220,10 +220,10 @@ const AdminPanel = () => {
           </ul>
         </div>
       </aside>
-     {!loggedIn &&(
+     {/* {!loggedIn &&(
        <h2>please login to get data</h2>
-     )}
-      {loggedIn && (
+    //  )} */}
+      {/* {loggedIn && ( */}
         <main className=" grow max-w-7xl mx-auto p-6">
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-3xl font-bold text-[#333333]">
@@ -254,7 +254,7 @@ const AdminPanel = () => {
             </div>
           )}
         </main>
-      )}
+      {/* )} */}
 
 
       {isModalOpen && (
