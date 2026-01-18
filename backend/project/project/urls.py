@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path,include
 from main.views import group_data,get_products
 from Products.views import get_products_data,get_group_profile_data
+from Customers.views import get_username,get_user_profile_data
 from django.conf import settings 
 from django.conf.urls.static import static
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
@@ -33,6 +34,10 @@ urlpatterns = [
     path('adminpanel/',include('groups.urls')),
     path('get_products/',get_products_data),
     path('get_grp_profile/',get_group_profile_data),
+    path('getusername/',get_username),
+    path('get_user_profile/',get_user_profile_data),
+    
+    
     # path("api/token/", TokenObtainPairView.as_view()),
     # path("api/token/refresh/", TokenRefreshView.as_view()),
 
