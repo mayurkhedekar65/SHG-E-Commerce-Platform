@@ -2,15 +2,7 @@ import React from "react";
 import { Edit2, Eye, Trash2 } from "lucide-react";
 
 const AdminProductCard = ({image,price,category,stock, onEdit, onDelete }) => {
-  // const {
-  //   id = null,
-  //   // image = "https://placehold.co/600x400/FBBF24/333?text=No+Image",
-  //   name = "No name",
-  //   category = "No category",
-  //   price = 0,
-  //   stock = 0,
-  //   status = "Unknown"
-  // } = productInfo || {};
+
 
   const getStatusClass = (s) => {
     switch (s) {
@@ -23,56 +15,92 @@ const AdminProductCard = ({image,price,category,stock, onEdit, onDelete }) => {
   
 
   return (
-    <div className="bg-white rounded-lg shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl w-full max-w-xs">
-      <img
-        src={`http://127.0.0.1:8000/media/${image}`}
-        alt={"j"}
-        className="w-full h-48 object-cover"
-        onError={(e) =>
-          (e.target.src =
-            "https://placehold.co/600x400/FBBF24/333?text=Image+Error")
-        }
-      />
-      {console.log(`http://127.0.0.1:8000/media/product_images/${image}`)}
-      <div className="p-4">
-        <div className="flex justify-between items-center mb-2">
-          <span
-            className={`text-xs font-semibold px-2.5 py-0.5 rounded-full ${getStatusClass(
-              status
-            )}`}
-          >
-            {status}
-          </span>
-          <span className="text-sm text-zinc-600">Stock: {stock}</span>
-        </div>
+    <div className="bg-white rounded-2xl shadow-md overflow-hidden 
+                transition-all duration-300 hover:-translate-y-1 hover:shadow-xl 
+                w-full max-w-xs">
 
-        <h3 className="text-xl font-bold text-[#333333] truncate ">{name}</h3>
-        <p className="text-sm text-zinc-600 mb-2">{category}</p>
-        <p className="text-lg font-semibold text-[#333333] mb-4">
-          ₹{parseFloat(price).toFixed(2)}
-        </p>
+  {/* Image */}
+  <img
+    src={`http://127.0.0.1:8000/media/${image}`}
+    alt={name}
+    className="w-full h-48 object-cover bg-gray-100"
+    onError={(e) =>
+      (e.target.src =
+        "https://placehold.co/600x400/F5C469/333?text=Image+Unavailable")
+    }
+  />
 
-        <div className="flex justify-between gap-2">
-          <button
-            onClick={() => onEdit && onEdit(productInfo)}
-            className="flex-1 inline-flex justify-center items-center gap-2 px-3 py-2 bg-[#42a6f8] text-[#dddddd] text-sm font-medium rounded-md hover:bg-blue-500"
-          >
-            <Edit2 size={16} /> Edit
-          </button>
+  {/* Content */}
+  <div className="p-5">
 
-          <button className="flex-1 inline-flex justify-center items-center gap-2 px-3 py-2 bg-[#333333] text-[#dddddd] text-sm font-medium rounded-md hover:bg-zinc-700">
-            <Eye size={16} /> View
-          </button>
+    {/* Status & Stock */}
+    <div className="flex justify-between items-center mb-3">
+      <span
+        className={`text-xs font-semibold px-3 py-1 rounded-full 
+        ${getStatusClass(status)}`}
+      >
+        {status}
+      </span>
 
-          <button
-            onClick={() => onDelete && onDelete(id)}
-            className="flex-1 inline-flex justify-center items-center gap-2 px-3 py-2 bg-[#f84242] text-[#dddddd] text-sm font-medium rounded-md hover:bg-red-700"
-          >
-            <Trash2 size={16} /> Delete
-          </button>
-        </div>
-      </div>
+      <span className="text-xs text-gray-500">
+        Stock: <span className="font-semibold">{stock}</span>
+      </span>
     </div>
+
+    {/* Title */}
+    <h3 className="text-lg font-bold text-[#333333] truncate mb-1">
+      {name}
+    </h3>
+
+    {/* Category */}
+    <p className="text-sm text-gray-500 mb-2">
+      {category}
+    </p>
+
+    {/* Price */}
+    <p className="text-xl font-bold text-[#333333] mb-4">
+      ₹{parseFloat(price).toFixed(2)}
+    </p>
+
+    {/* Actions */}
+    <div className="grid grid-cols-3 gap-2">
+
+      <button
+        onClick={() => onEdit && onEdit(productInfo)}
+        className="flex items-center justify-center gap-2 px-3 py-2
+                   text-sm font-semibold rounded-lg
+                   bg-[#42a6f8] text-white
+                   hover:bg-blue-500 transition"
+      >
+        <Edit2 size={16} />
+        Edit
+      </button>
+
+      <button
+        className="flex items-center justify-center gap-2 px-3 py-2
+                   text-sm font-semibold rounded-lg
+                   bg-[#333333] text-[#dddddd]
+                   hover:bg-zinc-700 transition"
+      >
+        <Eye size={16} />
+        View
+      </button>
+
+      <button
+        onClick={() => onDelete && onDelete(id)}
+        className="flex items-center justify-center gap-2 px-3 py-2
+                   text-sm font-semibold rounded-lg
+                   bg-red-500 text-white
+                   hover:bg-red-600 transition"
+      >
+        <Trash2 size={16} />
+        Delete
+      </button>
+
+    </div>
+  </div>
+</div>
+
   );
 };
 

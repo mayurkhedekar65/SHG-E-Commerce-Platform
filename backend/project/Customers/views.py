@@ -5,8 +5,10 @@ from Customers.serializers import UserFormSerializer
 from Customers.models import CustomerForm
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.decorators import api_view, permission_classes
+from Customers.models import CustomerForm
 
 
 class SubmitUserRegistrationForm(APIView):
@@ -82,3 +84,18 @@ class UserLogin(APIView):
             },
             status=status.HTTP_200_OK
         )
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_username(request):
+    username = User.objects.filter(id=request.user.id).values("email")
+    return Response({"username": username})
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_user_profile_data(request):
+    # username = User.objects.filter(id=request.user.id).values("email")
+    user_details=CustomerForm.objects.filter(customer_id=request.user.id).values("customer_name","customer_email","phone_number",
+"address")
+    return Response({"user_details": user_details})

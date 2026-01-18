@@ -13,6 +13,7 @@ import Signin from "./pages/Signin";
 import AdminPanel from "./pages/AdminPanel";
 import ShgLogin from "./pages/ShgLogin";
 import GroupProfile from "./pages/GroupProfile";
+import UserProfile from "./pages/UserProfile";
 
 
 
@@ -31,6 +32,7 @@ function App() {
         <Route path="/adminpanel" element={<AdminPanel />} />
         <Route path="/shglogin" element={<ShgLogin />} />
         <Route path="/shgprofile" element={<GroupProfile />} />
+        <Route path="/userprofile" element={<UserProfile />} />
       </Routes>
     </Router>
   );

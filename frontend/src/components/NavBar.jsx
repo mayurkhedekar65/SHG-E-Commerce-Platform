@@ -1,16 +1,40 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faXmark } from "@fortawesome/free-solid-svg-icons";
 import logo from "../assets/shg_baazar_logo.png";
 import Loader from "./Loader";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
   const [loader, activateLoader] = useState(false);
   const [hide, setHide] = useState(true);
-
+  const [username, setUsername] = useState("");
+  const [loggedIn, setLoggedIn] = useState(false);
+  const logout = () => {
+    localStorage.clear("access_token");
+    setLoggedIn(false);
+    alert("logged out successfully");
+    navigate("/");
+  };
+  useEffect(() => {
+    const fetchUsername = async () => {
+      try {
+        const response = await axios.get("http://127.0.0.1:8000/getusername/", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        });
+        setUsername(response.data["username"][0]["email"]);
+        setLoggedIn(true);
+      } catch {
+        console.error("user not found");
+      }
+    };
+    fetchUsername();
+  }, []);
   const showLoader = (path) => {
     activateLoader(true);
     setHide(false);
@@ -67,18 +91,38 @@ const Navbar = () => {
               >
                 about
               </button>
-              <button
-                className="capitalize bg-[#F5C469] text-[#333333]  md:bg-[#333333] md:text-[#dddddd] border border-[#dddddd] py-2 px-30 md:px-6 rounded-lg md:rounded-4xl"
-                onClick={() => showLoader("/registrationform")}
-              >
-                register SHG
-              </button>
-                    <button
-                className="capitalize text-[#F5C469] bg-[#333333]  md:text-[#333333] md:bg-[#dddddd] border border-[#333333] py-2 px-30 md:px-6 rounded-lg md:rounded-4xl"
-                onClick={() => showLoader("/signup")}
-              >
-                signup
-              </button>
+              {loggedIn && (
+                <>
+                  <button
+                    className="capitalize bg-[#F5C469] text-[#333333]  md:bg-[#333333] md:text-[#dddddd] border border-[#dddddd] py-2 px-30 md:px-6 rounded-lg md:rounded-4xl"
+                    onClick={() => showLoader("/userprofile")}
+                  >
+                    {username.split("@", 1)}
+                  </button>
+                  <button
+                    className="capitalize text-[#F5C469] bg-[#333333]  md:text-[#333333] md:bg-[#dddddd] border border-[#333333] py-2 px-30 md:px-6 rounded-lg md:rounded-4xl"
+                    onClick={logout}
+                  >
+                    logout
+                  </button>
+                </>
+              )}
+              {!loggedIn && (
+                <>
+                  <button
+                    className="capitalize bg-[#F5C469] text-[#333333]  md:bg-[#333333] md:text-[#dddddd] border border-[#dddddd] py-2 px-30 md:px-6 rounded-lg md:rounded-4xl"
+                    onClick={() => showLoader("/registrationform")}
+                  >
+                    register SHG
+                  </button>
+                  <button
+                    className="capitalize text-[#F5C469] bg-[#333333]  md:text-[#333333] md:bg-[#dddddd] border border-[#333333] py-2 px-30 md:px-6 rounded-lg md:rounded-4xl"
+                    onClick={() => showLoader("/signup")}
+                  >
+                    signup
+                  </button>
+                </>
+              )}
             </div>
           </nav>
         </header>

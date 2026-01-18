@@ -18,20 +18,19 @@ const ShgGroups = () => {
   }, 3500);
 
   useEffect(() => {
-    const fetchData=async()=>{
+    const fetchData = async () => {
       try {
-      const response=await axios.get("http://127.0.0.1:8000/shggroups/",{
-         headers: {
-              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-            },
-      })
-         setGroups(response.data["shg_groups_list"])
-      } 
-      catch {
-      console.error("groups not available...");
-    }
-    }
-    fetchData()
+        const response = await axios.get("http://127.0.0.1:8000/shggroups/", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        });
+        setGroups(response.data["shg_groups_list"]);
+      } catch {
+        console.error("groups not available...");
+      }
+    };
+    fetchData();
   }, [setGroups]);
   return (
     <>
@@ -47,37 +46,52 @@ const ShgGroups = () => {
             transition={{ duration: 3 }}
           >
             <Navbar></Navbar>
-            <section className="text-center py-35 bg-[#dddddd] min-h-screen">
+            <section className="bg-[#f0f0f0] min-h-screen py-20">
+              {/* Section Heading */}
               {!loader && (
-                <div>
-                  <h2 className="font-bold  text-[#333333] font-sans text-2xl md:text-3xl ">
+                <div className="text-center mb-12">
+                  <h2 className="text-3xl md:text-4xl font-bold text-[#333333]">
                     SHG Groups
                   </h2>
+                  <p className="mt-3 text-gray-600 md:text-lg max-w-2xl mx-auto">
+                    Discover Self Help Groups creating amazing products across
+                    Goa
+                  </p>
                 </div>
               )}
-              {loader && <ContainerLoader />}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 6 }}
-              >
-                {!loader && (
-                  <div className="grid grid-cols-1 md:grid-cols-4 place-items-center items-stretch gap-y-8 md:gap-x-0 md:mx-20 text-center pt-10">
+
+              {/* Loader */}
+              {loader && (
+                <div className="flex justify-center items-center h-40">
+                  <ContainerLoader />
+                </div>
+              )}
+
+              {/* Groups Grid */}
+              {!loader && (
+                <motion.div
+                  className="px-4 md:px-10"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 1.5 }}
+                >
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                     {Groups.map((item, index) => (
                       <GroupCard
                         key={index}
-                        GroupName={item["name_of_shg"]}
-                        GroupInfo={item["contact_number"]}
-                        Location={item["address"]}
-                        TotalProducts={item["type_of_shg"]}
-                        TotalGroupMembers={item["date_of_formation"]}
-                        // Logo={image}
-                      ></GroupCard>
+                        GroupName={item.name_of_shg}
+                        GroupInfo={item.contact_number}
+                        Location={item.address}
+                        TotalProducts={item.type_of_shg}
+                        TotalGroupMembers={item.date_of_formation}
+                        className="hover:scale-105 transition-transform duration-300"
+                      />
                     ))}
                   </div>
-                )}
-              </motion.div>
+                </motion.div>
+              )}
             </section>
+
             <Footer setLoading={setLoading} />
           </motion.div>
         </>
