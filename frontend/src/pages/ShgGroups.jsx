@@ -6,6 +6,7 @@ import image from "../assets/ChatGPT Image Oct 22, 2025, 06_20_44 PM.png";
 import ContainerLoader from "../components/ContainerLoader";
 import Loader from "../components/Loader";
 import { motion } from "framer-motion";
+import axios from "axios";
 
 const ShgGroups = () => {
   const [Groups, setGroups] = useState([]);
@@ -17,15 +18,21 @@ const ShgGroups = () => {
   }, 3500);
 
   useEffect(() => {
-    try {
-      fetch("http://127.0.0.1:8000/shggroups/")
-        .then((response) => response.json())
-        .then((data) => setGroups(data))
-        .catch((error) => console.error("Error", error));
-    } catch (error) {
-      console.error(error);
+    const fetchData=async()=>{
+      try {
+      const response=await axios.get("http://127.0.0.1:8000/shggroups/",{
+         headers: {
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            },
+      })
+         setGroups(response.data["shg_groups_list"])
+      } 
+      catch {
+      console.error("groups not available...");
     }
-  }, []);
+    }
+    fetchData()
+  }, [setGroups]);
   return (
     <>
       {loading ? (
@@ -59,12 +66,12 @@ const ShgGroups = () => {
                     {Groups.map((item, index) => (
                       <GroupCard
                         key={index}
-                        GroupName={item["group_name"]}
-                        GroupInfo={item["description"]}
-                        Location={item["location"]}
-                        TotalProducts={item["total_products"]}
-                        TotalGroupMembers={item["total_members"]}
-                        Logo={image}
+                        GroupName={item["name_of_shg"]}
+                        GroupInfo={item["contact_number"]}
+                        Location={item["address"]}
+                        TotalProducts={item["type_of_shg"]}
+                        TotalGroupMembers={item["date_of_formation"]}
+                        // Logo={image}
                       ></GroupCard>
                     ))}
                   </div>

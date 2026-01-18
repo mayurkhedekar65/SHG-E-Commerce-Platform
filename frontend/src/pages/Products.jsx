@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import ContainerLoader from "../components/ContainerLoader";
 import Loader from "../components/Loader";
 import { motion } from "framer-motion";
-
+import axios from "axios";
 const Products = () => {
   const [Product, setProduct] = useState([]);
   const [loader, showLoader] = useState(true);
@@ -17,17 +17,20 @@ const Products = () => {
   }, 3500);
 
   useEffect(() => {
+    const fetchData=async()=>{
     try {
-      fetch("http://127.0.0.1:8000/products/")
-        .then((response) => response.json())
-        .then((data) => {
-          setProduct(data);
-        })
-        .catch((error) => console.error("Error:", error));
-    } catch (error) {
-      console.log(error);
+     const response=await axios.get("http://127.0.0.1:8000/products/",{
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            },
+          })
+          setProduct(response.data["products_list"]);
+    } catch{
+      console.error("products not available..");
     }
-  }, []);
+  }
+fetchData()
+  }, [setProduct]);
 
   return (
     <>
@@ -62,11 +65,12 @@ const Products = () => {
                     {Product.map((item, index) => (
                       <ProductCard
                         key={index}
-                        ProductName={item["ProductName"]}
-                        GroupName={item["GroupName"]}
-                        Amount={item["Amount"]}
-                        Quantity={item["Quantity"]}
-                        Location={item["Location"]}
+                        image={item["image"]}
+                        ProductName={item["product_name"]}
+                        // GroupName={item["GroupName"]}
+                        Amount={item["price"]}
+                        Quantity={item["stock_quantity"]}
+                        // Location={item["Location"]}
                       ></ProductCard>
                     ))}
                   </div>

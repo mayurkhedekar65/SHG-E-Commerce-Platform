@@ -13,14 +13,14 @@ const GroupCard = ({
   Location,
   TotalProducts,
   TotalGroupMembers,
-  Logo,
+  // Logo,
 }) => {
   return (
     <>
       <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.95 }}>
         <div className="bg-[#dddddd] border flex flex-col justify-between border-[#333333] h-full rounded-lg text-center w-75 pb-5 shadow-2xl text-[#333333]">
           <div className="border-b border-[#333333] ">
-            <img className="rounded-t-lg" src={Logo} alt="not available" />
+            {/* <img className="rounded-t-lg" src={Logo} alt="not available" /> */}
           </div>
           <div className="text-center">
             <h3 className="mt-2 font-bold text-lg">{GroupName}</h3>
