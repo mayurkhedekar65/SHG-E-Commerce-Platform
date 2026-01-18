@@ -1,259 +1,145 @@
 import React, { useState, useEffect } from "react";
-import AdminProductCard from "../components/AdminProductCard";
-import { Plus } from "lucide-react";
-import AddProductForm from "../components/addproductform.jsx";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import AdminProductCard from "../components/AdminProductCard";
+import AddProductForm from "../components/addproductform.jsx";
 
 const AdminPanel = () => {
   const [productList, setProductList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [loggedIn, setloggedIn] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("dashboard");
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchProductsData = async () => {
+    const fetchProducts = async () => {
       try {
-        await axios
-          .get("http://127.0.0.1:8000/get_products/", {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-            },
-          })
-          .then((response) => response.data)
-          .then((data) => setProductList(data["products_list"]));
-        setIsLoading(false);
-        setloggedIn(true);
+        const res = await axios.get("http://127.0.0.1:8000/get_products/", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        });
+        setProductList(res.data.products_list);
       } catch {
-        console.error("products not found. please add products..");
+        console.error("Products not found");
+      } finally {
+        setIsLoading(false);
       }
     };
-    fetchProductsData();
-    const t = setTimeout(() => {
-      fetchProductsData();
-    }, 10000);
-    return () => clearTimeout(t);
-  }, [setProductList]);
+    fetchProducts();
+  }, []);
 
   const handleDelete = (id) => {
-    const confirmDelete = window.confirm(
-      "Are You Sure To Delete This Product?",
-    );
-    if (confirmDelete) {
-      setProduct((prev) => prev.filter((p) => p.id !== id));
+    if (window.confirm("Delete this product?")) {
+      setProductList((prev) => prev.filter((p) => p.id !== id));
     }
-  };
-
-  const handleAdd = () => {
-    setIsModalOpen(true);
   };
 
   const logOut = () => {
     localStorage.removeItem("access_token");
     navigate("/");
   };
-  const handleFormSubmit = (data) => {
-    const newProduct = {
-      id: Date.now(),
-      name: data.name || "New Product",
-      price: Number(data.price) || 0,
-      stock: Number(data.stock) || 0,
-      status: data.status || "Draft",
-      ...data,
-    };
-    // setProduct(prev => [newProduct, ...prev]);
-    setIsModalOpen(false);
-  };
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#dddddd]">
-      <button
-        data-drawer-target="default-sidebar"
-        data-drawer-toggle="default-sidebar"
-        aria-controls="default-sidebar"
-        type="button"
-        className="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-      >
-        <span className="sr-only">Open sidebar</span>
-        <svg
-          className="w-6 h-6"
-          aria-hidden="true"
-          fill="currentColor"
-          viewBox="0 0 20 20"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            clipRule="evenodd"
-            fillRule="evenodd"
-            d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"
-          ></path>
-        </svg>
-      </button>
+    <div className="bg-[#dddddd] min-h-screen">
+      {/* ================= FIXED SIDEBAR ================= */}
       <aside
-        id="default-sidebar"
-        className="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0"
-        aria-label="Sidebar"
+        className="fixed top-0 left-0 z-40 w-64 h-screen
+                   bg-[#333333] shadow-2xl p-6"
       >
-        <div className="h-full px-3 py-4 overflow-y-auto bg-[#333333]">
-          <ul className="space-y-2 font-medium">
-            <li>
-              <a
-                href="#"
-                className="flex items-center p-2 text-[#dddddd] rounded-lg bg-[#333333] hover:bg-[#F5C469] hover:text-[#333333] focus:bg-[#F5C469] focus:text-[#333333] group"
-              >
-                <svg
-                  className="w-5 h-5  transition duration-75  group-hover:text-[#333333] hover:text-[#dddddd] "
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 22 21"
-                >
-                  <path d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z" />
-                  <path d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z" />
-                </svg>
-                <span className="ms-3">Dashboard</span>
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="flex items-center p-2 text-[#dddddd] rounded-lg bg-[#333333] hover:bg-[#F5C469] hover:text-[#333333] focus:bg-[#F5C469] focus:text-[#333333]  group"
-              >
-                <svg
-                  className="shrink-0 w-5 h-5 transition duration-75  group-hover:text-[#333333] hover:text-[#dddddd] "
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path d="m17.418 3.623-.018-.008a6.713 6.713 0 0 0-2.4-.569V2h1a1 1 0 1 0 0-2h-2a1 1 0 0 0-1 1v2H9.89A6.977 6.977 0 0 1 12 8v5h-2V8A5 5 0 1 0 0 8v6a1 1 0 0 0 1 1h8v4a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-4h6a1 1 0 0 0 1-1V8a5 5 0 0 0-2.582-4.377ZM6 12H4a1 1 0 0 1 0-2h2a1 1 0 0 1 0 2Z" />
-                </svg>
-                <span className="flex-1 ms-3 whitespace-nowrap">Inbox</span>
-                <span className="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-[#333333] bg-[#F5C469] rounded-full focus:border-[#333333] focus:bg-[#333333]">
-                  3
-                </span>
-              </a>
-            </li>
-            <li>
-              <a
-                onClick={() => navigate("/shgprofile")}
-                className="flex items-center p-2 text-[#dddddd] rounded-lg bg-[#333333] hover:bg-[#F5C469] hover:text-[#333333] focus:bg-[#F5C469] focus:text-[#333333] group"
-              >
-                <svg
-                  className="shrink-0 w-5 h-5 transition duration-75 group-hover:text-[#333333] hover:text-[#dddddd] "
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 20 18"
-                >
-                  <path d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z" />
-                </svg>
-                <span className="flex-1 ms-3 whitespace-nowrap">Profile</span>
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="flex items-center p-2 text-[#dddddd] rounded-lg bg-[#333333] hover:bg-[#F5C469] hover:text-[#333333] focus:bg-[#F5C469] focus:text-[#333333]  group"
-              >
-                <svg
-                  className="shrink-0 w-5 h-5 transition duration-75 group-hover:text-[#333333] hover:text-[#dddddd]"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 18 20"
-                >
-                  <path d="M17 5.923A1 1 0 0 0 16 5h-3V4a4 4 0 1 0-8 0v1H2a1 1 0 0 0-1 .923L.086 17.846A2 2 0 0 0 2.08 20h13.84a2 2 0 0 0 1.994-2.153L17 5.923ZM7 9a1 1 0 0 1-2 0V7h2v2Zm0-5a2 2 0 1 1 4 0v1H7V4Zm6 5a1 1 0 1 1-2 0V7h2v2Z" />
-                </svg>
-                <span className="flex-1 ms-3 whitespace-nowrap">Products</span>
-              </a>
-            </li>
-            <li>
-              <a
-                onClick={logOut}
-                className="flex items-center p-2 text-[#dddddd] rounded-lg bg-[#333333] hover:bg-[#F5C469] hover:text-[#333333] focus:bg-[#F5C469] focus:text-[#333333]  group"
-              >
-                <svg
-                  className="shrink-0 w-5 h-5  transition duration-75 group-hover:text-[#333333] hover:text-[#dddddd]"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 18 16"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M1 8h11m0 0L8 4m4 4-4 4m4-11h3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-3"
-                  />
-                </svg>
-                <span className="flex-1 ms-3 whitespace-nowrap">Logout</span>
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="flex items-center p-2 text-[#dddddd] rounded-lg bg-[#333333] hover:bg-[#F5C469] hover:text-[#333333] focus:bg-[#F5C469] focus:text-[#333333]  group"
-              >
-                <svg
-                  className="shrink-0 w-5 h-5  transition duration-75 group-hover:text-[#333333] hover:text-[#dddddd]"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.96 2.96 0 0 0 .13 5H5Z" />
-                  <path d="M6.737 11.061a2.961 2.961 0 0 1 .81-1.515l6.117-6.116A4.839 4.839 0 0 1 16 2.141V2a1.97 1.97 0 0 0-1.933-2H7v5a2 2 0 0 1-2 2H0v11a1.969 1.969 0 0 0 1.933 2h12.134A1.97 1.97 0 0 0 16 18v-3.093l-1.546 1.546c-.413.413-.94.695-1.513.81l-3.4.679a2.947 2.947 0 0 1-1.85-.227 2.96 2.96 0 0 1-1.635-3.257l.681-3.397Z" />
-                  <path d="M8.961 16a.93.93 0 0 0 .189-.019l3.4-.679a.961.961 0 0 0 .49-.263l6.118-6.117a2.884 2.884 0 0 0-4.079-4.078l-6.117 6.117a.96.96 0 0 0-.263.491l-.679 3.4A.961.961 0 0 0 8.961 16Zm7.477-9.8a.958.958 0 0 1 .68-.281.961.961 0 0 1 .682 1.644l-.315.315-1.36-1.36.313-.318Zm-5.911 5.911 4.236-4.236 1.359 1.359-4.236 4.237-1.7.339.341-1.699Z" />
-                </svg>
-                <span className="flex-1 ms-3 whitespace-nowrap">Sign Up</span>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </aside>
-      {/* {!loggedIn &&(
-       <h2>please login to get data</h2>
-    //  )} */}
-      {/* {loggedIn && ( */}
-      <main className=" grow max-w-7xl mx-auto p-6">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold text-[#333333]">Admin Dashboard</h1>
-          <button
-            onClick={handleAdd}
-            className="flex items-center gap-2 bg-[#F5C469] hover:bg-[#F5C469] text-[#333333] font-semibold px-4 py-2 rounded-md"
-          >
-            <Plus size={18} /> Add Product
-          </button>
+        <div className="mb-10">
+          <h2 className="text-2xl font-bold text-[#F5C469]">SHG Admin</h2>
+          <p className="text-xs text-gray-400">Management Dashboard</p>
         </div>
 
-        {isLoading ? (
-          <p className="text-zinc-600">Loading products...</p>
-        ) : (
-          <div className=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {productList.map((product, index) => (
-              <AdminProductCard
-                key={index + 1}
-                image={product["image"]}
-                price={product["price"]}
-                category={product["category"]}
-                stock={product["stock_quantity"]}
-                onDelete={handleDelete}
-              />
-            ))}
-          </div>
+        <ul className="space-y-2 text-sm font-medium">
+          {[
+            { key: "dashboard", label: "Dashboard" },
+            { key: "profile", label: "Profile" },
+          ].map((item) => (
+            <li key={item.key}>
+              <button
+                onClick={() => setActiveSection(item.key)}
+                className={`w-full px-4 py-3 rounded-xl text-left transition
+                  ${
+                    activeSection === item.key
+                      ? "bg-[#F5C469] text-[#333333]"
+                      : "text-[#dddddd] hover:bg-[#F5C469] hover:text-[#333333]"
+                  }`}
+              >
+                {item.label}
+              </button>
+            </li>
+          ))}
+
+          <div className="border-t border-gray-600 my-4" />
+
+          <li>
+            <button
+              onClick={logOut}
+              className="w-full px-4 py-3 rounded-xl text-left
+                         text-red-300 hover:bg-red-500 hover:text-white transition"
+            >
+              Logout
+            </button>
+          </li>
+        </ul>
+      </aside>
+
+      {/* ================= MAIN CONTENT ================= */}
+      <main className="ml-64 p-6 min-h-screen overflow-y-auto">
+        {activeSection === "dashboard" && (
+          <>
+            <div className="bg-white rounded-2xl shadow p-6 mb-6 flex justify-between items-center">
+              <div>
+                <h1 className="text-3xl font-bold text-[#333333]">
+                  Admin Dashboard
+                </h1>
+                <p className="text-sm text-gray-500">
+                  Manage products & inventory
+                </p>
+              </div>
+
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className="bg-[#F5C469] text-[#333333]
+                           font-semibold px-6 py-2.5
+                           rounded-xl shadow"
+              >
+                Add Product
+              </button>
+            </div>
+
+            {isLoading ? (
+              <p className="text-gray-600">Loading products...</p>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {productList.map((product) => (
+                  <AdminProductCard
+                    key={product.id}
+                    image={product.image}
+                    price={product.price}
+                    category={product.category}
+                    stock={product.stock_quantity}
+                    status={product.status}
+                    id={product.id}
+                    onDelete={handleDelete}
+                    productInfo={product}
+                  />
+                ))}
+              </div>
+            )}
+          </>
         )}
+
+        {activeSection === "profile" && <SHGProfilePanel />}
       </main>
-      {/* )} */}
 
       {isModalOpen && (
         <AddProductForm
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
-          onSubmit={handleFormSubmit}
+          onSubmit={() => setIsModalOpen(false)}
         />
       )}
     </div>
@@ -261,3 +147,60 @@ const AdminPanel = () => {
 };
 
 export default AdminPanel;
+
+/* ================= PROFILE PANEL ================= */
+
+const SHGProfilePanel = () => {
+  const [profileData, setProfileData] = useState({});
+
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8000/get_grp_profile/", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      })
+      .then((res) => setProfileData(res.data.shg_grp_details[0]));
+  }, []);
+
+  return (
+    <>
+      <div className="bg-white rounded-2xl shadow p-6 mb-6">
+        <h2 className="text-3xl font-bold text-[#333333]">SHG Profile</h2>
+        <p className="text-sm text-gray-500">Self Help Group information</p>
+      </div>
+
+      <div className="bg-[#F5C469] rounded-2xl shadow-lg p-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {[
+            ["SHG Name", profileData.name_of_shg],
+            ["Registration Number", profileData.registration_number],
+            ["Contact Number", profileData.contact_number],
+            ["Village", profileData.village],
+            ["District", profileData.district],
+            ["Type of SHG", profileData.type_of_shg],
+            ["Date of Formation", profileData.date_of_formation],
+          ].map(([label, value], index) => (
+            <div key={index}>
+              <p className="text-xs font-semibold uppercase text-gray-700 mb-1">
+                {label}
+              </p>
+              <div className="bg-white rounded-xl px-4 py-3 font-medium text-[#333333]">
+                {value || "Not Available"}
+              </div>
+            </div>
+          ))}
+
+          <div className="md:col-span-2">
+            <p className="text-xs font-semibold uppercase text-gray-700 mb-1">
+              Address
+            </p>
+            <div className="bg-white rounded-xl px-4 py-3 font-medium text-[#333333]">
+              {profileData.address || "Not Available"}
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};

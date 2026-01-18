@@ -20,75 +20,108 @@ const GroupProfile = () => {
       }
     };
     fetchData();
-  }, [setProfileData]);
+  }, []);
   return (
     <>
-      <div className="min-h-screen bg-gray-100 flex justify-center items-center p-4">
-        <div className="bg-[#F5C469] shadow-xl rounded-2xl w-full max-w-3xl p-8">
-          <div className="border-b pb-4 mb-6">
-            <h2 className="text-2xl font-bold text-gray-800">SHG Profile</h2>
-            <p className="text-sm text-gray-500">Self Help Group Information</p>
-          </div>
+     <div className="bg-[#dddddd] min-h-screen p-6">
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <p className="text-sm text-gray-500 mb-1">SHG Name</p>
-              <div className="bg-gray-100 rounded-lg px-4 py-2 font-medium text-gray-800">
-                {profileData?.name_of_shg || "Not Available"}
-              </div>
-            </div>
+  {/* Page Header */}
+  <div className="mb-6 bg-white rounded-2xl shadow p-6">
+    <h2 className="text-3xl font-bold text-[#333333]">
+      SHG Profile
+    </h2>
+    <p className="text-sm text-gray-500 mt-1">
+      Self Help Group information overview
+    </p>
+  </div>
 
-            <div>
-              <p className="text-sm text-gray-500 mb-1">Registration Number</p>
-              <div className="bg-gray-100 rounded-lg px-4 py-2 font-medium text-gray-800">
-                {profileData?.registration_number || "Not Available"}
-              </div>
-            </div>
+  {/* Profile Card */}
+  <div className="bg-[#F5C469] rounded-2xl shadow-lg p-8">
 
-            <div>
-              <p className="text-sm text-gray-500 mb-1">Contact Number</p>
-              <div className="bg-gray-100 rounded-lg px-4 py-2 font-medium text-gray-800">
-                {profileData?.contact_number || "Not Available"}
-              </div>
-            </div>
+    <h3 className="text-xl font-bold text-[#333333] mb-6">
+      Group Details
+    </h3>
 
-            <div>
-              <p className="text-sm text-gray-500 mb-1">Village</p>
-              <div className="bg-gray-100 rounded-lg px-4 py-2 font-medium text-gray-800">
-                {profileData?.village || "Not Available"}
-              </div>
-            </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-            <div>
-              <p className="text-sm text-gray-500 mb-1">District</p>
-              <div className="bg-gray-100 rounded-lg px-4 py-2 font-medium text-gray-800">
-                {profileData?.district || "Not Available"}
-              </div>
-            </div>
-
-            <div>
-              <p className="text-sm text-gray-500 mb-1">Type of SHG</p>
-              <div className="bg-gray-100 rounded-lg px-4 py-2 font-medium text-gray-800">
-                {profileData?.type_of_shg || "Not Available"}
-              </div>
-            </div>
-
-            <div>
-              <p className="text-sm text-gray-500 mb-1">Date of Formation</p>
-              <div className="bg-gray-100 rounded-lg px-4 py-2 font-medium text-gray-800">
-                {profileData?.date_of_formation || "Not Available"}
-              </div>
-            </div>
-
-            <div className="md:col-span-2">
-              <p className="text-sm text-gray-500 mb-1">Address</p>
-              <div className="bg-gray-100 rounded-lg px-4 py-2 font-medium text-gray-800">
-                {profileData?.address || "Not Available"}
-              </div>
-            </div>
-          </div>
+      {/* Field */}
+      <div>
+        <p className="text-xs font-semibold uppercase text-gray-700 mb-1">
+          SHG Name
+        </p>
+        <div className="bg-white rounded-xl px-4 py-3 font-medium text-[#333333] shadow-sm">
+          {profileData?.name_of_shg || "Not Available"}
         </div>
       </div>
+
+      <div>
+        <p className="text-xs font-semibold uppercase text-gray-700 mb-1">
+          Registration Number
+        </p>
+        <div className="bg-white rounded-xl px-4 py-3 font-medium text-[#333333] shadow-sm">
+          {profileData?.registration_number || "Not Available"}
+        </div>
+      </div>
+
+      <div>
+        <p className="text-xs font-semibold uppercase text-gray-700 mb-1">
+          Contact Number
+        </p>
+        <div className="bg-white rounded-xl px-4 py-3 font-medium text-[#333333] shadow-sm">
+          {profileData?.contact_number || "Not Available"}
+        </div>
+      </div>
+
+      <div>
+        <p className="text-xs font-semibold uppercase text-gray-700 mb-1">
+          Village
+        </p>
+        <div className="bg-white rounded-xl px-4 py-3 font-medium text-[#333333] shadow-sm">
+          {profileData?.village || "Not Available"}
+        </div>
+      </div>
+
+      <div>
+        <p className="text-xs font-semibold uppercase text-gray-700 mb-1">
+          District
+        </p>
+        <div className="bg-white rounded-xl px-4 py-3 font-medium text-[#333333] shadow-sm">
+          {profileData?.district || "Not Available"}
+        </div>
+      </div>
+
+      <div>
+        <p className="text-xs font-semibold uppercase text-gray-700 mb-1">
+          Type of SHG
+        </p>
+        <div className="bg-white rounded-xl px-4 py-3 font-medium text-[#333333] shadow-sm">
+          {profileData?.type_of_shg || "Not Available"}
+        </div>
+      </div>
+
+      <div>
+        <p className="text-xs font-semibold uppercase text-gray-700 mb-1">
+          Date of Formation
+        </p>
+        <div className="bg-white rounded-xl px-4 py-3 font-medium text-[#333333] shadow-sm">
+          {profileData?.date_of_formation || "Not Available"}
+        </div>
+      </div>
+
+      {/* Full-width Address */}
+      <div className="md:col-span-2">
+        <p className="text-xs font-semibold uppercase text-gray-700 mb-1">
+          Address
+        </p>
+        <div className="bg-white rounded-xl px-4 py-3 font-medium text-[#333333] shadow-sm">
+          {profileData?.address || "Not Available"}
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
     </>
   );
 };
