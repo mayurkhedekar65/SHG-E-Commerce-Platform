@@ -35,7 +35,7 @@ const Signin = () => {
     } else {
       try {
         const response = await axios.post(
-          "http://127.0.0.1:8000/shgloginform/shg_login/",
+          "http://127.0.0.1:8000/loginform/user_login/",
           FormData,
         );
 
@@ -47,7 +47,7 @@ const Signin = () => {
           password: "",
         });
         alert("login successfull");
-        navigate("/adminpanel");
+        navigate("/");
       } catch (error) {
         console.error("error in submitting form", error);
         alert("error in submitting form.please try again !");
