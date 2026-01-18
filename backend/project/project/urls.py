@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
-from main.views import group_data,product_data
+from main.views import group_data,get_products
 from Products.views import get_products_data,get_group_profile_data
 from django.conf import settings 
 from django.conf.urls.static import static
@@ -24,7 +24,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('products/',product_data),
+    path('products/',get_products),
     path('shggroups/',group_data),
     path('groupform/',include('groups.urls')),
     path('userform/',include('Customers.urls')),
