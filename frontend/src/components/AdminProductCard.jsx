@@ -1,7 +1,7 @@
 import React from "react";
 import { Edit2, Eye, Trash2 } from "lucide-react";
 
-const AdminProductCard = ({image,price,category,stock, onEdit, onDelete }) => {
+const AdminProductCard = ({image,price,category,stock, onEdit, onDelete,id }) => {
 
 
   const getStatusClass = (s) => {
@@ -87,7 +87,7 @@ const AdminProductCard = ({image,price,category,stock, onEdit, onDelete }) => {
       </button>
 
       <button
-        onClick={() => onDelete && onDelete(id)}
+        onClick={onDelete}
         className="flex items-center justify-center gap-2 px-3 py-2
                    text-sm font-semibold rounded-lg
                    bg-red-500 text-white

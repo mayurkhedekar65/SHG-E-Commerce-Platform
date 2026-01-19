@@ -27,11 +27,28 @@ const AdminPanel = () => {
       }
     };
     fetchProducts();
-  }, []);
+    const timeout=setInterval(()=>{
+           fetchProducts()
+    },2000)
+    return ()=>clearInterval(timeout)
+  }, [setProductList]);
 
   const handleDelete = (id) => {
     if (window.confirm("Delete this product?")) {
-      setProductList((prev) => prev.filter((p) => p.id !== id));
+      try {
+        axios.post(
+          `http://127.0.0.1:8000/delete_product/${id}/`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            },
+          },
+        );
+        alert("product deleted successfully");
+      } catch {
+        console.error("product deleted failed");
+      }
     }
   };
 
@@ -116,14 +133,14 @@ const AdminPanel = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {productList.map((product) => (
                   <AdminProductCard
+                    id={product.id}
                     key={product.id}
+                    onDelete={() => handleDelete(product.id)}
                     image={product.image}
                     price={product.price}
                     category={product.category}
                     stock={product.stock_quantity}
                     status={product.status}
-                    id={product.id}
-                    onDelete={handleDelete}
                     productInfo={product}
                   />
                 ))}
