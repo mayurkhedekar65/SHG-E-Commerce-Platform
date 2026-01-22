@@ -13,3 +13,9 @@ class Products(models.Model):
 class Category(models.Model):
     category_name = models.CharField(max_length=50, null=False, blank=False, unique=True)
     description = models.TextField(null=True, blank=True)
+
+
+class Cart_Items(models.Model):
+    user_id = models.ForeignKey('Customers.CustomerForm', on_delete=models.CASCADE)
+    product_id = models.ForeignKey(Products, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)

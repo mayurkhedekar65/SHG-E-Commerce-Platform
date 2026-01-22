@@ -35,4 +35,7 @@ class Order_Items(models.Model):
     shg_groups_id = models.ForeignKey(Shg_Group_Registration, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
     price_at_time_of_order = models.DecimalField(max_digits=10, decimal_places=2, null=False, blank=False)
+    action = models.CharField(choices=(('APPROVED', 'Approved'), ('REJECTED', 'Rejected')), max_length=10, null=True, blank=True)
+    shipped_order = models.BooleanField(default=False)
+    delivered_order = models.BooleanField(default=False)
 
