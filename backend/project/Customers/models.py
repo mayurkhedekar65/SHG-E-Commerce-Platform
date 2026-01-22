@@ -12,7 +12,7 @@ class CustomerForm(models.Model):
 
 
 class Customer_Orders(models.Model):
-    customer_id= models.ForeignKey(CustomerForm, on_delete=models.CASCADE)
+    customer_id= models.ForeignKey(CustomerForm, on_delete=models.CASCADE , null = True, blank = True)
     order_date = models.DateField(auto_now_add=True)
     total_amount = models.DecimalField(max_digits=10, decimal_places=2, null=False, blank=False)
     shipping_address = models.CharField(max_length=100, null=False, blank=False)

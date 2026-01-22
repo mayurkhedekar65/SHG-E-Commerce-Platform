@@ -12,6 +12,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.tokens import RefreshToken
+from groups.models import Order_Items
+from Customers.models import CustomerForm
+from rest_framework.decorators import api_view, permission_classes
 
 # Create your views here.
 
@@ -60,8 +63,7 @@ class SubmitRegistrationForm(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class AdminLogin(APIView):
-    
+class AdminLogin(APIView):   
     permission_classes = [] 
     authentication_classes = []  
     def post(self, request, format=None):
@@ -112,3 +114,24 @@ class AdminPanelView(APIView):
             # If the form is invalid, print the errors
             print("Serializer Errors:", serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def approve_or_reject_order(request):
+    user_id = CustomerForm.objects.get(customer_id=request.user.id)
+    Shg_id =  Shg_Group_Registration.objects.get(shg_id=request.user.id)
+    order_id = request.data.get("order_id")
+    action = request.data.get("action") 
+    try:
+        order_item = Order_Items.objects.get(id=order_id, shg_groups_id=Shg_id)
+        if action in ['APPROVED', 'REJECTED']:
+            order_item.action = action
+            order_item.save()
+            return Response({"message": f"Order {action.lower()} successfully"}, status=status.HTTP_200_OK)
+        else:
+            return Response({"message": "Invalid action"}, status=status.HTTP_400_BAD_REQUEST)
+    except Order_Items.DoesNotExist:
+        return Response({"message": "Order item not found"}, status=status.HTTP_404_NOT_FOUND)
+
+
