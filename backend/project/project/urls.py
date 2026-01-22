@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from main.views import get_products ,group_data
-from Products.views import get_products_data,get_group_profile_data,delete_product
+from Products.views import get_products_data,get_group_profile_data,delete_product, update_Product
 from Customers.views import get_username,get_user_profile_data
 from django.conf import settings 
 from django.conf.urls.static import static
@@ -37,6 +37,7 @@ urlpatterns = [
     path('getusername/',get_username),
     path('get_user_profile/',get_user_profile_data),
     path('delete_product/<int:id>/',delete_product),
+    path("adminpanel/updateproduct/<int:id>/",update_Product,),
     
     
     

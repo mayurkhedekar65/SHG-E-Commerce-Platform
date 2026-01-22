@@ -56,12 +56,13 @@ const AddProductForm = ({ isOpen, onClose, onSubmit, initialData }) => {
         ? `http://127.0.0.1:8000/adminpanel/updateproduct/${initialData.id}/` 
         : "http://127.0.0.1:8000/adminpanel/addproduct/";
       
-      const response = await axios.post(url, data, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await axios.patch(url, data, {
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+    "Content-Type": "multipart/form-data",
+  },
+});
+
 
       alert(isEditing ? "Product updated successfully!" : "Product added successfully!");
       onSubmit();
