@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import AdminProductCard from "../components/AdminProductCard";
 import AddProductForm from "../components/AddProductForm.jsx";
+import GroupProfile from "./GroupProfile.jsx"
 
 const AdminPanel = () => {
   const [productList, setProductList] = useState([]);
@@ -106,7 +107,7 @@ const AdminPanel = () => {
             )}
           </>
         )}
-        {activeSection === "profile" && <SHGProfilePanel />}
+        {activeSection === "profile" && <GroupProfile />}
       </main>
 
       {isModalOpen && (
