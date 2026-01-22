@@ -20,12 +20,8 @@ const ShgGroups = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://127.0.0.1:8000/shggroups/", {
-          // headers: {
-          //   Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-          // },
-        });
-        setGroups(response.data["shg_groups_list"]);
+        const response = await axios.get("http://127.0.0.1:8000/get_grp_profile/");
+        setGroups(response.data["shg_grp_details"]);
       } catch {
         console.error("groups not available...");
       }
