@@ -15,7 +15,7 @@ const AdminPanel = () => {
 
   const fetchProducts = async () => {
     try {
-      const res = await axios.get("http://127.0.0.1:8000/get_products/", {
+      const res = await axios.get("http://127.0.0.1:8000/get_group_products/", {
         headers: { Authorization: `Bearer ${localStorage.getItem("access_token")}` },
       });
       setProductList(res.data.products_list);
