@@ -96,7 +96,6 @@ def get_username(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_user_profile_data(request):
-    # username = User.objects.filter(id=request.user.id).values("email")
     user_details=CustomerForm.objects.filter(customer_id=request.user.id).values("customer_name","customer_email","phone_number",
 "address")
     return Response({"user_details": user_details})

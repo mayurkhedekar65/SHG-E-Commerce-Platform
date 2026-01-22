@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.authentication import SessionAuthentication
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated , AllowAny
 from groups.models import Shg_Group_Registration
 from Products.models import Products
 from django.core import serializers
@@ -23,12 +23,19 @@ def get_products_data(request, format=None):
 
 
 @api_view(['GET'])
+@permission_classes([AllowAny])
+def get_groups_data(request, format=None):
+    shg_grp_list = Shg_Group_Registration.objects.values(
+        "name_of_shg", "date_of_formation", "registration_number", "contact_number", "village", "taluka", "district", "type_of_shg", "address")
+    return Response({"shg_grp_list": shg_grp_list})
+
+
+@api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_group_profile_data(request, format=None):
     shg_grp_details = Shg_Group_Registration.objects.filter(shg_id=request.user.id).values(
         "name_of_shg", "date_of_formation", "registration_number", "contact_number", "village", "taluka", "district", "type_of_shg", "address")
     return Response({"shg_grp_details": shg_grp_details})
-
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -39,7 +46,7 @@ def delete_product(request,id,format=None):
 
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticated])
-def update_Product(request,id):
+def Update_Product(request,id):
     try:
         product_id = Products.objects.get(id=id)
     except Products.DoesNotExist:

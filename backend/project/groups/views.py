@@ -150,4 +150,3 @@ def is_shipped(request):
         return Response({"message": "Order marked as shipped successfully"}, status=status.HTTP_200_OK)
     except Order_Items.DoesNotExist:
         return Response({"message": "Order item not found"}, status=status.HTTP_404_NOT_FOUND)
-
