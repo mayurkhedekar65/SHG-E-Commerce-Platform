@@ -20,11 +20,18 @@ def get_products_data(request, format=None):
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
+def get_groups_data(request, format=None):
+    shg_grp_list = Shg_Group_Registration.objects.values(
+        "name_of_shg", "date_of_formation", "registration_number", "contact_number", "village", "taluka", "district", "type_of_shg", "address")
+    return Response({"shg_grp_list": shg_grp_list})
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_group_profile_data(request, format=None):
-    shg_grp_details = Shg_Group_Registration.objects.values(
+    shg_grp_details = Shg_Group_Registration.objects.filter(shg_id=request.user.id).values(
         "name_of_shg", "date_of_formation", "registration_number", "contact_number", "village", "taluka", "district", "type_of_shg", "address")
     return Response({"shg_grp_details": shg_grp_details})
-
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])

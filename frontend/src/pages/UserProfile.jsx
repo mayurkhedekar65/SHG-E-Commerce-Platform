@@ -102,71 +102,67 @@ const UserProfile = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Pending Orders */}
             <div className="bg-white rounded-2xl shadow-md p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-xl font-bold text-gray-800">
-            Pending Orders
-          </h3>
-          <span className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs font-semibold">
-            Pending
-          </span>
-        </div>
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-xl font-bold text-gray-800">
+                  Pending Orders
+                </h3>
+                <span className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs font-semibold">
+                  Pending
+                </span>
+              </div>
 
-        <ul className="space-y-3">
-          {pendingOrders?.length ? (
-            pendingOrders.map((order, index) => (
-              <li
-                key={index}
-                className="flex justify-between items-center bg-gray-100 rounded-lg p-3"
-              >
-                <span className="font-medium text-gray-700">
-                  {order.itemName}
-                </span>
-                <span className="text-sm text-gray-500">
-                  Qty: {order.quantity}
-                </span>
-              </li>
-            ))
-          ) : (
-            <p className="text-sm text-gray-500">
-              No pending orders
-            </p>
-          )}
-        </ul>
-      </div>
+              <ul className="space-y-3">
+                {/* {pendingOrders?.length ? (
+                  pendingOrders.map((order, index) => (
+                    <li
+                      key={index}
+                      className="flex justify-between items-center bg-gray-100 rounded-lg p-3"
+                    >
+                      <span className="font-medium text-gray-700">
+                        {order.itemName}
+                      </span>
+                      <span className="text-sm text-gray-500">
+                        Qty: {order.quantity}
+                      </span>
+                    </li>
+                  ))
+                ) : (
+                  <p className="text-sm text-gray-500">No pending orders</p>
+                )} */}
+              </ul>
+            </div>
 
             {/* { Delivered Orders } */}
-            <div className="bg-white rounded-2xl shadow-md p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-xl font-bold text-gray-800">
-            Delivered Orders
-          </h3>
-          <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-semibold">
-            Delivered
-          </span>
-        </div>
+            {/* <div className="bg-white rounded-2xl shadow-md p-6">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-xl font-bold text-gray-800">
+                  Delivered Orders
+                </h3>
+                <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-semibold">
+                  Delivered
+                </span>
+              </div>
 
-        <ul className="space-y-3">
-          {deliveredOrders?.length ? (
-            deliveredOrders.map((order, index) => (
-              <li
-                key={index}
-                className="flex justify-between items-center bg-gray-100 rounded-lg p-3"
-              >
-                <span className="font-medium text-gray-700">
-                  {order.itemName}
-                </span>
-                <span className="text-sm text-gray-500">
-                  Qty: {order.quantity}
-                </span>
-              </li>
-            ))
-          ) : (
-            <p className="text-sm text-gray-500">
-              No delivered orders
-            </p>
-          )}
-        </ul>
-      </div>
+              <ul className="space-y-3">
+                {deliveredOrders?.length ? (
+                  deliveredOrders.map((order, index) => (
+                    <li
+                      key={index}
+                      className="flex justify-between items-center bg-gray-100 rounded-lg p-3"
+                    >
+                      <span className="font-medium text-gray-700">
+                        {order.itemName}
+                      </span>
+                      <span className="text-sm text-gray-500">
+                        Qty: {order.quantity}
+                      </span>
+                    </li>
+                  ))
+                ) : (
+                  <p className="text-sm text-gray-500">No delivered orders</p>
+                )}
+              </ul>
+            </div> */}
           </div>
         </main>
       </div>
