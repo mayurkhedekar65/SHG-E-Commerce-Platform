@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from Products.models import Products
 from groups.models import Shg_Group_Registration
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated , AllowAny
 
 # Create your views here.
 
@@ -159,7 +159,7 @@ def get_products(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])
 def group_data(request):
     # data = [
     #     {

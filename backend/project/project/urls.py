@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
-from main.views import group_data,get_products
+from main.views import get_products ,group_data
 from Products.views import get_products_data,get_group_profile_data,delete_product
 from Customers.views import get_username,get_user_profile_data
 from django.conf import settings 

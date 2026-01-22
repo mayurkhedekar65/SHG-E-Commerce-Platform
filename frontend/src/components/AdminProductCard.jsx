@@ -1,8 +1,16 @@
 import React from "react";
 import { Edit2, Eye, Trash2 } from "lucide-react";
 
-const AdminProductCard = ({image,price,category,stock, onEdit, onDelete,id }) => {
-
+const AdminProductCard = ({ 
+  image, 
+  price, 
+  category, 
+  stock_quantity, 
+  product_name, 
+  status, 
+  onEdit, 
+  onDelete 
+}) => {
 
   const getStatusClass = (s) => {
     switch (s) {
@@ -12,95 +20,51 @@ const AdminProductCard = ({image,price,category,stock, onEdit, onDelete,id }) =>
       default: return "bg-gray-100 text-gray-800";
     }
   };
-  
 
   return (
-    <div className="bg-white rounded-2xl shadow-md overflow-hidden 
-                transition-all duration-300 hover:-translate-y-1 hover:shadow-xl 
-                w-full max-w-xs">
+    <div className="bg-white rounded-2xl shadow-md overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl w-full max-w-xs">
+      <img
+        src={`http://127.0.0.1:8000/media/${image}`}
+        alt={product_name}
+        className="w-full h-48 object-cover bg-gray-100"
+        onError={(e) => (e.target.src = "https://placehold.co/600x400/F5C469/333?text=Image+Unavailable")}
+      />
 
-  {/* Image */}
-  <img
-    src={`http://127.0.0.1:8000/media/${image}`}
-    alt={name}
-    className="w-full h-48 object-cover bg-gray-100"
-    onError={(e) =>
-      (e.target.src =
-        "https://placehold.co/600x400/F5C469/333?text=Image+Unavailable")
-    }
-  />
+      <div className="p-5">
+        <div className="flex justify-between items-center mb-3">
+          <span className={`text-xs font-semibold px-3 py-1 rounded-full ${getStatusClass(status || "Active")}`}>
+            {status || "Active"}
+          </span>
+          <span className="text-xs text-gray-500">
+            Stock: <span className="font-semibold">{stock_quantity}</span>
+          </span>
+        </div>
 
-  {/* Content */}
-  <div className="p-5">
+        <h3 className="text-lg font-bold text-[#333333] truncate mb-1">{product_name}</h3>
+        <p className="text-sm text-gray-500 mb-2">{category}</p>
+        <p className="text-xl font-bold text-[#333333] mb-4">₹{parseFloat(price).toFixed(2)}</p>
 
-    {/* Status & Stock */}
-    <div className="flex justify-between items-center mb-3">
-      <span
-        className={`text-xs font-semibold px-3 py-1 rounded-full 
-        ${getStatusClass(status)}`}
-      >
-        {status}
-      </span>
+        <div className="grid grid-cols-3 gap-2">
+          <button
+            onClick={onEdit}
+            className="flex items-center justify-center gap-1 px-2 py-2 text-xs font-semibold rounded-lg bg-[#42a6f8] text-white hover:bg-blue-500 transition"
+          >
+            <Edit2 size={14} /> Edit
+          </button>
 
-      <span className="text-xs text-gray-500">
-        Stock: <span className="font-semibold">{stock}</span>
-      </span>
+          <button className="flex items-center justify-center gap-1 px-2 py-2 text-xs font-semibold rounded-lg bg-[#333333] text-[#dddddd] hover:bg-zinc-700 transition">
+            <Eye size={14} /> View
+          </button>
+
+          <button
+            onClick={onDelete}
+            className="flex items-center justify-center gap-1 px-2 py-2 text-xs font-semibold rounded-lg bg-red-500 text-white hover:bg-red-600 transition"
+          >
+            <Trash2 size={14} /> Delete
+          </button>
+        </div>
+      </div>
     </div>
-
-    {/* Title */}
-    <h3 className="text-lg font-bold text-[#333333] truncate mb-1">
-      {name}
-    </h3>
-
-    {/* Category */}
-    <p className="text-sm text-gray-500 mb-2">
-      {category}
-    </p>
-
-    {/* Price */}
-    <p className="text-xl font-bold text-[#333333] mb-4">
-      ₹{parseFloat(price).toFixed(2)}
-    </p>
-
-    {/* Actions */}
-    <div className="grid grid-cols-3 gap-2">
-
-      <button
-        onClick={() => onEdit && onEdit(productInfo)}
-        className="flex items-center justify-center gap-2 px-3 py-2
-                   text-sm font-semibold rounded-lg
-                   bg-[#42a6f8] text-white
-                   hover:bg-blue-500 transition"
-      >
-        <Edit2 size={16} />
-        Edit
-      </button>
-
-      <button
-        className="flex items-center justify-center gap-2 px-3 py-2
-                   text-sm font-semibold rounded-lg
-                   bg-[#333333] text-[#dddddd]
-                   hover:bg-zinc-700 transition"
-      >
-        <Eye size={16} />
-        View
-      </button>
-
-      <button
-        onClick={onDelete}
-        className="flex items-center justify-center gap-2 px-3 py-2
-                   text-sm font-semibold rounded-lg
-                   bg-red-500 text-white
-                   hover:bg-red-600 transition"
-      >
-        <Trash2 size={16} />
-        Delete
-      </button>
-
-    </div>
-  </div>
-</div>
-
   );
 };
 

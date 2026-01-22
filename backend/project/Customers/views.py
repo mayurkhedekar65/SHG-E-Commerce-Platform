@@ -197,3 +197,6 @@ def purchase_now(request):
             return Response({"message": " Insufficient stock for the product"}, status = status.HTTP_400_BAD_REQUEST)
     else:
         return Response({"message": " Products does not exists"}, status = status.HTTP_400_BAD_REQUEST)
+    
+
+    

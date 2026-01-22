@@ -101,7 +101,7 @@ const UserProfile = () => {
           {/* Orders Section */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Pending Orders */}
-            {/* <div className="bg-white rounded-2xl shadow-md p-6">
+            <div className="bg-white rounded-2xl shadow-md p-6">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-xl font-bold text-gray-800">
             Pending Orders
@@ -132,10 +132,10 @@ const UserProfile = () => {
             </p>
           )}
         </ul>
-      </div> */}
+      </div>
 
-            {/* Delivered Orders */}
-            {/* <div className="bg-white rounded-2xl shadow-md p-6">
+            {/* { Delivered Orders } */}
+            <div className="bg-white rounded-2xl shadow-md p-6">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-xl font-bold text-gray-800">
             Delivered Orders
@@ -166,7 +166,7 @@ const UserProfile = () => {
             </p>
           )}
         </ul>
-      </div> */}
+      </div>
           </div>
         </main>
       </div>
