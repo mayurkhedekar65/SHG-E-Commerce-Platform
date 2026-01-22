@@ -33,9 +33,18 @@ def get_group_profile_data(request, format=None):
         "name_of_shg", "date_of_formation", "registration_number", "contact_number", "village", "taluka", "district", "type_of_shg", "address")
     return Response({"shg_grp_details": shg_grp_details})
 
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def delete_product(request,id,format=None):
     product_id=id
     Products.objects.filter(id=product_id).delete()
     return Response({"message":"product deleted successfully"})
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_group_products_data(request, format=None):
+    products_list = Products.objects.filter(shg_group_id_id=request.user.id).values("id",
+        "product_name", "category", "description", "image", "price", "stock_quantity")
+    return Response({"products_list": products_list, })
