@@ -13,6 +13,13 @@ const Signin = () => {
       navigate("/signup");
     }, 1500);
   };
+  const showLoader2 = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(true);
+      navigate("/shglogin");
+    }, 1500);
+  };
   const [FormData, setFormData] = useState({
     email: "",
     password: "",
@@ -121,6 +128,20 @@ const Signin = () => {
                       onClick={showLoader}
                     >
                       signup
+                    </button>
+                  </div>
+                </div>
+                <div className="flex justify-center items-center gap-2 capitalize mt-3 text-[15px]">
+                  <div className="text-[#333333]">
+                    <p>Sign in as SHG?</p>
+                  </div>
+                  <div>
+                    <button
+                      type="button"
+                      className="capitalize text-blue-500"
+                      onClick={showLoader2}
+                    >
+                      signin
                     </button>
                   </div>
                 </div>

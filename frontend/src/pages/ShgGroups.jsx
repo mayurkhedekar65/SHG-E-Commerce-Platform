@@ -21,9 +21,9 @@ const ShgGroups = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get("http://127.0.0.1:8000/shggroups/", {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-          },
+          // headers: {
+          //   Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          // },
         });
         setGroups(response.data["shg_groups_list"]);
       } catch {

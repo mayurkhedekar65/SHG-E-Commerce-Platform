@@ -50,7 +50,8 @@ class SubmitRegistrationForm(APIView):
                                                   taluka=taluka,
                                                   district=district,
                                                   type_of_shg=type_of_shg,
-                                                  address=address)
+                                                  address=address
+                                                  )
             
             # Auto-login the user after registration
             user = authenticate(username=shg_username, password=shg_password)
@@ -116,7 +117,7 @@ class AdminPanelView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
 
-@api_view(['GET'])
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def approve_or_reject_order(request):
     user_id = CustomerForm.objects.get(customer_id=request.user.id)
@@ -124,14 +125,29 @@ def approve_or_reject_order(request):
     order_id = request.data.get("order_id")
     action = request.data.get("action") 
     try:
-        order_item = Order_Items.objects.get(id=order_id, shg_groups_id=Shg_id)
+        order_item = Order_Items.objects.get(id=order_id, shg_groups_id=Shg_id, user_id=user_id)
         if action in ['APPROVED', 'REJECTED']:
             order_item.action = action
             order_item.save()
+            if action == 'APPROVED':
+                product = order_item.product_id
+                product.stock_quantity -= order_item.quantity
+                product.save()
             return Response({"message": f"Order {action.lower()} successfully"}, status=status.HTTP_200_OK)
         else:
             return Response({"message": "Invalid action"}, status=status.HTTP_400_BAD_REQUEST)
     except Order_Items.DoesNotExist:
         return Response({"message": "Order item not found"}, status=status.HTTP_404_NOT_FOUND)
-
+    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def is_shipped(request):
+    order_id = request.data.get("order_id")
+    try:
+        order_item = Order_Items.objects.get(order_id=order_id)   
+        order_item.order_status = 'SHIPPED'
+        order_item.save() 
+        return Response({"message": "Order marked as shipped successfully"}, status=status.HTTP_200_OK)
+    except Order_Items.DoesNotExist:
+        return Response({"message": "Order item not found"}, status=status.HTTP_404_NOT_FOUND)
 
