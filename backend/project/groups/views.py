@@ -25,8 +25,8 @@ class SubmitRegistrationForm(APIView):
         serializer = ShgFormSerializer(data=request.data)
 
         if serializer.is_valid():
-            shg_username = serializer.validated_data['email']
-            shg_password = serializer.validated_data['password']
+            shg_username = request.data.get("email")
+            shg_password = request.data.get("password")
 
             shg_user = User.objects.create(
                 username=shg_username,
