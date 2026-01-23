@@ -45,7 +45,7 @@ def delete_product(request,id,format=None):
     Products.objects.filter(id=product_id).delete()
     return Response({"message":"product deleted successfully"})
 
-@api_view(['PATCH'])
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def Update_Product(request,id):
     try:
@@ -67,6 +67,7 @@ def Update_Product(request,id):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_group_products_data(request, format=None):
-    products_list = Products.objects.filter(shg_group_id_id=request.user.id).values("id",
+    grp_id = Shg_Group_Registration.objects.get(shg_id=request.user.id)
+    products_list = Products.objects.filter(shg_group_id_id=grp_id).values("id",
         "product_name", "category", "description", "image", "price", "stock_quantity")
     return Response({"products_list": products_list, })

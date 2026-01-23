@@ -7,7 +7,7 @@ from Products.models import Products
 from groups.serializers import ShgFormSerializer, AdminPanelSerializer
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 # --- FIX 1: CORRECTED TYPO AND IMPORTED PARSERS/AUTH ---
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework_simplejwt.authentication import JWTAuthentication
@@ -20,48 +20,46 @@ from rest_framework.decorators import api_view, permission_classes
 
 
 class SubmitRegistrationForm(APIView):
-    # (This class is fine)
+    permission_classes = [AllowAny]
+
     def post(self, request, format=None):
         serializer = ShgFormSerializer(data=request.data)
 
         if serializer.is_valid():
-            shg_username = request.data.get('email')
-            shg_password = request.data.get('password')
-            name_of_shg = request.data.get('name_of_shg')
-            date_of_formation = request.data.get('date_of_formation')
-            registration_number = request.data.get('registration_number')
-            contact_number = request.data.get('contact_number')
-            village = request.data.get('village')
-            taluka = request.data.get('taluka')
-            district = request.data.get('district')
-            type_of_shg = request.data.get('type_of_shg')
-            address = request.data.get('address')
+            shg_username = serializer.validated_data['email']
+            shg_password = serializer.validated_data['password']
 
             shg_user = User.objects.create(
-                username=shg_username, email=shg_username, is_staff=True)
+                username=shg_username,
+                email=shg_username,
+                is_staff=True
+            )
             shg_user.set_password(shg_password)
             shg_user.save()
-            Shg_Group_Registration.objects.create(shg=shg_user,
-                                                  name_of_shg=name_of_shg,
-                                                  date_of_formation=date_of_formation,
-                                                  registration_number=registration_number,
-                                                  contact_number=contact_number,
-                                                  village=village,
-                                                  taluka=taluka,
-                                                  district=district,
-                                                  type_of_shg=type_of_shg,
-                                                  address=address
-                                                  )
-            
-            # Auto-login the user after registration
-            user = authenticate(username=shg_username, password=shg_password)
-            if user is not None:
-                return Response({"message": "Group Registered successfully! You are now logged in."}, status=status.HTTP_201_CREATED)
-            
-            return Response({"message": "Group Registered successfully! Please log in."}, status=status.HTTP_201_CREATED)
-        else:
-            print(serializer.errors)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+            Shg_Group_Registration.objects.create(
+                shg=shg_user,
+                name_of_shg=serializer.validated_data['name_of_shg'],
+                date_of_formation=serializer.validated_data['date_of_formation'],
+                registration_number=serializer.validated_data['registration_number'],
+                contact_number=serializer.validated_data['contact_number'],
+                village=serializer.validated_data['village'],
+                taluka=serializer.validated_data['taluka'],
+                district=serializer.validated_data['district'],
+                type_of_shg=serializer.validated_data['type_of_shg'],
+                address=serializer.validated_data['address']
+            )
+
+            # 🔑 JWT generation
+            refresh = RefreshToken.for_user(shg_user)
+
+            return Response({
+                "message": "Group registered & logged in successfully",
+                "access": str(refresh.access_token),
+                "refresh": str(refresh)
+            }, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class AdminLogin(APIView):   
