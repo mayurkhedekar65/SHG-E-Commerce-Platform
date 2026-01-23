@@ -6,6 +6,9 @@ import { useNavigate } from "react-router-dom";
 
 const UserProfile = () => {
   const [profileData, setProfileData] = useState({});
+  const [pendingOrders,setPendingOrders]=useState([])
+  const [deliveredOrders,setDeliveredOrders]=useState([])
+
   const navigate = useNavigate();
   const logout = () => {
     localStorage.clear("access_token");
@@ -35,7 +38,7 @@ const UserProfile = () => {
         {/* Sidebar */}
         <aside className="w-64 bg-[#F5C469] shadow-xl hidden md:flex flex-col">
           <div className="p-6 border-b border-yellow-400">
-            <h2 className="text-2xl font-bold text-gray-800">SHG Dashboard</h2>
+            <h2 className="text-2xl font-bold text-gray-800">User Profile</h2>
             <p className="text-xs text-gray-700">Member Panel</p>
           </div>
 
@@ -112,7 +115,7 @@ const UserProfile = () => {
               </div>
 
               <ul className="space-y-3">
-                {/* {pendingOrders?.length ? (
+                {pendingOrders?.length ? (
                   pendingOrders.map((order, index) => (
                     <li
                       key={index}
@@ -128,12 +131,12 @@ const UserProfile = () => {
                   ))
                 ) : (
                   <p className="text-sm text-gray-500">No pending orders</p>
-                )} */}
+                )}
               </ul>
             </div>
 
             {/* { Delivered Orders } */}
-            {/* <div className="bg-white rounded-2xl shadow-md p-6">
+            <div className="bg-white rounded-2xl shadow-md p-6">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-xl font-bold text-gray-800">
                   Delivered Orders
@@ -162,7 +165,7 @@ const UserProfile = () => {
                   <p className="text-sm text-gray-500">No delivered orders</p>
                 )}
               </ul>
-            </div> */}
+            </div>
           </div>
         </main>
       </div>
