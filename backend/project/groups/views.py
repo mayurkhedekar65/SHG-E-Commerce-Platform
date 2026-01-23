@@ -7,7 +7,7 @@ from Products.models import Products
 from groups.serializers import ShgFormSerializer, AdminPanelSerializer
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated,AllowAny
 # --- FIX 1: CORRECTED TYPO AND IMPORTED PARSERS/AUTH ---
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework_simplejwt.authentication import JWTAuthentication
@@ -20,8 +20,7 @@ from rest_framework.decorators import api_view, permission_classes
 
 
 class SubmitRegistrationForm(APIView):
-    permission_classes = [AllowAny]
-
+    permission_classes=[AllowAny]
     def post(self, request, format=None):
         serializer = ShgFormSerializer(data=request.data)
 

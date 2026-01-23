@@ -67,27 +67,38 @@ const RegistrationForm = () => {
     ) {
       if (FormData["name_of_shg"] == "") {
         alert("please enter group name !");
-      } else if (FormData["date_of_formation"] == "") {
+      }
+      if (FormData["date_of_formation"] == "") {
         alert("please enter group registration date !");
-      } else if (FormData["registration_number"] == "") {
+      }
+      if (FormData["registration_number"] == "") {
         alert("please enter group registration number !");
-      } else if (FormData["contact_number"] == "") {
+      }
+      if (FormData["contact_number"] == "") {
         alert("please enter group contact number !");
-      } else if (FormData["contact_number"].length < 10) {
+      }
+      if (FormData["contact_number"].length < 10) {
         alert("contact number length cannot be less than 10 !");
-      } else if (FormData["village"] == "") {
+      }
+      if (FormData["village"] == "") {
         alert("please enter village!");
-      } else if (FormData["taluka"] == "") {
+      }
+      if (FormData["taluka"] == "") {
         alert("please enter taluka !");
-      } else if (FormData["district"] == "") {
+      }
+      if (FormData["district"] == "") {
         alert("please enter village !");
-      } else if (FormData["type_of_shg"] == "") {
+      }
+      if (FormData["type_of_shg"] == "") {
         alert("please enter type_of_shg !");
-      } else if (FormData["email"] == "") {
+      }
+      if (FormData["email"] == "") {
         alert("please enter email !");
-      } else if (FormData["password"] == "") {
+      }
+      if (FormData["password"] == "") {
         alert("please enter password !");
-      } else if (FormData["address"] == "") {
+      }
+      if (FormData["address"] == "") {
         alert("please enter Address !");
       }
     } else {
@@ -96,19 +107,25 @@ const RegistrationForm = () => {
         const response = await axios.post(
           "http://127.0.0.1:8000/groupform/submit_registration_form/",
           FormData,
-          {
-            withCredentials: true,
-            headers: {
-              "Content-Type": "application/json",
-              "X-CSRFToken": getCookie("csrftoken"),
-            },
-          }
         );
-        
-        alert(response.data["message"]);
+
+        alert("form submitted !");
+        setFormData({
+          name_of_shg: "",
+          date_of_formation: "",
+          registration_number: "",
+          contact_number: "",
+          village: "",
+          taluka: "",
+          district: "",
+          type_of_shg: "",
+          email: "",
+          password: "",
+          address: "",
+        });
+
         navigate("/adminpanel"); // Redirect to dashboard
         // -----------------------------------------------------
-
       } catch (error) {
         console.error("error in submitting form !", error);
         alert("error in submitting form.please try again !");
@@ -149,12 +166,12 @@ const RegistrationForm = () => {
                           </label>
                         </div>
                         <input
+                          name="name_of_shg"
                           className="border bg-[#dddddd] border-[#333333] w-70 h-13 md:w-80 md:h-12 mb-6 rounded-xl pl-3 placeholder:capitalize placeholder:text-[14px] placeholder:text-[#585858]"
                           type="text"
                           placeholder="eg., Mahalaxmi Mahila SHG"
                           onChange={handleChange}
                           value={FormData.name_of_shg}
-                          name="name_of_shg"
                         />
                       </div>
 
@@ -168,11 +185,11 @@ const RegistrationForm = () => {
                           </label>
                         </div>
                         <input
+                          name="date_of_formation"
                           className="border bg-[#dddddd] border-[#333333] w-70 h-13 md:w-80 md:h-12 mb-6 rounded-xl pl-3 placeholder:capitalize placeholder:text-[14px] text-[#585858]"
                           type="date"
                           onChange={handleChange}
                           value={FormData.date_of_formation}
-                          name="date_of_formation"
                         />
                       </div>
                     </div>
@@ -188,12 +205,12 @@ const RegistrationForm = () => {
                           </label>
                         </div>
                         <input
+                          name="registration_number"
                           className="border bg-[#dddddd] border-[#333333] w-70 h-13 md:w-80 md:h-12 mb-6 rounded-xl pl-3 placeholder:capitalize placeholder:text-[14px] placeholder:text-[#585858]"
                           type="text"
                           placeholder="eg., SHG-GOA-2025-017"
                           onChange={handleChange}
                           value={FormData.registration_number}
-                          name="registration_number"
                         />
                       </div>
                       <div>
@@ -206,12 +223,12 @@ const RegistrationForm = () => {
                           </label>
                         </div>
                         <input
+                          name="contact_number"
                           className="border bg-[#dddddd] border-[#333333] w-70 h-13 md:w-80 md:h-12 mb-6 rounded-xl pl-3 placeholder:capitalize placeholder:text-[14px] placeholder:text-[#585858]"
                           type="text"
                           placeholder="eg., 9146228061"
                           onChange={handleChange}
                           value={FormData.contact_number}
-                          name="contact_number"
                         />
                       </div>
                     </div>
@@ -227,12 +244,12 @@ const RegistrationForm = () => {
                           </label>
                         </div>
                         <input
+                          name="village"
                           className="border bg-[#dddddd] border-[#333333] w-70 h-13 md:w-80 md:h-12 mb-6 rounded-xl pl-3 placeholder:capitalize placeholder:text-[14px] placeholder:text-[#585858]"
                           type="text"
                           placeholder="eg., Keri,Panchawadi"
                           onChange={handleChange}
                           value={FormData.village}
-                          name="village"
                         />
                       </div>
                       <div>
@@ -245,12 +262,12 @@ const RegistrationForm = () => {
                           </label>
                         </div>
                         <input
+                          name="taluka"
                           className="border bg-[#dddddd] border-[#333333] w-70 h-13 md:w-80 md:h-12 mb-6 rounded-xl pl-3 placeholder:capitalize placeholder:text-[14px] placeholder:text-[#585858]"
                           type="text"
                           placeholder="eg., Sattari"
                           onChange={handleChange}
                           value={FormData.taluka}
-                          name="taluka"
                         />
                       </div>
                     </div>
@@ -310,12 +327,12 @@ const RegistrationForm = () => {
                           </label>
                         </div>
                         <input
+                          name="email"
                           className="border bg-[#dddddd] border-[#333333] w-70 h-13 md:w-80 md:h-12 mb-6 rounded-xl pl-3 placeholder:capitalize placeholder:text-[14px] placeholder:text-[#585858]"
                           type="text"
                           placeholder="eg., shaktienterprises@gmail.com"
                           onChange={handleChange}
                           value={FormData.email}
-                          name="email"
                         />
                       </div>
                       <div>
@@ -328,12 +345,12 @@ const RegistrationForm = () => {
                           </label>
                         </div>
                         <input
+                          name="password"
                           className="border bg-[#dddddd] border-[#333333] w-70 h-13 md:w-80 md:h-12 mb-6 rounded-xl pl-3 placeholder:capitalize placeholder:text-[14px] placeholder:text-[#585858]"
                           type="password"
                           placeholder="password"
                           onChange={handleChange}
                           value={FormData.password}
-                          name="password"
                         />
                       </div>
                     </div>
@@ -365,7 +382,7 @@ const RegistrationForm = () => {
                     </div>
                   </form>
                   <div className="flex justify-center  items-center  gap-2 capitalize mt-5  text-[15px]">
-                    <div  className="text-[#333333]">
+                    <div className="text-[#333333]">
                       <p>already have an account ?</p>
                     </div>
                     <div>
