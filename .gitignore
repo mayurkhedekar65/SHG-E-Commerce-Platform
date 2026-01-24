@@ -1,2 +1,11 @@
 node_modules/
 venv/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+
+

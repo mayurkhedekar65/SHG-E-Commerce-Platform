@@ -37,8 +37,10 @@ urlpatterns = [
     path('getusername/',get_username),
     path('get_user_profile/',get_user_profile_data),
     path('delete_product/<int:id>/',delete_product),
-    path("adminpanel/updateproduct/<int:id>/",Update_Product,
-)
+    path("adminpanel/updateproduct/<int:id>/",Update_Product),
+    path("cart/",include('Customers.urls')),
+    
+
     
     
     
