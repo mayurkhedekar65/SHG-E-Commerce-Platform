@@ -13,10 +13,11 @@ const CartPage = () => {
 
   const fetchCart = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/cart/", {
+      // Endpoint updated to match your include path: /cart/cart/
+      const response = await axios.get("http://127.0.0.1:8000/cart/cart/", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setCartItems(response.data.cart_items);
+      setCartItems(response.data.cart_items || []);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching cart", error);
@@ -49,16 +50,27 @@ const CartPage = () => {
 
   const removeItem = async (productId) => {
     try {
-      await axios.delete(`http://127.0.0.1:8000/cart/remove/${productId}/`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await axios.post(`http://127.0.0.1:8000/cart/remove_from_cart/`, 
+        { product_id: productId },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
       fetchCart();
     } catch (error) {
       alert("Failed to remove item");
     }
   };
 
-  const totalPrice = cartItems.reduce((acc, item) => acc + (item.product.Amount * item.quantity), 0);
+  const handleCheckout = async () => {
+    try {
+        // Example for purchasing the first item or logic can be expanded
+        alert("Processing your order...");
+    } catch (error) {
+        alert("Checkout failed");
+    }
+  };
+
+  // Keys updated to match your .values("product_name", "product_id__price", "quantity")
+  const totalPrice = cartItems.reduce((acc, item) => acc + (item.product_id__price * item.quantity), 0);
 
   if (loading) {
     return (
@@ -80,7 +92,6 @@ const CartPage = () => {
         animate={{ opacity: 1 }}
         className="max-w-7xl mx-auto"
       >
-        {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
           <div>
             <button 
@@ -97,7 +108,6 @@ const CartPage = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-          {/* CART LIST */}
           <div className="lg:col-span-8">
             <AnimatePresence mode="popLayout">
               {cartItems.length === 0 ? (
@@ -117,58 +127,52 @@ const CartPage = () => {
                 </motion.div>
               ) : (
                 <div className="space-y-6">
-                  {cartItems.map((item) => (
+                  {cartItems.map((item, index) => (
                     <motion.div 
                       layout
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: 20 }}
-                      key={item.id} 
+                      key={index} 
                       className="group bg-white p-6 rounded-4xl shadow-sm hover:shadow-xl transition-shadow duration-500 flex flex-col sm:flex-row items-center gap-8 border border-gray-50 relative overflow-hidden"
                     >
-                      {/* Product Image */}
-                      <div className="relative w-32 h-32 md:w-40 md:h-40 overflow-hidden rounded-2xl bg-gray-50">
-                        <img 
-                          src={`http://127.0.0.1:8000/media/${item.product.image}`} 
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
-                          alt={item.product.ProductName}
-                        />
+                      {/* Note: Your current view does not return image URL, using a placeholder icon or color box */}
+                      <div className="relative w-32 h-32 md:w-40 md:h-40 overflow-hidden rounded-2xl bg-gray-100 flex items-center justify-center">
+                         <FontAwesomeIcon icon={faBagShopping} className="text-gray-300 text-4xl" />
                       </div>
 
-                      {/* Info */}
                       <div className="flex-1 flex flex-col justify-between h-full py-2">
                         <div>
                           <div className="flex justify-between items-start">
-                            <h3 className="font-bold text-2xl text-[#333333] leading-tight mb-1">{item.product.ProductName}</h3>
+                            <h3 className="font-bold text-2xl text-[#333333] leading-tight mb-1">{item.product_name}</h3>
                             <button 
-                              onClick={() => removeItem(item.product.id)}
+                              onClick={() => removeItem(item.product_id)}
                               className="text-gray-300 hover:text-red-500 transition-colors p-2"
                             >
                               <FontAwesomeIcon icon={faTrash} />
                             </button>
                           </div>
-                          <p className="text-[#F5C469] font-bold text-lg mb-4">₹{item.product.Amount}</p>
+                          <p className="text-[#F5C469] font-bold text-lg mb-4">₹{item.product_id__price}</p>
                         </div>
                         
-                        {/* Controls */}
                         <div className="flex items-center justify-between mt-auto">
                           <div className="flex items-center gap-6 bg-[#F9F9F9] px-6 py-3 rounded-2xl border border-gray-100">
                             <button 
-                              onClick={() => updateQuantity(item.product.id, item.quantity, -1)} 
+                              onClick={() => updateQuantity(item.product_id, item.quantity, -1)} 
                               className="text-gray-400 hover:text-[#333333] transition-colors"
                             >
                               <FontAwesomeIcon icon={faMinus} size="sm" />
                             </button>
                             <span className="font-black text-[#333333] text-lg w-4 text-center">{item.quantity}</span>
                             <button 
-                              onClick={() => updateQuantity(item.product.id, item.quantity, 1)} 
+                              onClick={() => updateQuantity(item.product_id, item.quantity, 1)} 
                               className="text-gray-400 hover:text-[#F5C469] transition-colors"
                             >
                               <FontAwesomeIcon icon={faPlus} size="sm" />
                             </button>
                           </div>
                           <p className="hidden md:block text-[#333333] font-black text-xl">
-                            ₹{(item.product.Amount * item.quantity).toLocaleString()}
+                            ₹{(item.product_id__price * item.quantity).toLocaleString()}
                           </p>
                         </div>
                       </div>
@@ -179,10 +183,8 @@ const CartPage = () => {
             </AnimatePresence>
           </div>
 
-          {/* SUMMARY SECTION */}
           <div className="lg:col-span-4">
             <div className="bg-[#333333] text-white p-10 rounded-[2.5rem] shadow-2xl sticky top-36 overflow-hidden border border-[#444444]">
-              {/* Subtle Background Pattern Decoration */}
               <div className="absolute top-0 right-0 w-32 h-32 bg-[#F5C469] opacity-10 rounded-full -mr-16 -mt-16 blur-3xl"></div>
               
               <h2 className="text-3xl font-black mb-8 tracking-tighter italic">Order <span className="text-[#F5C469]">Details</span></h2>
@@ -205,7 +207,10 @@ const CartPage = () => {
                 </div>
               </div>
 
-              <button className="group w-full mt-10 bg-[#F5C469] text-[#333333] font-black py-5 rounded-2xl hover:bg-white transition-all transform active:scale-[0.98] uppercase tracking-[0.2em] text-sm flex items-center justify-center gap-3">
+              <button 
+                onClick={handleCheckout}
+                className="group w-full mt-10 bg-[#F5C469] text-[#333333] font-black py-5 rounded-2xl hover:bg-white transition-all transform active:scale-[0.98] uppercase tracking-[0.2em] text-sm flex items-center justify-center gap-3"
+              >
                 Secure Checkout
                 <FontAwesomeIcon icon={faArrowLeft} className="rotate-180 group-hover:translate-x-2 transition-transform" />
               </button>
