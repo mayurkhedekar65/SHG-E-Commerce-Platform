@@ -87,12 +87,12 @@ const Navbar = () => {
               onClick={() => setMenuOpen(!menuOpen)}
             />
           </div>
-          <nav className={`${menuOpen ? "flex flex-col absolute top-14 left-0 w-full bg-[#3d3c3c] py-4 space-y-4 items-center" : "hidden"} md:flex md:space-x-8 md:static md:flex-row md:justify-center md:items-center md:space-y-0 md:bg-transparent`}>
+          <nav className={`${menuOpen ? "flex flex-col absolute top-14 left-0 w-full bg-[#3d3c3c] py-4 space-y-4 items-center" : "hidden"} md:flex md:space-x-8 md:static md:flex-row md:justify-center md:items-center md:space-y-0 md:bg-transparent capitalize`}>
             <div className="flex flex-col md:flex-row justify-around items-center gap-5 md:gap-10 capitalize text-[16.5px] text-[#dddddd] md:text-[#333333]">
-              <button onClick={() => navigate("/")}>home</button>
-              <button onClick={() => showLoader("/shggroups")}>SHG Groups</button>
-              <button onClick={() => showLoader("/contact")}>contact</button>
-              <button onClick={() => showLoader("/about")}>about</button>
+             <button className="capitalize" onClick={() => navigate("/")}>home</button>
+              <button className="capitalize" onClick={() => showLoader("/shggroups")}>SHG Groups</button>
+              <button className="capitalize" onClick={() => showLoader("/contact")}>contact</button>
+              <button className="capitalize" onClick={() => showLoader("/about")}>about</button>
 
               {loggedIn && (
                 <>
