@@ -16,6 +16,7 @@ class Category(models.Model):
 
 
 class Cart_Items(models.Model):
-    user_id = models.ForeignKey('Customers.CustomerForm', on_delete=models.CASCADE)
-    product_id = models.ForeignKey(Products, on_delete=models.CASCADE)
+    user_id = models.ForeignKey('Customers.CustomerForm', on_delete=models.CASCADE,null=True,   blank=True)
+    product_id = models.ForeignKey(Products, on_delete=models.CASCADE, null=True, blank=True)
+    shg_group_id = models.ForeignKey('groups.Shg_Group_Registration', on_delete=models.CASCADE, null=True, blank=True)
     quantity = models.PositiveIntegerField(default=1)

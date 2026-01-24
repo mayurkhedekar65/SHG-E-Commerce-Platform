@@ -14,12 +14,11 @@ from rest_framework import status
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])
 def get_products_data(request, format=None):
-    shg_group = Shg_Group_Registration.objects.get(shg_id=request.user.id)
-    products_list = Products.objects.filter(shg_group_id_id=shg_group.id).values("id",
-        "product_name", "category", "description", "image", "price", "stock_quantity")
-    return Response({"products_list": products_list, })
+    products_list = Products.objects.all().values( "id","image","product_name","price", "stock_quantity")
+    return Response({"products_list": products_list})
+
 
 
 @api_view(['GET'])

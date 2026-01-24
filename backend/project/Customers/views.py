@@ -101,25 +101,28 @@ def get_user_profile_data(request):
     return Response({"user_details": user_details})
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])
 def add_to_cart(request):
-    product_id = request.data.get("product_id")
-    quantity = request.data.get("quantity")
-    user_id = CustomerForm.objects.get(customer_id=request.user.id)
-    if not Products.objects.filter(id=product_id).exists():
-        return Response({"message": "Products does not exists"} , status=status.HTTP_400_BAD_REQUEST)
+    if not request.user.is_authenticated:
+        return Response({"message": "Authentication required to add items to cart."}, status=status.HTTP_401_UNAUTHORIZED)
     else:
-        if Products.objects.get(id=product_id).stock_quantity >= quantity:
-            if Cart_Items.objects.filter(product_id = product_id , user_id = user_id).exists():
-                cart_item = Cart_Items.objects.get(product_id=product_id , user_id = user_id)
-                cart_item.quantity += quantity
-                cart_item.save()
-                return Response({"message": " Product quantity updated in the Cart Successfully"}, status = status.HTTP_200_OK)
-            else: 
-                Cart_Items.objects.create(user_id=user_id,product_id=Products.objects.get(id=product_id),quantity=quantity)
-                return Response({"message": " Product added to the Cart Successfully"}, status = status.HTTP_201_CREATED)
+        product_id = request.data.get("product_id")
+        quantity = request.data.get("quantity")
+        user_id = CustomerForm.objects.get(customer_id=request.user.id)
+        if not Products.objects.filter(id=product_id).exists():
+            return Response({"message": "Products does not exists"} , status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response({"message": " Insufficient stock for the product"}, status = status.HTTP_400_BAD_REQUEST)
+            if Products.objects.get(id=product_id).stock_quantity >= quantity:
+                if Cart_Items.objects.filter(product_id = product_id , user_id = user_id).exists():
+                    cart_item = Cart_Items.objects.get(product_id=product_id , user_id = user_id)
+                    cart_item.quantity += quantity
+                    cart_item.save()
+                    return Response({"message": " Product quantity updated in the Cart Successfully"}, status = status.HTTP_200_OK)
+                else: 
+                    Cart_Items.objects.create(user_id=user_id,product_id=Products.objects.get(id=product_id),quantity=quantity,shg_group_id=Products.objects.get(id=product_id).shg_group_id)
+                    return Response({"message": " Product added to the Cart Successfully"}, status = status.HTTP_201_CREATED)
+            else:
+                return Response({"message": " Insufficient stock for the product"}, status = status.HTTP_400_BAD_REQUEST)
     
 
 
