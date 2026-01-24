@@ -145,9 +145,21 @@ def remove_from_cart(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def view_cart(request):
-    user_id = CustomerForm.objects.get(costomer_id=request.user.id)
-    cart_items = Cart_Items.objects.filter(user_id=user_id).values("product_name","product_id__price","quantity")
-    return Response({"cart_items": cart_items}, status = status.HTTP_200_OK)
+    cart_items = Cart_Items.objects.filter(
+        user_id__customer_id=request.user.id
+    ).values(
+        "product_id__id",
+        "product_id__product_name",
+        "product_id__price",
+        "product_id__image",
+        "quantity"
+    )
+
+    return Response(
+        {"cart_items": cart_items},
+        status=status.HTTP_200_OK
+    )
+
 
 
 @api_view(['POST'])
@@ -163,7 +175,7 @@ def purchase_from_cart(request):
             product.save()
             Order_Items.objects.create(
                 customer_id = user_id,
-                product_id = product,
+                product_id = product_id,
                 quantity = cart_item.quantity,
                 price_at_time_of_order = product.price,
                 shg_groups_id = product.shg_group_id
