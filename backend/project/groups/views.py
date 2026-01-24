@@ -3,11 +3,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 from groups.models import Shg_Group_Registration
-from Products.models import Products
 from groups.serializers import ShgFormSerializer, AdminPanelSerializer
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
-from rest_framework.permissions import IsAuthenticated,AllowAny
+from rest_framework.permissions import IsAuthenticated, AllowAny
 # --- FIX 1: CORRECTED TYPO AND IMPORTED PARSERS/AUTH ---
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework_simplejwt.authentication import JWTAuthentication
@@ -15,12 +14,14 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from groups.models import Order_Items
 from Customers.models import CustomerForm
 from rest_framework.decorators import api_view, permission_classes
+from common.email import send_email
 
 # Create your views here.
 
 
 class SubmitRegistrationForm(APIView):
-    permission_classes=[AllowAny]
+    permission_classes = [AllowAny]
+
     def post(self, request, format=None):
         serializer = ShgFormSerializer(data=request.data)
 
@@ -61,9 +62,10 @@ class SubmitRegistrationForm(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class AdminLogin(APIView):   
-    permission_classes = [] 
-    authentication_classes = []  
+class AdminLogin(APIView):
+    permission_classes = []
+    authentication_classes = []
+
     def post(self, request, format=None):
         username = request.data.get('email')
         password = request.data.get('password')
@@ -78,8 +80,8 @@ class AdminLogin(APIView):
                     user = authenticate(
                         username=user_obj.username, password=password)
                     if user is not None:
-                        refresh=RefreshToken.for_user(user)
-                        return Response({'message': 'shg logged in successfully',  'access': str(refresh.access_token),'refresh': str(refresh)}, status=status.HTTP_201_CREATED)
+                        refresh = RefreshToken.for_user(user)
+                        return Response({'message': 'shg logged in successfully',  'access': str(refresh.access_token), 'refresh': str(refresh)}, status=status.HTTP_201_CREATED)
                     else:
                         return Response({'message': 'invalid creditials'}, status=status.HTTP_400_BAD_REQUEST)
         except:
@@ -88,18 +90,18 @@ class AdminLogin(APIView):
 
 class AdminPanelView(APIView):
     # --- FIX 2: ADD AUTH, PERMISSIONS, AND PARSERS ---
-    authentication_classes = [JWTAuthentication] 
+    authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     parser_classes = [MultiPartParser, FormParser]
 
     def post(self, request, format=None):
         user = request.user
         serializer = AdminPanelSerializer(data=request.data)
-        
+
         try:
             # Get the SHG profile linked to the user
             shg_group = Shg_Group_Registration.objects.get(shg=user)
-            
+
         except Shg_Group_Registration.DoesNotExist:
             return Response({'message': 'No SHG profile found for this user.'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -112,17 +114,18 @@ class AdminPanelView(APIView):
             # If the form is invalid, print the errors
             print("Serializer Errors:", serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def approve_or_reject_order(request):
     user_id = CustomerForm.objects.get(customer_id=request.user.id)
-    Shg_id =  Shg_Group_Registration.objects.get(shg_id=request.user.id)
+    Shg_id = Shg_Group_Registration.objects.get(shg_id=request.user.id)
     order_id = request.data.get("order_id")
-    action = request.data.get("action") 
+    action = request.data.get("action")
     try:
-        order_item = Order_Items.objects.get(id=order_id, shg_groups_id=Shg_id, user_id=user_id)
+        order_item = Order_Items.objects.get(
+            id=order_id, shg_groups_id=Shg_id, user_id=user_id)
         if action in ['APPROVED', 'REJECTED']:
             order_item.action = action
             order_item.save()
@@ -135,15 +138,44 @@ def approve_or_reject_order(request):
             return Response({"message": "Invalid action"}, status=status.HTTP_400_BAD_REQUEST)
     except Order_Items.DoesNotExist:
         return Response({"message": "Order item not found"}, status=status.HTTP_404_NOT_FOUND)
-    
+
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def is_shipped(request):
     order_id = request.data.get("order_id")
     try:
-        order_item = Order_Items.objects.get(order_id=order_id)   
+        order_item = Order_Items.objects.get(order_id=order_id)
         order_item.order_status = 'SHIPPED'
-        order_item.save() 
+        order_item.save()
+        distributer_email=Shg_Group_Registration.objects.filter(shg_id=request.user.id).values("email").first()
+        consumer_id=Order_Items.objects.filter(shg_group_id_id=request.user.id,order_id_id=order_id).values("customer_id_id").first()
+        customer_email=CustomerForm.objects.filter(customer_id=consumer_id).values("customer_email").first()
+        mail_sub="Your Order Has Been Shipped"
+        message = """
+        Hello,
+
+        We’re happy to let you know that your order has been shipped and is on its way to you.
+
+        Shipment details:
+
+        Order Number: [Order Number]
+
+        Carrier: [Shipping Carrier]
+
+        Tracking Number: [Tracking Number]
+
+        Estimated Delivery Date: [Estimated Delivery Date]
+
+        You can track your shipment using the tracking number provided above. If you have any questions or need further assistance, feel free to contact us.
+
+        Thank you for your business—we hope you enjoy your purchase!
+
+        Best regards,
+        Customer Support Team
+        """
+   
+        send_email(request,distributer_email,customer_email,message,mail_sub)
         return Response({"message": "Order marked as shipped successfully"}, status=status.HTTP_200_OK)
     except Order_Items.DoesNotExist:
         return Response({"message": "Order item not found"}, status=status.HTTP_404_NOT_FOUND)

@@ -141,7 +141,7 @@ const Home = () => {
                   across Goa
                 </p>
               </div>
-              <div className="grid grid-col-1 md:grid-cols-4 place-items-center items-stretch md:mx-20 md:gap-x-0 text-center pt-10">
+              <div className="grid grid-col-1 md:grid-cols-4 place-items-center items-stretch md:mx-20 md:gap-x-4 text-center pt-10">
                 <GroupCard
                   GroupName={"Mapusa Women's Collective"}
                   GroupInfo={
