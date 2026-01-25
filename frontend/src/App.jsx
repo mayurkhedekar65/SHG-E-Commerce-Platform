@@ -15,7 +15,8 @@ import ShgLogin from "./pages/ShgLogin";
 import GroupProfile from "./pages/GroupProfile";
 import UserProfile from "./pages/UserProfile";
 import CartPage from "./pages/CartPage";
-
+import ForgotPassword from "./pages/ForgotPassword";
+import SetNewPassword from "./pages/SetNewPassword";
 
 
 function App() {
@@ -35,6 +36,8 @@ function App() {
         <Route path="/shgprofile" element={<GroupProfile />} />
         <Route path="/userprofile" element={<UserProfile />} />
         <Route path="/cart" element={<CartPage />} />
+        <Route path="/forgotpassword" element={<ForgotPassword/>} />
+        <Route path="/resetpassword" element={<SetNewPassword/>} />
       </Routes>
     </Router>
   );
