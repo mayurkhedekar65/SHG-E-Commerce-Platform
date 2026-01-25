@@ -27,7 +27,8 @@ const Products = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get("http://127.0.0.1:8000/get_products/");
-        setProduct(response.data.products_list);
+        setProduct(response.data["products_list"]);
+        // console.log(response.data["products_list"])
       } catch (err) {
         console.error(err);
       }
@@ -87,14 +88,16 @@ const Products = () => {
 
             {!loader && (
               <div className="grid grid-cols-1 md:grid-cols-4 md:mx-20 gap-y-8 pt-10">
-                {Product.map((item) => (
+                {Product.map((item, index) => (
                   <ProductCard
-                    key={item.id}
-                    image={item.image}
-                    ProductName={item.product_name}
-                    Amount={item.price}
-                    Quantity={item.stock_quantity}
-                    productId={item.id}
+                    key={index}
+                    productId={item["id"]}
+                    image={item["image"]}
+                    ProductName={item["product_name"]}
+                    Amount={item["price"]}
+                    Quantity={item["stock_quantity"]}
+                    Description={item["description"]}
+                    Category={item["category"]}
                     onRequireLogin={() => setShowSigninPopup(true)}
                   />
                 ))}

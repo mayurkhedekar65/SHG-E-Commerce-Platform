@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
+import {
+  faCartShopping,
+  faTag,
+  faEye,
+  faIndianRupeeSign,
+} from "@fortawesome/free-solid-svg-icons";
 import { motion } from "motion/react";
 import axios from "axios";
 import ProductViewCard from "./ProductViewCard";
@@ -13,6 +18,8 @@ const ProductCard = ({
   ProductName,
   Amount,
   Quantity,
+  Description,
+  Category,
   productId,
   onRequireLogin,
 }) => {
@@ -20,9 +27,9 @@ const ProductCard = ({
     name: ProductName,
     price: Amount,
     unit: Quantity,
-    image: image, // replace with your image
-    description:
-      "Fresh and premium quality ground nuts, perfect for daily cooking and snacks.",
+    image: image,
+    category: Category,
+    description: Description,
   };
   const [open, setOpen] = useState(false);
   const handleAddToCart = async () => {
@@ -88,14 +95,36 @@ const ProductCard = ({
 
           {/* CONTENT */}
           <div className="p-4 flex-1 text-left">
-            <h3 className="text-white font-semibold text-base leading-tight">
+            {/* CATEGORY */}
+            <span className="inline-flex items-center gap-1 text-xs font-semibold text-[#2F2F2F] bg-[#F5C469] px-3 py-1 rounded-full">
+              <FontAwesomeIcon icon={faTag} className="w-3 h-3" />
+              {Category}
+            </span>
+
+            {/* PRODUCT NAME */}
+            <h3 className="mt-3 text-white font-semibold text-base leading-tight line-clamp-2">
               {ProductName}
             </h3>
 
-            <p className="mt-3 text-sm text-gray-400">{Quantity} ml</p>
+            {/* DESCRIPTION */}
+            <p className="mt-2 text-sm text-gray-400 line-clamp-2">
+              {Description}
+            </p>
 
-            <div className="mt-4 text-2xl font-bold text-[#F5C469]">
-              ₹{Amount}
+            {/* STOCK */}
+            <p className="mt-3 text-sm text-gray-400">
+              Stock:{" "}
+              <span
+                className={`font-medium ${Quantity > 0 ? "text-green-400" : "text-red-400"}`}
+              >
+                {Quantity > 0 ? Quantity : "Out of stock"}
+              </span>
+            </p>
+
+            {/* PRICE */}
+            <div className="mt-4 text-2xl font-bold text-[#F5C469] flex items-center gap-1">
+              <FontAwesomeIcon icon={faIndianRupeeSign} className="w-4 h-4" />
+              {Amount}
             </div>
           </div>
 
@@ -103,21 +132,28 @@ const ProductCard = ({
           <div className="p-4 pt-2">
             <button
               onClick={handleAddToCart}
-              className="w-full bg-[#F5C469] text-[#2F2F2F] font-bold py-3 rounded-xl"
+              disabled={Quantity === 0}
+              className={`w-full font-bold py-3 rounded-xl transition flex items-center justify-center gap-2
+        ${
+          Quantity === 0
+            ? "bg-gray-500 text-gray-300 cursor-not-allowed"
+            : "bg-[#F5C469] text-[#2F2F2F] hover:bg-[#e8b85e]"
+        }`}
             >
+              <FontAwesomeIcon icon={faCartShopping} />
               Add to Cart
             </button>
 
             <button
               onClick={() => setOpen(true)}
-              className="mt-4 w-full border border-[#F5C469] text-[#F5C469] font-semibold py-2.5 rounded-xl bg-transparent hover:bg-[#F5C469]/10 transition "
+              className="mt-4 w-full border border-[#F5C469] text-[#F5C469] font-semibold py-2.5 rounded-xl bg-transparent flex items-center justify-center gap-2 hover:bg-[#F5C469]/10 transition"
             >
+              <FontAwesomeIcon icon={faEye} />
               View Product
             </button>
           </div>
         </div>
       </motion.div>
-
       <ProductViewCard
         isOpen={open}
         product={product}
