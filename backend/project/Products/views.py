@@ -16,7 +16,7 @@ from rest_framework import status
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def get_products_data(request, format=None):
-    products_list = Products.objects.all().values( "id","image","product_name","price", "stock_quantity")
+    products_list = Products.objects.all().values( "id", "image", "product_name", "price", "stock_quantity","category","description")
     return Response({"products_list": products_list})
 
 

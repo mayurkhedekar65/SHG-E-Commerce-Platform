@@ -1,27 +1,29 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faIdCard,
+  faPhone,
+  faCalendarDays,
+  faHouse,
+  faBuilding,
   faLocationDot,
-  faUser,
-  faBox,
+  faTag,
+  faMapLocationDot,
 } from "@fortawesome/free-solid-svg-icons";
 
 const GroupViewCard = ({ isOpen, onClose, group}) => {
   if (!isOpen) return null;
 
   return (
-     <div className="fixed inset-0 z-50 flex items-center justify-center">
-
+   <>
+   <div className="fixed inset-0 z-50 flex items-center justify-center">
   {/* BACKDROP */}
-  <div
-    className="absolute inset-0 bg-black/60"
-    onClick={onClose}
-  />
+  <div className="absolute inset-0 bg-black/60" onClick={onClose} />
 
   {/* MODAL */}
   <div className="relative z-10 w-[92%] max-w-4xl bg-white rounded-2xl overflow-hidden shadow-2xl">
-
-    {/* CLOSE BUTTON */}
+    
+    {/* CLOSE */}
     <button
       onClick={onClose}
       className="absolute top-4 right-4 text-gray-400 hover:text-black text-xl"
@@ -29,79 +31,98 @@ const GroupViewCard = ({ isOpen, onClose, group}) => {
       ✕
     </button>
 
-    {/* MODAL CONTENT */}
     <div className="flex flex-col md:flex-row">
-
-      {/* LEFT: GROUP IMAGE */}
+      
+      {/* LEFT IMAGE */}
       <div className="md:w-1/2 bg-[#EDEDED] flex items-center justify-center p-6">
         <img
           src={group.image}
-          alt={"not available"}
+          alt="SHG"
           className="max-h-[400px] w-full object-cover rounded-lg"
         />
       </div>
 
-      {/* RIGHT: DETAILS */}
+      {/* RIGHT CONTENT */}
       <div className="md:w-1/2 p-8 flex flex-col">
 
         {/* NAME */}
-        <h2 className="text-2xl font-semibold text-[#2B2B2B] line-clamp-2">
-          {group.name}
+        <h2 className="text-2xl font-semibold text-[#2B2B2B]">
+          {group.name_of_shg}
         </h2>
 
-        {/* DESCRIPTION */}
-        <p className="mt-4 text-gray-600 leading-relaxed line-clamp-5">
-          {group.info}
-        </p>
-
-        {/* LOCATION */}
-        <div className="mt-4 flex items-center gap-2 text-sm text-[#2B2B2B]">
-          <FontAwesomeIcon className="text-[#E6B65C]" icon={faLocationDot} />
-          <span>{group.location}</span>
+        {/* TYPE */}
+        <div className="mt-3 flex items-center gap-2 text-sm">
+          <FontAwesomeIcon icon={faTag} className="text-[#E6B65C]" />
+          <span className="font-medium">Type Of SHG:</span>
+          <span className="text-gray-600">{group.type_of_shg}</span>
         </div>
 
-        {/* STATS */}
-        <div className="mt-5 flex gap-6 text-sm flex-wrap text-[#2B2B2B]">
-          <div className="flex items-center gap-2 whitespace-nowrap">
-            <FontAwesomeIcon className="text-[#E6B65C]" icon={faBox} />
-            <span>{group.totalproducts} Products</span>
+        {/* DETAILS */}
+        <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+
+          <div className="flex gap-3">
+            <FontAwesomeIcon icon={faIdCard} className="text-[#E6B65C] mt-1" />
+            <div>
+              <p className="font-medium">Registration Number</p>
+              <p className="text-gray-600">{group.registration_number}</p>
+            </div>
           </div>
-          <div className="flex items-center gap-2 whitespace-nowrap">
-            <FontAwesomeIcon className="text-[#E6B65C]" icon={faUser} />
-            <span>{group.totalgroupmembers} Members</span>
+
+          <div className="flex gap-3">
+            <FontAwesomeIcon icon={faPhone} className="text-[#E6B65C] mt-1" />
+            <div>
+              <p className="font-medium">Contact Number</p>
+              <p className="text-gray-600">{group.contact_number}</p>
+            </div>
+          </div>
+
+          <div className="flex gap-3">
+            <FontAwesomeIcon icon={faCalendarDays} className="text-[#E6B65C] mt-1" />
+            <div>
+              <p className="font-medium">Date Of Formation</p>
+              <p className="text-gray-600">{group.date_of_formation}</p>
+            </div>
+          </div>
+
+          <div className="flex gap-3">
+            <FontAwesomeIcon icon={faHouse} className="text-[#E6B65C] mt-1" />
+            <div>
+              <p className="font-medium">Village</p>
+              <p className="text-gray-600">{group.village}</p>
+            </div>
+          </div>
+
+          <div className="flex gap-3">
+            <FontAwesomeIcon icon={faBuilding} className="text-[#E6B65C] mt-1" />
+            <div>
+              <p className="font-medium">Taluka</p>
+              <p className="text-gray-600">{group.taluka}</p>
+            </div>
+          </div>
+
+          <div className="flex gap-3">
+            <FontAwesomeIcon icon={faLocationDot} className="text-[#E6B65C] mt-1" />
+            <div>
+              <p className="font-medium">District</p>
+              <p className="text-gray-600">{group.district}</p>
+            </div>
           </div>
         </div>
 
-        {/* ACTION BUTTONS */}
-        <div className="mt-auto pt-6 flex flex-col gap-4">
-          {/* <button
-            // onClick={joinGroup} // your function to join or view group
-            className="
-              w-full
-              bg-[#E6B65C]
-              text-[#2B2B2B]
-              font-semibold
-              py-3
-              rounded-lg
-              hover:bg-[#d9a94f]
-              transition
-            "
-          >
-            <FontAwesomeIcon className="mr-2" icon={faUser} />
-            Join / View Group
-          </button> */}
+        {/* ADDRESS */}
+        <div className="mt-5 flex gap-3 text-sm">
+          <FontAwesomeIcon icon={faMapLocationDot} className="text-[#E6B65C] mt-1" />
+          <div>
+            <p className="font-medium">Address</p>
+            <p className="text-gray-600 leading-relaxed">{group.address}</p>
+          </div>
+        </div>
 
+        {/* ACTION */}
+        <div className="mt-auto pt-6">
           <button
             onClick={onClose}
-            className="
-              w-full
-              border border-gray-300
-              text-gray-600
-              py-3
-              rounded-lg
-              hover:bg-gray-100
-              transition
-            "
+            className="w-full border border-gray-300 text-gray-600 py-3 rounded-lg hover:bg-gray-100 transition"
           >
             Close
           </button>
@@ -111,7 +132,7 @@ const GroupViewCard = ({ isOpen, onClose, group}) => {
     </div>
   </div>
 </div>
-
+   </>
   );
 };
 

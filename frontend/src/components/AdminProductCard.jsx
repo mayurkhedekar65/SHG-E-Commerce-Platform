@@ -1,58 +1,89 @@
 import React from "react";
 import { Edit2, Eye, Trash2 } from "lucide-react";
 
-const AdminProductCard = ({ 
-  image, 
-  price, 
-  category, 
-  stock_quantity, 
-  product_name, 
-  status, 
-  onEdit, 
-  onDelete 
+const AdminProductCard = ({
+  image,
+  price,
+  category,
+  stock_quantity,
+  product_name,
+  status,
+  description,
+  onEdit,
+  onDelete,
 }) => {
-
   const getStatusClass = (s) => {
     switch (s) {
-      case "Active": return "bg-green-100 text-green-800";
-      case "Draft": return "bg-yellow-100 text-yellow-800";
-      case "Out of Stock": return "bg-red-100 text-red-800";
-      default: return "bg-gray-100 text-gray-800";
+      case "Active":
+        return "bg-green-100 text-green-800";
+      case "Draft":
+        return "bg-yellow-100 text-yellow-800";
+      case "Out of Stock":
+        return "bg-red-100 text-red-800";
+      default:
+        return "bg-gray-100 text-gray-800";
     }
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-md overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl w-full max-w-xs">
-      <img
-        src={`http://127.0.0.1:8000/media/${image}`}
-        alt={product_name}
-        className="w-full h-48 object-cover bg-gray-100"
-        onError={(e) => (e.target.src = "https://placehold.co/600x400/F5C469/333?text=Image+Unavailable")}
-      />
+    <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl hover:-translate-y-1 transition-transform duration-300 w-full max-w-xs">
+      {/* Image */}
+      <div className="relative w-full h-48">
+        <img
+          src={`http://127.0.0.1:8000/media/${image}`}
+          alt={product_name}
+          className="w-full h-full object-cover"
+          onError={(e) =>
+            (e.target.src =
+              "https://placehold.co/600x400/F5C469/333?text=Image+Unavailable")
+          }
+        />
 
-      <div className="p-5">
-        <div className="flex justify-between items-center mb-3">
-          <span className={`text-xs font-semibold px-3 py-1 rounded-full ${getStatusClass(status || "Active")}`}>
-            {status || "Active"}
-          </span>
-          <span className="text-xs text-gray-500">
+        {/* Status Badge */}
+        <span
+          className={`absolute top-3 left-3 text-xs font-semibold px-3 py-1 rounded-full ${getStatusClass(status || "Active")}`}
+        >
+          {status || "Active"}
+        </span>
+      </div>
+
+      {/* Content */}
+      <div className="p-5 flex flex-col gap-3">
+        {/* Product Name */}
+        <h3 className="text-lg font-bold text-gray-800 truncate">
+          {product_name}
+        </h3>
+
+        {/* Category */}
+        <p className="text-sm font-medium text-blue-500 uppercase">
+          {category}
+        </p>
+
+        {/* Description */}
+        {description && (
+          <p className="text-sm text-gray-600 line-clamp-3">{description}</p>
+        )}
+
+        {/* Price & Stock */}
+        <div className="flex justify-between items-center">
+          <p className="text-xl font-bold text-gray-800">
+            ₹{parseFloat(price).toFixed(2)}
+          </p>
+          <p className="text-sm text-gray-500">
             Stock: <span className="font-semibold">{stock_quantity}</span>
-          </span>
+          </p>
         </div>
 
-        <h3 className="text-lg font-bold text-[#333333] truncate mb-1">{product_name}</h3>
-        <p className="text-sm text-gray-500 mb-2">{category}</p>
-        <p className="text-xl font-bold text-[#333333] mb-4">₹{parseFloat(price).toFixed(2)}</p>
-
-        <div className="grid grid-cols-3 gap-2">
+        {/* Action Buttons */}
+        <div className="grid grid-cols-3 gap-2 mt-2">
           <button
             onClick={onEdit}
-            className="flex items-center justify-center gap-1 px-2 py-2 text-xs font-semibold rounded-lg bg-[#42a6f8] text-white hover:bg-blue-500 transition"
+            className="flex items-center justify-center gap-1 px-2 py-2 text-xs font-semibold rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition"
           >
             <Edit2 size={14} /> Edit
           </button>
 
-          <button className="flex items-center justify-center gap-1 px-2 py-2 text-xs font-semibold rounded-lg bg-[#333333] text-[#dddddd] hover:bg-zinc-700 transition">
+          <button className="flex items-center justify-center gap-1 px-2 py-2 text-xs font-semibold rounded-lg bg-gray-700 text-gray-200 hover:bg-gray-800 transition">
             <Eye size={14} /> View
           </button>
 

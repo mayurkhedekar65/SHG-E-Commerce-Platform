@@ -23,105 +23,62 @@ const GroupProfile = () => {
   }, []);
   return (
     <>
-     <div className="bg-[#dddddd] min-h-screen p-6">
+      <div className="min-h-screen bg-gray-50 p-8 font-sans">
+        {/* Page Header */}
+        <header className="mb-8 bg-white rounded-3xl shadow-md p-8">
+          <h2 className="text-4xl font-extrabold text-gray-900 tracking-wide">
+            SHG Profile
+          </h2>
+          <p className="text-gray-600 mt-2 text-lg">
+            Self Help Group information overview
+          </p>
+        </header>
 
-  {/* Page Header */}
-  <div className="mb-6 bg-white rounded-2xl shadow p-6">
-    <h2 className="text-3xl font-bold text-[#333333]">
-      SHG Profile
-    </h2>
-    <p className="text-sm text-gray-500 mt-1">
-      Self Help Group information overview
-    </p>
-  </div>
+        {/* Profile Card */}
+        <section className="bg-white rounded-3xl shadow-lg p-10 max-w-5xl mx-auto">
+          <h3 className="text-2xl font-semibold text-gray-900 mb-8 tracking-wide">
+            Group Details
+          </h3>
 
-  {/* Profile Card */}
-  <div className="bg-[#F5C469] rounded-2xl shadow-lg p-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Single Field */}
+            {[
+              { label: "SHG Name", value: profileData?.name_of_shg },
+              {
+                label: "Registration Number",
+                value: profileData?.registration_number,
+              },
+              { label: "Contact Number", value: profileData?.contact_number },
+              { label: "Village", value: profileData?.village },
+              { label: "District", value: profileData?.district },
+              { label: "Type of SHG", value: profileData?.type_of_shg },
+              {
+                label: "Date of Formation",
+                value: profileData?.date_of_formation,
+              },
+            ].map(({ label, value }) => (
+              <div key={label}>
+                <p className="text-xs font-semibold uppercase text-gray-500 mb-2 tracking-wide">
+                  {label}
+                </p>
+                <div className="bg-gray-100 rounded-xl px-5 py-4 font-medium text-gray-800 shadow-sm transition-shadow hover:shadow-md">
+                  {value || "Not Available"}
+                </div>
+              </div>
+            ))}
 
-    <h3 className="text-xl font-bold text-[#333333] mb-6">
-      Group Details
-    </h3>
-
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-      {/* Field */}
-      <div>
-        <p className="text-xs font-semibold uppercase text-gray-700 mb-1">
-          SHG Name
-        </p>
-        <div className="bg-white rounded-xl px-4 py-3 font-medium text-[#333333] shadow-sm">
-          {profileData?.name_of_shg || "Not Available"}
-        </div>
+            {/* Full-width Address */}
+            <div className="md:col-span-2">
+              <p className="text-xs font-semibold uppercase text-gray-500 mb-2 tracking-wide">
+                Address
+              </p>
+              <div className="bg-gray-100 rounded-xl px-5 py-4 font-medium text-gray-800 shadow-sm transition-shadow hover:shadow-md">
+                {profileData?.address || "Not Available"}
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
-
-      <div>
-        <p className="text-xs font-semibold uppercase text-gray-700 mb-1">
-          Registration Number
-        </p>
-        <div className="bg-white rounded-xl px-4 py-3 font-medium text-[#333333] shadow-sm">
-          {profileData?.registration_number || "Not Available"}
-        </div>
-      </div>
-
-      <div>
-        <p className="text-xs font-semibold uppercase text-gray-700 mb-1">
-          Contact Number
-        </p>
-        <div className="bg-white rounded-xl px-4 py-3 font-medium text-[#333333] shadow-sm">
-          {profileData?.contact_number || "Not Available"}
-        </div>
-      </div>
-
-      <div>
-        <p className="text-xs font-semibold uppercase text-gray-700 mb-1">
-          Village
-        </p>
-        <div className="bg-white rounded-xl px-4 py-3 font-medium text-[#333333] shadow-sm">
-          {profileData?.village || "Not Available"}
-        </div>
-      </div>
-
-      <div>
-        <p className="text-xs font-semibold uppercase text-gray-700 mb-1">
-          District
-        </p>
-        <div className="bg-white rounded-xl px-4 py-3 font-medium text-[#333333] shadow-sm">
-          {profileData?.district || "Not Available"}
-        </div>
-      </div>
-
-      <div>
-        <p className="text-xs font-semibold uppercase text-gray-700 mb-1">
-          Type of SHG
-        </p>
-        <div className="bg-white rounded-xl px-4 py-3 font-medium text-[#333333] shadow-sm">
-          {profileData?.type_of_shg || "Not Available"}
-        </div>
-      </div>
-
-      <div>
-        <p className="text-xs font-semibold uppercase text-gray-700 mb-1">
-          Date of Formation
-        </p>
-        <div className="bg-white rounded-xl px-4 py-3 font-medium text-[#333333] shadow-sm">
-          {profileData?.date_of_formation || "Not Available"}
-        </div>
-      </div>
-
-      {/* Full-width Address */}
-      <div className="md:col-span-2">
-        <p className="text-xs font-semibold uppercase text-gray-700 mb-1">
-          Address
-        </p>
-        <div className="bg-white rounded-xl px-4 py-3 font-medium text-[#333333] shadow-sm">
-          {profileData?.address || "Not Available"}
-        </div>
-      </div>
-
-    </div>
-  </div>
-</div>
-
     </>
   );
 };

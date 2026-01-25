@@ -42,7 +42,7 @@ const ShgGroups = () => {
             transition={{ duration: 3 }}
           >
             <Navbar></Navbar>
-            <section className="bg-[#f0f0f0] min-h-screen py-20">
+            <section className="bg-[#f0f0f0] min-h-screen py-34">
               {/* Section Heading */}
               {!loader && (
                 <div className="text-center mb-12">
@@ -75,11 +75,15 @@ const ShgGroups = () => {
                     {Groups.map((item, index) => (
                       <GroupCard
                         key={index}
-                        GroupName={item.name_of_shg}
-                        GroupInfo={item.contact_number}
-                        Location={item.address}
-                        TotalProducts={item.type_of_shg}
-                        TotalGroupMembers={item.date_of_formation}
+                        NameOfShg={item["name_of_shg"]}
+                        DateOfFormation={item["date_of_formation"]}
+                        RegistrationNumber={item["registration_number"]}
+                        ContactNumber={item["contact_number"]}
+                        Village={item["village"]}
+                        Taluka={item["taluka"]}
+                        District={item["district"]}
+                        TypeOfShg={item["type_of_shg"]}
+                        Address={item["address"]}
                         className="hover:scale-105 transition-transform duration-300"
                       />
                     ))}

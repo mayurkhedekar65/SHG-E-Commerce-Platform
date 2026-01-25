@@ -102,32 +102,52 @@ const Home = () => {
               </div>
               <div className="flex flex-col md:flex-row justify-center items-center gap-5 md:gap-10 text-center pt-10">
                 <ProductCard
+                  image={
+                    "https://via.placeholder.com/300x200.png?text=Coconut+Oil"
+                  }
                   ProductName={"Premium Coconut Oil"}
-                  GroupName={"by Mapusa Women's Collective"}
                   Amount={"350"}
-                  Quantity={"500"}
-                  Location={"Mapusa, Bardez"}
+                  Quantity={500}
+                  Description={
+                    "Cold-pressed coconut oil made by local women's SHG."
+                  }
+                  Category={"Edible Oil"}
                 ></ProductCard>
                 <ProductCard
-                  ProductName={"Handwoven Table Runner"}
-                  GroupName={"by Ponda Craft Circle"}
-                  Amount={"800"}
-                  Quantity={"500"}
-                  Location={"Ponda, Central Goa"}
+                  image={
+                    "https://via.placeholder.com/300x200.png?text=Organic+Honey"
+                  }
+                  ProductName={"Organic Honey"}
+                  Amount={"450"}
+                  Quantity={200}
+                  Description={
+                    "Pure organic honey harvested by the Sunshine Women's SHG."
+                  }
+                  Category={"Honey & Syrups"}
                 ></ProductCard>
                 <ProductCard
-                  ProductName={"Artisanal Cashew Feni"}
-                  GroupName={"by Bicholim Distillers Group"}
-                  Amount={"1,200"}
-                  Quantity={"750"}
-                  Location={"Bicholim, North Goa"}
+                  image={
+                    "https://via.placeholder.com/300x200.png?text=Handmade+Soap"
+                  }
+                  ProductName={"Lavender Handmade Soap"}
+                  Amount={"150"}
+                  Quantity={300}
+                  Description={
+                    "Natural handmade soap with soothing lavender fragrance."
+                  }
+                  Category={"Personal Care"}
                 ></ProductCard>
                 <ProductCard
-                  ProductName={"Ceramic Dinner Set"}
-                  GroupName={"by Margao Pottery Collective"}
-                  Amount={"2,500"}
-                  Quantity={"500"}
-                  Location={"Margao, Salcete"}
+                  image={
+                    "https://via.placeholder.com/300x200.png?text=Handwoven+Bag"
+                  }
+                  ProductName={"Handwoven Cotton Bag"}
+                  Amount={"600"}
+                  Quantity={150}
+                  Description={
+                    "Eco-friendly handwoven cotton bag by Mountain Weavers SHG."
+                  }
+                  Category={"Textiles & Handicrafts"}
                 ></ProductCard>
               </div>
             </section>
@@ -141,46 +161,56 @@ const Home = () => {
                   across Goa
                 </p>
               </div>
-              <div className="grid grid-col-1 md:grid-cols-4 place-items-center items-stretch md:mx-20 md:gap-x-4 text-center pt-10">
+              <div className="grid grid-col-1 md:grid-cols-4  items-stretch md:mx-20 md:gap-x-3 text-center pt-10">
                 <GroupCard
-                  GroupName={"Mapusa Women's Collective"}
-                  GroupInfo={
-                    "Specializing in organic food products and traditional preserves since 2018"
+                  NameOfShg={"Mountain Weavers SHG"}
+                  DateOfFormation={"05-06-2019"}
+                  RegistrationNumber={"SHG13579XYZ"}
+                  ContactNumber={"+91 97654 32109"}
+                  Village={"Chorla"}
+                  Taluka={"Sattari"}
+                  District={"North Goa"}
+                  TypeOfShg={"Textiles & Handloom"}
+                  Address={
+                    "Plot No. 7, Hillview Street, Chorla, Sattari, North Goa"
                   }
-                  Location={"Mapusa, Bardez"}
-                  TotalProducts={"24"}
-                  TotalGroupMembers={"15"}
-                  Logo={image}
                 ></GroupCard>
                 <GroupCard
-                  GroupName={"Ponda Craft Circle"}
-                  GroupInfo={
-                    "Master weavers creating beautiful textiles and home decor items"
+                  NameOfShg={"Seaside Artisans SHG"}
+                  DateOfFormation={"22-11-2016"}
+                  RegistrationNumber={"SHG24680LMN"}
+                  ContactNumber={"+91 99887 66554"}
+                  Village={"Calangute"}
+                  Taluka={"Bardez"}
+                  District={"North Goa"}
+                  TypeOfShg={"Handicrafts & Art"}
+                  Address={
+                    "Shop 5, Beach Road, Calangute Village, Bardez, North Goa"
                   }
-                  Location={"Ponda, Central Goa"}
-                  TotalProducts={"18"}
-                  TotalGroupMembers={"12"}
-                  Logo={image}
                 ></GroupCard>
                 <GroupCard
-                  GroupName={"Margao Pottery Collective"}
-                  GroupInfo={
-                    "Traditional pottery and ceramic art passed down through generations"
-                  }
-                  Location={"Margao, Salcete"}
-                  TotalProducts={"32"}
-                  TotalGroupMembers={"20"}
-                  Logo={image}
+                  NameOfShg={"Greenfields Farmers SHG"}
+                  DateOfFormation={"10-03-2018"}
+                  RegistrationNumber={"SHG67890ABC"}
+                  ContactNumber={"+91 91234 56789"}
+                  Village={"Ponda"}
+                  Taluka={"Ponda Taluka"}
+                  District={"North Goa"}
+                  TypeOfShg={"Agriculture & Farming"}
+                  Address={"House No. 12, Market Road, Ponda, North Goa, Goa"}
                 ></GroupCard>
                 <GroupCard
-                  GroupName={"Bicholim Spice Masters"}
-                  GroupInfo={
-                    "Authentic Goan spices and masalas prepared using traditional methods"
+                  NameOfShg={"Sunshine Women's SHG"}
+                  DateOfFormation={"15-08-2015"}
+                  RegistrationNumber={"SHG12345XYZ"}
+                  ContactNumber={"+91 98765 43210"}
+                  Village={"Kudal"}
+                  Taluka={"Kudal Taluka"}
+                  District={"Sindhudurg"}
+                  TypeOfShg={"Women Empowerment"}
+                  Address={
+                    "Plot No. 24, Main Street, Kudal Village, Sindhudurg, Maharashtra"
                   }
-                  Location={"Bicholim, North Goa"}
-                  TotalProducts={"28"}
-                  TotalGroupMembers={"18"}
-                  Logo={image}
                 ></GroupCard>
               </div>
             </section>

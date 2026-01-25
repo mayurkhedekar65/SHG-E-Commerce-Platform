@@ -154,7 +154,7 @@ def get_products(request):
     #     }
     # ]
     products_list = Products.objects.all().values(
-        "image", "product_name", "price", "stock_quantity")
+        "image", "product_name", "price", "stock_quantity","category","description")
     return Response({"products_list": products_list})
 
 

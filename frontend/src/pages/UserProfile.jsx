@@ -6,8 +6,8 @@ import { useNavigate } from "react-router-dom";
 
 const UserProfile = () => {
   const [profileData, setProfileData] = useState({});
-  const [pendingOrders,setPendingOrders]=useState([])
-  const [deliveredOrders,setDeliveredOrders]=useState([])
+  const [pendingOrders, setPendingOrders] = useState([]);
+  const [deliveredOrders, setDeliveredOrders] = useState([]);
 
   const navigate = useNavigate();
   const logout = () => {
@@ -34,29 +34,33 @@ const UserProfile = () => {
   }, []);
   return (
     <>
-      <div className="min-h-screen bg-gray-100 flex">
+      <div className="min-h-screen bg-gray-50 flex font-sans">
         {/* Sidebar */}
-        <aside className="w-64 bg-[#F5C469] shadow-xl hidden md:flex flex-col">
-          <div className="p-6 border-b border-yellow-400">
-            <h2 className="text-2xl font-bold text-gray-800">User Profile</h2>
-            <p className="text-xs text-gray-700">Member Panel</p>
+        <aside className="w-64 bg-gray-900 text-[#bfa85f] shadow-lg hidden md:flex flex-col">
+          <div className="p-6 border-b border-[#bfa85f]">
+            <h2 className="text-2xl font-semibold tracking-wide">
+              User Profile
+            </h2>
+            <p className="text-sm text-[#a69e6e] mt-1 uppercase tracking-wide">
+              Member Panel
+            </p>
           </div>
 
-          <nav className="flex-1 p-4 space-y-3">
-            <button className="w-full text-left px-4 py-3 rounded-xl bg-white shadow font-semibold text-gray-800">
+          <nav className="flex-1 p-6 space-y-4">
+            <button className="w-full text-left px-5 py-3 rounded-xl bg-[#bfa85f] shadow-md font-semibold text-gray-900 hover:bg-[#a18d46] transition duration-300 ease-in-out">
               Profile
             </button>
 
-            <button className="w-full text-left px-4 py-3 rounded-xl hover:bg-white/70 font-medium text-gray-800">
+            <button className="w-full text-left px-5 py-3 rounded-xl hover:bg-gray-800 font-semibold tracking-wide text-[#bfa85f] transition duration-300 ease-in-out">
               Pending Orders
             </button>
 
-            <button className="w-full text-left px-4 py-3 rounded-xl hover:bg-white/70 font-medium text-gray-800">
+            <button className="w-full text-left px-5 py-3 rounded-xl hover:bg-gray-800 font-semibold tracking-wide text-[#bfa85f] transition duration-300 ease-in-out">
               Delivered Orders
             </button>
 
             <button
-              className="w-full text-left px-4 py-3 rounded-xl hover:bg-white/70 font-medium text-gray-800"
+              className="w-full text-left px-5 py-3 rounded-xl hover:bg-gray-800 font-semibold tracking-wide text-[#bfa85f] transition duration-300 ease-in-out"
               onClick={logout}
             >
               Logout
@@ -65,24 +69,26 @@ const UserProfile = () => {
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 p-6">
+        <main className="flex-1 p-8 space-y-8 max-w-7xl mx-auto">
           {/* Header */}
-          <div className="bg-white rounded-2xl shadow-md p-6 mb-6">
-            <h1 className="text-3xl font-bold text-gray-800">
-              Welcome, {profileData?.customer_name || "User"}
-            </h1>
-            <p className="text-sm text-gray-500">
-              Manage your profile and orders
-            </p>
+          <div className="bg-white rounded-3xl shadow-lg p-8 flex flex-col md:flex-row md:justify-between md:items-center">
+            <div>
+              <h1 className="text-4xl font-extrabold text-gray-900 tracking-tight">
+                Welcome, {profileData?.customer_name || "User"}
+              </h1>
+              <p className="text-base text-gray-600 mt-2 max-w-xl leading-relaxed">
+                Manage your profile and orders efficiently with ease.
+              </p>
+            </div>
           </div>
 
           {/* Profile Panel */}
-          <div className="bg-[#F5C469] rounded-2xl shadow-lg p-6 mb-6">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">
+          <section className="bg-white rounded-3xl shadow-lg p-8">
+            <h2 className="text-3xl font-extrabold text-gray-900 mb-6 tracking-wide">
               Profile Information
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {[
                 { label: "Name", value: profileData?.customer_name },
                 { label: "Email", value: profileData?.customer_email },
@@ -90,83 +96,87 @@ const UserProfile = () => {
                 { label: "Address", value: profileData?.address },
               ].map((item, index) => (
                 <div key={index}>
-                  <p className="text-xs uppercase font-semibold text-gray-700 mb-1">
+                  <p className="text-xs uppercase font-semibold text-gray-500 mb-2 tracking-wide">
                     {item.label}
                   </p>
-                  <div className="bg-white rounded-xl px-4 py-3 font-medium text-gray-800 shadow">
+                  <div className="bg-gray-50 rounded-2xl px-6 py-4 font-semibold text-gray-900 shadow-sm select-text">
                     {item.value || "Not Available"}
                   </div>
                 </div>
               ))}
             </div>
-          </div>
+          </section>
 
           {/* Orders Section */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <section className="grid grid-cols-1 md:grid-cols-2 gap-10">
             {/* Pending Orders */}
-            <div className="bg-white rounded-2xl shadow-md p-6">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-xl font-bold text-gray-800">
+            <div className="bg-white rounded-3xl shadow-lg p-8 hover:shadow-xl transition-shadow duration-300">
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-2xl font-extrabold text-gray-900 tracking-wide">
                   Pending Orders
                 </h3>
-                <span className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs font-semibold">
+                <span className="bg-yellow-600 text-yellow-100 px-4 py-2 rounded-full text-sm font-semibold tracking-wider">
                   Pending
                 </span>
               </div>
 
-              <ul className="space-y-3">
+              <ul className="space-y-4">
                 {pendingOrders?.length ? (
                   pendingOrders.map((order, index) => (
                     <li
                       key={index}
-                      className="flex justify-between items-center bg-gray-100 rounded-lg p-3"
+                      className="flex justify-between items-center bg-gray-50 rounded-2xl px-6 py-4 shadow-sm hover:bg-gray-100 transition-colors duration-300"
                     >
-                      <span className="font-medium text-gray-700">
+                      <span className="font-semibold text-gray-900 tracking-wide">
                         {order.itemName}
                       </span>
-                      <span className="text-sm text-gray-500">
+                      <span className="text-sm text-gray-600 font-medium">
                         Qty: {order.quantity}
                       </span>
                     </li>
                   ))
                 ) : (
-                  <p className="text-sm text-gray-500">No pending orders</p>
+                  <p className="text-sm text-gray-600 font-medium">
+                    No pending orders
+                  </p>
                 )}
               </ul>
             </div>
 
-            {/* { Delivered Orders } */}
-            <div className="bg-white rounded-2xl shadow-md p-6">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-xl font-bold text-gray-800">
+            {/* Delivered Orders */}
+            <div className="bg-white rounded-3xl shadow-lg p-8 hover:shadow-xl transition-shadow duration-300">
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-2xl font-extrabold text-gray-900 tracking-wide">
                   Delivered Orders
                 </h3>
-                <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-semibold">
+                <span className="bg-green-700 text-green-100 px-4 py-2 rounded-full text-sm font-semibold tracking-wider">
                   Delivered
                 </span>
               </div>
 
-              <ul className="space-y-3">
+              <ul className="space-y-4">
                 {deliveredOrders?.length ? (
                   deliveredOrders.map((order, index) => (
                     <li
                       key={index}
-                      className="flex justify-between items-center bg-gray-100 rounded-lg p-3"
+                      className="flex justify-between items-center bg-gray-50 rounded-2xl px-6 py-4 shadow-sm hover:bg-gray-100 transition-colors duration-300"
                     >
-                      <span className="font-medium text-gray-700">
+                      <span className="font-semibold text-gray-900 tracking-wide">
                         {order.itemName}
                       </span>
-                      <span className="text-sm text-gray-500">
+                      <span className="text-sm text-gray-600 font-medium">
                         Qty: {order.quantity}
                       </span>
                     </li>
                   ))
                 ) : (
-                  <p className="text-sm text-gray-500">No delivered orders</p>
+                  <p className="text-sm text-gray-600 font-medium">
+                    No delivered orders
+                  </p>
                 )}
               </ul>
             </div>
-          </div>
+          </section>
         </main>
       </div>
     </>
