@@ -13,6 +13,13 @@ const ShgLogin = () => {
         navigate("/registrationform")
     }, 1500);
   }
+   const showLoader2 = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(true);
+      navigate("/forgotpassword");
+    }, 1500);
+  };
   const [FormData, setFormData] = useState({
     email: "",
     password: ""
@@ -47,7 +54,7 @@ const ShgLogin = () => {
         email: "",
         password: ""
       });
-      alert("login successfull");
+      alert("login successful.");
       navigate("/adminpanel")
     } catch (error) {
       console.error("error in submitting form", error);
@@ -119,6 +126,20 @@ const ShgLogin = () => {
                   </button>
                 </div>
               </div>
+              <div className="flex justify-center items-center gap-2 capitalize mt-3 text-[15px]">
+                  <div className="text-[#333333]">
+                    <p>forgot password?</p>
+                  </div>
+                  <div>
+                    <button
+                      type="button"
+                      className="capitalize text-blue-500"
+                      onClick={showLoader2}
+                    >
+                      reset password
+                    </button>
+                  </div>
+                </div>
             </form>
           </div>
         </main>

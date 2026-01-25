@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
-from main.views import get_products ,group_data
+from main.views import reset_password,set_new_password
 from Products.views import get_products_data,get_group_products_data,get_groups_data,get_group_profile_data,delete_product,Update_Product
 from Customers.views import get_username,get_user_profile_data
 from django.conf import settings 
@@ -39,15 +39,8 @@ urlpatterns = [
     path('delete_product/<int:id>/',delete_product),
     path("adminpanel/updateproduct/<int:id>/",Update_Product),
     path("cart/",include('Customers.urls')),
-    
-
-    
-    
-    
-    
-    # path("api/token/", TokenObtainPairView.as_view()),
-    # path("api/token/refresh/", TokenRefreshView.as_view()),
-
+    path("forgot_password/",reset_password),
+    path("reset_password/",set_new_password)
 ]
 
 
