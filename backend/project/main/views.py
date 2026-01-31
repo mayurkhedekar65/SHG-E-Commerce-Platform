@@ -30,7 +30,7 @@ def reset_password(request):
         send_email(request, default_email, reset_email, message, mail_sub)
         return Response({"message": "reset link generated"})
 
-
+# forgot password view
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def set_new_password(request):
