@@ -9,6 +9,7 @@ import ProcessCard from "../components/ProcessCard";
 import Footer from "../components/Footer";
 import BottomButtonSection from "../components/BottomButtonSection";
 import { motion } from "framer-motion";
+import coconutimage from "../assets/Beauty_Oils_Round_Bottle.webp"
 
 import {
   faUtensils,
@@ -102,9 +103,7 @@ const Home = () => {
               </div>
               <div className="flex flex-col md:flex-row justify-center items-center gap-5 md:gap-10 text-center pt-10">
                 <ProductCard
-                  image={
-                    "https://via.placeholder.com/300x200.png?text=Coconut+Oil"
-                  }
+                  image1={coconutimage}
                   ProductName={"Premium Coconut Oil"}
                   Amount={"350"}
                   Quantity={500}
@@ -256,35 +255,35 @@ const Home = () => {
                   Simple steps to discover and purchase authentic Goan products
                 </p>
               </div>
-              <div className="flex flex-col md:flex-row justify-center items-center gap-8  md:gap-10 text-center pt-10">
+              <div className="flex flex-col md:flex-row justify-center items-center gap-8 md:gap-10 text-center pt-10">
                 <ProcessCard
                   Number={"1"}
                   Title={"Browse Products"}
                   Description={
                     "Explore our curated collection of authentic Goan products from verified SHG groups"
                   }
-                ></ProcessCard>
+                />
                 <ProcessCard
                   Number={"2"}
-                  Title={"Connect via WhatsApp"}
+                  Title={"Connect with SHGs"}
                   Description={
-                    "Chat directly with SHG groups through WhatsApp to discuss your requirements"
+                    "View seller details and communicate your requirements through our platform"
                   }
-                ></ProcessCard>
+                />
                 <ProcessCard
                   Number={"3"}
-                  Title={"Place Your Order"}
+                  Title={"Secure Checkout"}
                   Description={
-                    "Confirm your order details and make payment directly to the SHG group"
+                    "Place your order using our secure payment gateway or choose cash on delivery"
                   }
-                ></ProcessCard>
+                />
                 <ProcessCard
                   Number={"4"}
                   Title={"Receive & Enjoy"}
                   Description={
-                    "Get your authentic Goan products delivered to your doorstep"
+                    "Get your authentic Goan products delivered safely to your doorstep"
                   }
-                ></ProcessCard>
+                />
               </div>
             </section>
           </motion.div>

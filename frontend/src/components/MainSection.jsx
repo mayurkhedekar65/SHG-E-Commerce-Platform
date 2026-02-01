@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import image from "../assets/ChatGPT Image Oct 22, 2025, 06_20_44 PM.png";
+import image from "../assets/ChatGPT_Image_Feb_1__2026__11_02_00_PM-removebg-preview.png";
 import { useNavigate } from "react-router-dom";
 const MainSection = ({ setLoading }) => {
   const navigate = useNavigate();
@@ -13,7 +13,7 @@ const MainSection = ({ setLoading }) => {
   };
   return (
     <>
-      <section className="md:py-45 py-30 bg-linear-to-t md:bg-linear-to-l to-[#333333] from-[#F5C469]">
+      <section className="md:py-40 py-30 bg-linear-to-t md:bg-linear-to-l to-[#333333] from-[#F5C469]">
         <div className="  flex flex-col md:flex-row  justify-center items-center md:pl-28 font-sans">
           <div>
             <div className="capitalize text-[#dddddd] md:text-6xl text-[32px] text-center md:text-left  font-bold">
@@ -44,7 +44,7 @@ const MainSection = ({ setLoading }) => {
           </div>
           <div className="md:pr-25 md:mt-0 mt-10 text-center">
             <img
-              className="h-50 w-80 md:h-100 md:w-300 rounded-2xl"
+              className="h-50 w-80 md:h-110 md:w-345 rounded-2xl"
               src={image}
               alt=""
             />
