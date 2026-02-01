@@ -17,6 +17,7 @@ import UserProfile from "./pages/UserProfile";
 import CartPage from "./pages/CartPage";
 import ForgotPassword from "./pages/ForgotPassword";
 import SetNewPassword from "./pages/SetNewPassword";
+import PaymentPage from "./pages/PaymentPage";
 
 
 function App() {
@@ -38,6 +39,7 @@ function App() {
         <Route path="/cart" element={<CartPage />} />
         <Route path="/forgotpassword" element={<ForgotPassword/>} />
         <Route path="/resetpassword" element={<SetNewPassword/>} />
+        <Route path="/payment" element={<PaymentPage />} />
       </Routes>
     </Router>
   );

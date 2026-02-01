@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 class CustomerForm(models.Model):
-    customer=models.ForeignKey(User,on_delete=models.CASCADE,null=True,blank=True)
+    customer=models.ForeignKey(User,on_delete=models.CASCADE,null=False,blank=False)
     customer_name= models.CharField(max_length=30, null=False, blank=False)
     phone_number = models.CharField(max_length=15, null=False, blank=False)
     customer_email = models.EmailField(max_length=50, null = False, blank =False)

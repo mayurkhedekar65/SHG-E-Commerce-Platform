@@ -162,30 +162,30 @@ def view_cart(request):
 
 
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def purchase_from_cart(request):
-    user_id = CustomerForm.objects.get(customer_id=request.user.id)
-    product_id = request.data.get("product_id")
-    if Cart_Items.objects.filter(user_id=user_id, product_id=product_id).exists():
-        cart_item = Cart_Items.objects.get(user_id=user_id, product_id=product_id)
-        product = Products.objects.get(id=product_id)
-        if product.stock_quantity >= cart_item.quantity:
-            product.stock_quantity -= cart_item.quantity
-            product.save()
-            Order_Items.objects.create(
-                customer_id = user_id,
-                product_id = product_id,
-                quantity = cart_item.quantity,
-                price_at_time_of_order = product.price,
-                shg_groups_id = product.shg_group_id
-            )
-            cart_item.delete()
-            return Response({"message": " Purchase successful"}, status = status.HTTP_200_OK)
-        else:
-            return Response({"message": " Insufficient stock for the product"}, status = status.HTTP_400_BAD_REQUEST)
-    else:
-        return Response({"message": " Product not found in the Cart"}, status = status.HTTP_400_BAD_REQUEST)
+# @api_view(['POST'])
+# @permission_classes([IsAuthenticated])
+# def purchase_from_cart(request):
+#     user_id = CustomerForm.objects.get(customer_id=request.user.id)
+#     product_id = request.data.get("product_id")
+#     if Cart_Items.objects.filter(user_id=user_id, product_id=product_id).exists():
+#         cart_item = Cart_Items.objects.get(user_id=user_id, product_id=product_id)
+#         product = Products.objects.get(id=product_id)
+#         if product.stock_quantity >= cart_item.quantity:
+#             product.stock_quantity -= cart_item.quantity
+#             product.save()
+#             Order_Items.objects.create(
+#                 customer_id = user_id,
+#                 product_id = product_id,
+#                 quantity = cart_item.quantity,
+#                 price_at_time_of_order = product.price,
+#                 shg_groups_id = product.shg_group_id
+#             )
+#             cart_item.delete()
+#             return Response({"message": " Purchase successful"}, status = status.HTTP_200_OK)
+#         else:
+#             return Response({"message": " Insufficient stock for the product"}, status = status.HTTP_400_BAD_REQUEST)
+#     else:
+#         return Response({"message": " Product not found in the Cart"}, status = status.HTTP_400_BAD_REQUEST)
     
 
 @api_view(['POST'])
