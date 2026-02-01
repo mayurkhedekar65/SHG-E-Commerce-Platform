@@ -15,6 +15,7 @@ import ProductViewCard from "./ProductViewCard";
 */
 const ProductCard = ({
   image,
+  image1,
   ProductName,
   Amount,
   Quantity,
@@ -87,7 +88,7 @@ const ProductCard = ({
           {/* IMAGE */}
           <div className="h-44 bg-white">
             <img
-              src={`http://127.0.0.1:8000/media/${image}`}
+              src={image1 || `http://127.0.0.1:8000/media/${image}`}
               alt={ProductName}
               className="w-full h-full object-contain p-4"
             />
