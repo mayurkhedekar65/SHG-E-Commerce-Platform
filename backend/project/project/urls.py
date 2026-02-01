@@ -40,7 +40,8 @@ urlpatterns = [
     path("adminpanel/updateproduct/<int:id>/",Update_Product),
     path("cart/",include('Customers.urls')),
     path("forgot_password/",reset_password),
-    path("reset_password/",set_new_password)
+    path("reset_password/",set_new_password),
+    path('payments/', include('payments.urls')),
 ]
 
 
