@@ -15,7 +15,7 @@ from groups.models import Order_Items
 from Customers.models import CustomerForm
 from rest_framework.decorators import api_view, permission_classes
 from common.email import send_email
-
+from Products.models import Products
 # Create your views here.
 
 
@@ -179,3 +179,57 @@ def is_shipped(request):
         return Response({"message": "Order marked as shipped successfully"}, status=status.HTTP_200_OK)
     except Order_Items.DoesNotExist:
         return Response({"message": "Order item not found"}, status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_group_profile_data(request, format=None):
+    group_email=User.objects.filter(id=request.user.id).values("username")
+    print(group_email)
+    shg_grp_details = Shg_Group_Registration.objects.filter(shg_id=request.user.id).values(
+        "name_of_shg", "date_of_formation", "registration_number", "contact_number", "village", "taluka", "district", "type_of_shg", "address")
+    return Response({"group_email":group_email,"shg_grp_details": shg_grp_details})
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def update_group_profile_data(request):
+    name_of_shg = request.data.get("name_of_shg")
+    date_of_formation = request.data.get("date_of_formation")
+    registration_number = request.data.get("registration_number")
+    contact_number = request.data.get("contact_number")
+    village = request.data.get("village")
+    taluka = request.data.get("taluka")
+    district= request.data.get("district")
+    type_of_shg = request.data.get("type_of_shg")
+    email = request.data.get("username")
+    address= request.data.get("address")
+    group_id = User.objects.filter(
+        id=request.user.id).values_list("id", flat=True)
+    if Shg_Group_Registration.objects.filter(shg_id=group_id[0]).exists():
+        group_email=User.objects.get(id=request.user.id)
+        group = Shg_Group_Registration.objects.get(shg_id=group_id[0])
+        group_email.username=email
+        group_email.email=email
+        group.name_of_shg = name_of_shg
+        group.date_of_formation = date_of_formation
+        group.registration_number = registration_number
+        group.contact_number = contact_number
+        group.village = village
+        group.taluka = taluka
+        group.district = district
+        group.type_of_shg = type_of_shg
+        group.address = address
+        group_email.save()
+        group.save()
+        return Response({"message": "profile updated"}, status=status.HTTP_200_OK)
+    else:
+        return Response({"message": "profile updation failed"},  status=status.HTTP_400_BAD_REQUEST)
+    
+    
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_group_products_data(request, format=None):
+    shg_group_id=Shg_Group_Registration.objects.get(shg_id=request.user.id)
+    products_list = Products.objects.filter(shg_group_id_id=shg_group_id).values("id",
+        "product_name", "category", "description", "image", "price", "stock_quantity")
+    return Response({"products_list": products_list, })

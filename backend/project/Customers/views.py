@@ -220,15 +220,42 @@ def purchase_now(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def order_history(request):
-    customer_id=CustomerForm.objects.filter(customer_id=request.user.id).values_list("id",flat=True)
-    order_items_list = Order_Items.objects.filter(customer_id_id=customer_id[0], delivered_order=False,shipped_order=False).select_related("product_id_id").values(
-       "product_id__id",
+    customer_id = CustomerForm.objects.filter(
+        customer_id=request.user.id).values_list("id", flat=True)
+    order_items_list = Order_Items.objects.filter(customer_id_id=customer_id[0], delivered_order=False, shipped_order=False).select_related("product_id_id").values(
+        "product_id__id",
         "product_id__product_name",
         "product_id__image",
         "product_id__category",
         "product_id__description",
-        "quantity", 
+        "quantity",
         "price_at_time_of_order")
     if not order_items_list:
         return Response({"message": "items not found"}, status=status.HTTP_400_BAD_REQUEST)
-    return Response({"order_items_list":order_items_list})
+    return Response({"order_items_list": order_items_list})
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def update_user_profile(request):
+    customer_name = request.data.get("customer_name")
+    customer_email = request.data.get("customer_email")
+    phone_number = request.data.get("phone_number")
+    address = request.data.get("address")
+    customer_id = User.objects.filter(
+        id=request.user.id).values_list("id", flat=True)
+    if CustomerForm.objects.filter(customer_id=customer_id[0]).exists():
+        user_email = User.objects.get(id=request.user.id)
+        print(customer_email)
+        customer = CustomerForm.objects.get(customer_id=customer_id[0])
+        user_email.username = customer_email
+        user_email.email = customer_email
+        customer.customer_name = customer_name
+        customer.customer_email = customer_email
+        customer.phone_number = phone_number
+        customer.address = address
+        user_email.save()
+        customer.save()
+        return Response({"message": "profile updated"}, status=status.HTTP_200_OK)
+    else:
+        return Response({"message": "profile updation failed"},  status=status.HTTP_400_BAD_REQUEST)

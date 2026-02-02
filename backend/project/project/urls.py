@@ -17,8 +17,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from main.views import reset_password,set_new_password
-from Products.views import get_products_data,get_group_products_data,get_groups_data,get_group_profile_data,delete_product,Update_Product
-from Customers.views import get_username,get_user_profile_data
+from Products.views import get_products_data,get_groups_data,delete_product,Update_Product
+from Customers.views import get_username,get_user_profile_data,update_user_profile
+from groups.views import get_group_profile_data,update_group_profile_data,get_group_products_data
 from django.conf import settings 
 from django.conf.urls.static import static
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
@@ -34,8 +35,10 @@ urlpatterns = [
     path('get_products/',get_products_data),
     path('get_group_products/',get_group_products_data),
     path('get_grp_profile/',get_group_profile_data),
+    path('update_grp_profile/',update_group_profile_data),
     path('getusername/',get_username),
     path('get_user_profile/',get_user_profile_data),
+    path('update_user_profile/',update_user_profile),
     path('delete_product/<int:id>/',delete_product),
     path("adminpanel/updateproduct/<int:id>/",Update_Product),
     path("cart/",include('Customers.urls')),
