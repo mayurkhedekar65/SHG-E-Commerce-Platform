@@ -8,11 +8,13 @@ import {
   faPhone
 } from "@fortawesome/free-solid-svg-icons";
 import { motion } from "motion/react";
-import GroupImage from "../assets/ChatGPT Image Oct 22, 2025, 06_20_44 PM.png";
+// import GroupImage from "../assets/ChatGPT Image Oct 22, 2025, 06_20_44 PM.png";
 import { useState } from "react";
 import GroupViewCard from "./GroupViewCard";
 
 const GroupCard = ({
+GroupImage,
+GroupImage1,
 NameOfShg,
 DateOfFormation,
 RegistrationNumber,
@@ -26,7 +28,8 @@ Address
   // Logo,
 }) => {
   const group = {
-    image:GroupImage,
+    groupimage:GroupImage,
+    groupimage1:GroupImage1,
     name_of_shg:NameOfShg,
     date_of_formation:DateOfFormation,
     registration_number:RegistrationNumber,
@@ -46,7 +49,7 @@ Address
           {/* IMAGE */}
           <div className="h-36 bg-[#EDEDED] overflow-hidden">
             <img
-              src={GroupImage}
+              src={GroupImage1 || `http://127.0.0.1:8000/media/${GroupImage}`}
               alt={NameOfShg}
               className="w-full h-full object-cover"
             />

@@ -9,7 +9,10 @@ import ProcessCard from "../components/ProcessCard";
 import Footer from "../components/Footer";
 import BottomButtonSection from "../components/BottomButtonSection";
 import { motion } from "framer-motion";
-import coconutimage from "../assets/Beauty_Oils_Round_Bottle.webp"
+import coconutimage from "../assets/Beauty_Oils_Round_Bottle.webp";
+import honeyimage from "../assets/shopping.webp";
+import soapimage from "../assets/soap.webp";
+import handbgimage from "../assets/handbag.avif";
 
 import {
   faUtensils,
@@ -23,7 +26,12 @@ import {
   faHeart,
   faRupeeSign,
 } from "@fortawesome/free-solid-svg-icons";
-import image from "../assets/ChatGPT Image Oct 22, 2025, 06_20_44 PM.png";
+import shgimg1 from "../assets/shg1.jpg";
+import shgimg2 from "../assets/shg2.jpg";
+import shgimg3 from "../assets/shg3.jpg";
+import shgimg4 from "../assets/shg4.jpg";
+
+
 import Loader from "../components/Loader";
 
 const Home = () => {
@@ -113,9 +121,7 @@ const Home = () => {
                   Category={"Edible Oil"}
                 ></ProductCard>
                 <ProductCard
-                  image={
-                    "https://via.placeholder.com/300x200.png?text=Organic+Honey"
-                  }
+                  image1={honeyimage}
                   ProductName={"Organic Honey"}
                   Amount={"450"}
                   Quantity={200}
@@ -125,9 +131,7 @@ const Home = () => {
                   Category={"Honey & Syrups"}
                 ></ProductCard>
                 <ProductCard
-                  image={
-                    "https://via.placeholder.com/300x200.png?text=Handmade+Soap"
-                  }
+                  image1={soapimage}
                   ProductName={"Lavender Handmade Soap"}
                   Amount={"150"}
                   Quantity={300}
@@ -137,9 +141,7 @@ const Home = () => {
                   Category={"Personal Care"}
                 ></ProductCard>
                 <ProductCard
-                  image={
-                    "https://via.placeholder.com/300x200.png?text=Handwoven+Bag"
-                  }
+                  image1={handbgimage}
                   ProductName={"Handwoven Cotton Bag"}
                   Amount={"600"}
                   Quantity={150}
@@ -162,7 +164,8 @@ const Home = () => {
               </div>
               <div className="grid grid-col-1 md:grid-cols-4  items-stretch md:mx-20 md:gap-x-3 text-center pt-10">
                 <GroupCard
-                  NameOfShg={"Mountain Weavers SHG"}
+                  GroupImage1={shgimg1}
+                  NameOfShg={"Mountain Weavers"}
                   DateOfFormation={"05-06-2019"}
                   RegistrationNumber={"SHG13579XYZ"}
                   ContactNumber={"+91 97654 32109"}
@@ -175,7 +178,8 @@ const Home = () => {
                   }
                 ></GroupCard>
                 <GroupCard
-                  NameOfShg={"Seaside Artisans SHG"}
+                  GroupImage1={shgimg2}
+                  NameOfShg={"Seaside Artisans"}
                   DateOfFormation={"22-11-2016"}
                   RegistrationNumber={"SHG24680LMN"}
                   ContactNumber={"+91 99887 66554"}
@@ -188,7 +192,8 @@ const Home = () => {
                   }
                 ></GroupCard>
                 <GroupCard
-                  NameOfShg={"Greenfields Farmers SHG"}
+                  GroupImage1={shgimg3}
+                  NameOfShg={"Greenfields Farmers"}
                   DateOfFormation={"10-03-2018"}
                   RegistrationNumber={"SHG67890ABC"}
                   ContactNumber={"+91 91234 56789"}
@@ -199,7 +204,8 @@ const Home = () => {
                   Address={"House No. 12, Market Road, Ponda, North Goa, Goa"}
                 ></GroupCard>
                 <GroupCard
-                  NameOfShg={"Sunshine Women's SHG"}
+                  GroupImage1={shgimg4}
+                  NameOfShg={"Sunshine Women's"}
                   DateOfFormation={"15-08-2015"}
                   RegistrationNumber={"SHG12345XYZ"}
                   ContactNumber={"+91 98765 43210"}
