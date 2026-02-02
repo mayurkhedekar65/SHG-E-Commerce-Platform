@@ -30,7 +30,7 @@ const ProductViewCard = ({ isOpen, onClose, product, addToCart }) => {
             {/* IMAGE */}
             <div className="md:w-1/2 bg-[#F3F3F3] flex items-center justify-center p-6">
               <img
-                src={`http://127.0.0.1:8000/media/${product.image}`}
+                src={product.image1 || `http://127.0.0.1:8000/media/${product.image}`}
                 alt={product.name}
                 className="max-h-[420px] object-contain"
               />

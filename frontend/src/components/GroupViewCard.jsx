@@ -36,7 +36,7 @@ const GroupViewCard = ({ isOpen, onClose, group}) => {
       {/* LEFT IMAGE */}
       <div className="md:w-1/2 bg-[#EDEDED] flex items-center justify-center p-6">
         <img
-          src={group.image}
+          src={group.groupimage1 || `http://127.0.0.1:8000/media/${group.groupimage}`}
           alt="SHG"
           className="max-h-[400px] w-full object-cover rounded-lg"
         />

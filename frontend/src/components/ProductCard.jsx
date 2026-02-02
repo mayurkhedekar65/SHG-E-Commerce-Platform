@@ -29,6 +29,7 @@ const ProductCard = ({
     price: Amount,
     unit: Quantity,
     image: image,
+    image1:image1,
     category: Category,
     description: Description,
   };
