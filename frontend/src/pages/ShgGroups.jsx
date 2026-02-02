@@ -75,6 +75,7 @@ const ShgGroups = () => {
                     {Groups.map((item, index) => (
                       <GroupCard
                         key={index}
+                        GroupImage={item["image"]}
                         NameOfShg={item["name_of_shg"]}
                         DateOfFormation={item["date_of_formation"]}
                         RegistrationNumber={item["registration_number"]}

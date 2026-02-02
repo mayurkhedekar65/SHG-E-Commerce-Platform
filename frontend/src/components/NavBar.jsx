@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faXmark, faShoppingCart } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBars,
+  faXmark,
+  faShoppingCart,
+} from "@fortawesome/free-solid-svg-icons";
 import logo from "../assets/shg_baazar_logo.png";
 import Loader from "./Loader";
 import { useNavigate } from "react-router-dom";
@@ -74,10 +78,14 @@ const Navbar = () => {
     <>
       {loader && <Loader />}
       {hide && (
-        <header className="flex justify-center items-center gap-70 md:gap-160 py-2 md:bg-linear-to-l md:to-[#333333] md:from-[#F5C469] bg-linear-to-b from-[#333333] to-[#3d3c3c] fixed w-full z-50">
+        <header className="flex justify-center items-center gap-70 md:gap-140 py-2 md:bg-linear-to-l md:to-[#333333] md:from-[#F5C469] bg-linear-to-b from-[#333333] to-[#3d3c3c] fixed w-full z-50">
           <div>
             <button onClick={() => navigate("/")}>
-              <img className="w-12 h-12 md:w-15 md:h-15" src={logo} alt="Logo" />
+              <img
+                className="w-12 h-12 md:w-15 md:h-15"
+                src={logo}
+                alt="Logo"
+              />
             </button>
           </div>
           <div className="md:hidden">
@@ -87,17 +95,42 @@ const Navbar = () => {
               onClick={() => setMenuOpen(!menuOpen)}
             />
           </div>
-          <nav className={`${menuOpen ? "flex flex-col absolute top-14 left-0 w-full bg-[#3d3c3c] py-4 space-y-4 items-center" : "hidden"} md:flex md:space-x-8 md:static md:flex-row md:justify-center md:items-center md:space-y-0 md:bg-transparent capitalize`}>
+          <nav
+            className={`${menuOpen ? "flex flex-col absolute top-14 left-0 w-full bg-[#3d3c3c] py-4 space-y-4 items-center" : "hidden"} md:flex md:space-x-8 md:static md:flex-row md:justify-center md:items-center md:space-y-0 md:bg-transparent capitalize`}
+          >
             <div className="flex flex-col md:flex-row justify-around items-center gap-5 md:gap-10 capitalize text-[16.5px] text-[#dddddd] md:text-[#333333]">
-             <button className="capitalize" onClick={() => navigate("/")}>home</button>
-              <button className="capitalize" onClick={() => showLoader("/shggroups")}>SHG Groups</button>
-              <button className="capitalize" onClick={() => showLoader("/contact")}>contact</button>
-              <button className="capitalize" onClick={() => showLoader("/about")}>about</button>
+              <button className="capitalize" onClick={() => navigate("/")}>
+                home
+              </button>
+              <button
+                className="capitalize"
+                onClick={() => showLoader("/shggroups")}
+              >
+                SHG Groups
+              </button>
+              <button
+                className="capitalize"
+                onClick={() => showLoader("/contact")}
+              >
+                contact
+              </button>
+              <button
+                className="capitalize"
+                onClick={() => showLoader("/about")}
+              >
+                about
+              </button>
 
               {loggedIn && (
                 <>
-                  <button className="relative flex items-center gap-2 text-[#F5C469] md:text-[#333333] hover:scale-110 transition-transform" onClick={() => showLoader("/cart")}>
-                    <FontAwesomeIcon icon={faShoppingCart} className="text-xl" />
+                  <button
+                    className="relative flex items-center gap-2 text-[#F5C469] md:text-[#333333] hover:scale-110 transition-transform"
+                    onClick={() => showLoader("/cart")}
+                  >
+                    <FontAwesomeIcon
+                      icon={faShoppingCart}
+                      className="text-xl"
+                    />
                     {cartCount > 0 && (
                       <span className="absolute -top-2 -right-2 bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full border border-white">
                         {cartCount}
@@ -105,11 +138,17 @@ const Navbar = () => {
                     )}
                     <span className="md:hidden">Cart</span>
                   </button>
-
-                  <button className="capitalize bg-[#F5C469] text-[#333333] md:bg-[#333333] md:text-[#dddddd] border border-[#dddddd] py-2 px-6 rounded-lg md:rounded-full" onClick={() => showLoader("/userprofile")}>
+                  <button
+                  w-40
+                    className="overflow-hidden   w-40 text-ellipsis  capitalize bg-[#F5C469] text-[#333333] md:bg-[#333333] md:text-[#dddddd] border border-[#dddddd] py-2 px-6 rounded-lg md:rounded-full "
+                    onClick={() => showLoader("/userprofile")}
+                  >
                     {username.split("@", 1)}
                   </button>
-                  <button className="capitalize text-[#F5C469] bg-[#333333] md:text-[#333333] md:bg-[#dddddd] border border-[#333333] py-2 px-6 rounded-lg md:rounded-full" onClick={logout}>
+                  <button
+                    className="capitalize text-[#F5C469] bg-[#333333] md:text-[#333333] md:bg-[#dddddd] border border-[#333333] py-2 px-6 rounded-lg md:rounded-full"
+                    onClick={logout}
+                  >
                     logout
                   </button>
                 </>
@@ -117,10 +156,16 @@ const Navbar = () => {
 
               {!loggedIn && (
                 <>
-                  <button className="capitalize bg-[#F5C469] text-[#333333] md:bg-[#333333] md:text-[#dddddd] border border-[#dddddd] py-2 px-6 rounded-lg md:rounded-full" onClick={() => showLoader("/registrationform")}>
+                  <button
+                    className="capitalize bg-[#F5C469] text-[#333333] md:bg-[#333333] md:text-[#dddddd] border border-[#dddddd] py-2 px-6 rounded-lg md:rounded-full"
+                    onClick={() => showLoader("/registrationform")}
+                  >
                     register SHG
                   </button>
-                  <button className="capitalize text-[#F5C469] bg-[#333333] md:text-[#333333] md:bg-[#dddddd] border border-[#333333] py-2 px-6 rounded-lg md:rounded-full" onClick={() => showLoader("/signup")}>
+                  <button
+                    className="capitalize text-[#F5C469] bg-[#333333] md:text-[#333333] md:bg-[#dddddd] border border-[#333333] py-2 px-6 rounded-lg md:rounded-full"
+                    onClick={() => showLoader("/signup")}
+                  >
                     signup
                   </button>
                 </>

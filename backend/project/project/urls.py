@@ -17,9 +17,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from main.views import reset_password,set_new_password
-from Products.views import get_products_data,get_groups_data,delete_product,Update_Product
+from Products.views import get_products_data,delete_product,Update_Product
 from Customers.views import get_username,get_user_profile_data,update_user_profile
-from groups.views import get_group_profile_data,update_group_profile_data,get_group_products_data
+from groups.views import get_group_profile_data,update_group_profile_data,get_group_products_data,get_groups_data
 from django.conf import settings 
 from django.conf.urls.static import static
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView

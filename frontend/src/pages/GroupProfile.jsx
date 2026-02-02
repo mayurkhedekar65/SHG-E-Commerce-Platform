@@ -35,12 +35,21 @@ const GroupProfile = () => {
 
   const handleUpdateProfile = async () => {
     try {
+      const formData = new FormData();
+
+      Object.keys(editData).forEach((key) => {
+        if (editData[key] !== null && editData[key] !== undefined) {
+          formData.append(key, editData[key]);
+        }
+      });
+
       const res = await axios.post(
         "http://127.0.0.1:8000/update_grp_profile/",
-        editData,
+        formData,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            "Content-Type": "multipart/form-data",
           },
         },
       );
@@ -48,7 +57,7 @@ const GroupProfile = () => {
       setProfileData(res.data.updated_group);
       setIsEditOpen(false);
       alert("Group profile updated successfully");
-      window.location.reload();
+      window.location.reload(); // keeping your logic
     } catch (error) {
       console.error(error);
       alert("Failed to update group profile");
@@ -82,6 +91,15 @@ const GroupProfile = () => {
           <h3 className="text-2xl font-semibold text-gray-900 mb-8">
             Group Details
           </h3>
+          {profileData?.image && (
+            <div className="flex justify-center mb-10">
+              <img
+                src={`http://127.0.0.1:8000/media/${profileData.image}`}
+                alt="SHG"
+                className="w-100 h-56 object-cover rounded-2xl shadow-lg"
+              />
+            </div>
+          )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {[
@@ -125,7 +143,7 @@ const GroupProfile = () => {
       {/* EDIT MODAL */}
       {isEditOpen && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-3xl p-8 w-full max-w-xl shadow-xl">
+          <div className="bg-white rounded-3xl p-8 w-full max-w-xl shadow-xl max-h-[90vh] overflow-y-auto">
             <h3 className="text-2xl font-bold mb-6">Edit SHG Profile</h3>
 
             <div className="space-y-4">
@@ -158,6 +176,34 @@ const GroupProfile = () => {
                 }
                 className="w-full px-4 py-3 rounded-xl border"
               />
+
+              <div className="text-left">
+                <label className="capitalize text-[#333333] md:text-[15px] text-[14px]">
+                  Group Picture
+                </label>
+
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) =>
+                    setEditData({ ...editData, image: e.target.files[0] })
+                  }
+                  className="mt-2 border bg-[#dddddd] border-[#333333] w-full rounded-xl p-2 text-[14px]"
+                />
+
+                {/* Image preview */}
+                {editData.image && (
+                  <img
+                    src={
+                      editData.image instanceof File
+                        ? URL.createObjectURL(editData.image)
+                        : `http://127.0.0.1:8000/media/${editData.image}`
+                    }
+                    alt="Preview"
+                    className="w-32 h-32 object-cover rounded-lg mt-4 border"
+                  />
+                )}
+              </div>
             </div>
 
             <div className="flex justify-end gap-4 mt-8">

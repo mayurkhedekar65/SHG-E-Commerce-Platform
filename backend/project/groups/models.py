@@ -26,7 +26,8 @@ class Shg_Group_Registration(models.Model):
     district = models.CharField(max_length=20, choices=District.choices, default=District.NORTH_GOA)
     type_of_shg = models.CharField(max_length=10, choices=ShgType.choices, default=ShgType.WOMEN)
     address = models.CharField(max_length=500, null=False, blank=False)
-
+    image = models.ImageField(upload_to='group_images/', null=True, blank=True)
+    
 
 class Order_Items(models.Model):
     customer_id = models.ForeignKey(CustomerForm, on_delete=models.CASCADE)
