@@ -1,5 +1,3 @@
-
-
 import React, { useState } from "react";
 import Navbar from "../components/NavBar";
 import Footer from "../components/Footer";
@@ -11,6 +9,8 @@ import { useNavigate } from "react-router-dom";
 const RegistrationForm = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(null);
+  const [groupImage, setGroupImage] = useState(null);
+
   const showLoader = () => {
     setLoading(true);
     setTimeout(() => {
@@ -18,7 +18,7 @@ const RegistrationForm = () => {
       navigate("/shglogin");
     }, 1500);
   };
-  const [FormData, setFormData] = useState({
+  const [formData, setFormData] = useState({
     name_of_shg: "",
     date_of_formation: "",
     registration_number: "",
@@ -32,66 +32,85 @@ const RegistrationForm = () => {
     address: "",
   });
   const handleChange = (e) => {
-    setFormData({ ...FormData, [e.target.name]: e.target.value });
+    const { name, value, files } = e.target;
+    if (name === "image") {
+      setGroupImage(files[0]); // store file
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (
-      FormData["name_of_shg"] == "" ||
-      FormData["date_of_formation"] == "" ||
-      FormData["registration_number"] == "" ||
-      FormData["contact_number"] == "" ||
-      FormData["village"] == "" ||
-      FormData["taluka"] == "" ||
-      FormData["district"] == "" ||
-      FormData["type_of_shg"] == "" ||
-      FormData["email"] == "" ||
-      FormData["password"] == "" ||
-      FormData["address"] == ""
+      formData["name_of_shg"] == "" ||
+      formData["date_of_formation"] == "" ||
+      formData["registration_number"] == "" ||
+      formData["contact_number"] == "" ||
+      formData["village"] == "" ||
+      formData["taluka"] == "" ||
+      formData["district"] == "" ||
+      formData["type_of_shg"] == "" ||
+      formData["email"] == "" ||
+      formData["password"] == "" ||
+      formData["address"] == ""
     ) {
-      if (FormData["name_of_shg"] == "") {
+      if (formData["name_of_shg"] == "") {
         alert("please enter group name !");
       }
-      if (FormData["date_of_formation"] == "") {
+      if (formData["date_of_formation"] == "") {
         alert("please enter group registration date !");
       }
-      if (FormData["registration_number"] == "") {
+      if (formData["registration_number"] == "") {
         alert("please enter group registration number !");
       }
-      if (FormData["contact_number"] == "") {
+      if (formData["contact_number"] == "") {
         alert("please enter group contact number !");
       }
-      if (FormData["contact_number"].length < 10) {
+      if (formData["contact_number"].length < 10) {
         alert("contact number length cannot be less than 10 !");
       }
-      if (FormData["village"] == "") {
+      if (formData["village"] == "") {
         alert("please enter village!");
       }
-      if (FormData["taluka"] == "") {
+      if (formData["taluka"] == "") {
         alert("please enter taluka !");
       }
-      if (FormData["district"] == "") {
-        alert("please enter village !");
+      if (formData["district"] == "") {
+        alert("please enter district !");
       }
-      if (FormData["type_of_shg"] == "") {
+      if (formData["type_of_shg"] == "") {
         alert("please enter type_of_shg !");
       }
-      if (FormData["email"] == "") {
+      if (formData["email"] == "") {
         alert("please enter email !");
       }
-      if (FormData["password"] == "") {
+      if (formData["password"] == "") {
         alert("please enter password !");
       }
-      if (FormData["address"] == "") {
+      if (formData["address"] == "") {
         alert("please enter Address !");
       }
     } else {
       try {
-        // --- FIX: ADDED withCredentials AND REDIRECT ON SUCCESS ---
-        const response = await axios.post(
+        const formDataToSend = new FormData();
+
+        // keep your FormData object, just append it
+        Object.entries(formData).forEach(([key, value]) => {
+          formDataToSend.append(key, value);
+        });
+
+        // append image
+        formDataToSend.append("image", groupImage);
+
+        await axios.post(
           "http://127.0.0.1:8000/groupform/submit_registration_form/",
-          FormData,
+          formDataToSend,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          },
         );
 
         alert("form submitted !");
@@ -109,8 +128,8 @@ const RegistrationForm = () => {
           address: "",
         });
 
-        navigate("/adminpanel"); // Redirect to dashboard
-        // -----------------------------------------------------
+        setGroupImage(null);
+        navigate("/shglogin");
       } catch (error) {
         console.error("error in submitting form !", error);
         alert("error in submitting form.please try again !");
@@ -156,7 +175,7 @@ const RegistrationForm = () => {
                           type="text"
                           placeholder="eg., Mahalaxmi Mahila SHG"
                           onChange={handleChange}
-                          value={FormData.name_of_shg}
+                          value={formData.name_of_shg}
                         />
                       </div>
 
@@ -174,7 +193,7 @@ const RegistrationForm = () => {
                           className="border bg-[#dddddd] border-[#333333] w-70 h-13 md:w-80 md:h-12 mb-6 rounded-xl pl-3 placeholder:capitalize placeholder:text-[14px] text-[#585858]"
                           type="date"
                           onChange={handleChange}
-                          value={FormData.date_of_formation}
+                          value={formData.date_of_formation}
                         />
                       </div>
                     </div>
@@ -195,7 +214,7 @@ const RegistrationForm = () => {
                           type="text"
                           placeholder="eg., SHG-GOA-2025-017"
                           onChange={handleChange}
-                          value={FormData.registration_number}
+                          value={formData.registration_number}
                         />
                       </div>
                       <div>
@@ -213,7 +232,7 @@ const RegistrationForm = () => {
                           type="text"
                           placeholder="eg., 9146228061"
                           onChange={handleChange}
-                          value={FormData.contact_number}
+                          value={formData.contact_number}
                         />
                       </div>
                     </div>
@@ -234,7 +253,7 @@ const RegistrationForm = () => {
                           type="text"
                           placeholder="eg., Keri,Panchawadi"
                           onChange={handleChange}
-                          value={FormData.village}
+                          value={formData.village}
                         />
                       </div>
                       <div>
@@ -252,7 +271,7 @@ const RegistrationForm = () => {
                           type="text"
                           placeholder="eg., Sattari"
                           onChange={handleChange}
-                          value={FormData.taluka}
+                          value={formData.taluka}
                         />
                       </div>
                     </div>
@@ -272,8 +291,12 @@ const RegistrationForm = () => {
                           name="district"
                           id=""
                           onChange={handleChange}
-                          value={FormData.district}
+                          value={formData.district}
                         >
+                          {" "}
+                          <option value="" disabled>
+                            Select District
+                          </option>
                           <option value="North Goa">North Goa</option>
                           <option value="South Goa">South Goa</option>
                         </select>
@@ -292,8 +315,11 @@ const RegistrationForm = () => {
                           name="type_of_shg"
                           id=""
                           onChange={handleChange}
-                          value={FormData.type_of_shg}
+                          value={formData.type_of_shg}
                         >
+                          <option value="" disabled>
+                            Select Type
+                          </option>
                           <option value="Women">Women</option>
                           <option value="Men">Men</option>
                           <option value="Mixed">Mixed</option>
@@ -317,7 +343,7 @@ const RegistrationForm = () => {
                           type="text"
                           placeholder="eg., shaktienterprises@gmail.com"
                           onChange={handleChange}
-                          value={FormData.email}
+                          value={formData.email}
                         />
                       </div>
                       <div>
@@ -335,7 +361,7 @@ const RegistrationForm = () => {
                           type="password"
                           placeholder="password"
                           onChange={handleChange}
-                          value={FormData.password}
+                          value={formData.password}
                         />
                       </div>
                     </div>
@@ -351,15 +377,39 @@ const RegistrationForm = () => {
                           </label>
                         </div>
                         <textarea
-                          className="mb-10 w-70 h-30 md:w-2xl md:h-35 p-3 border bg-[#dddddd]  border-[#333333] rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent resize-none placeholder:capitalize placeholder:text-[14px] placeholder:text-[#585858]"
+                          className="mb-2 w-70 h-30 md:w-2xl md:h-35 p-3 border bg-[#dddddd]  border-[#333333] rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent resize-none placeholder:capitalize placeholder:text-[14px] placeholder:text-[#585858]"
                           placeholder="eg., House No. 56, Near Primary School, Keri, Valpoi – 403505"
                           onChange={handleChange}
-                          value={FormData.address}
+                          value={formData.address}
                           name="address"
                         ></textarea>
                       </div>
-                      <div></div>
+                    
                     </div>
+                    <div>
+                      <div className="text-left mb-2">
+                        <label className="capitalize text-[#333333] md:text-[15px] text-[14px]">
+                          Group Picture*
+                        </label>
+                        <div className="mt-2">
+                          <input
+                            type="file"
+                            name="image"
+                            accept="image/*"
+                            onChange={handleChange}
+                            className="border bg-[#dddddd] border-[#333333] w-70 md:w-full mb-6 rounded-xl p-2 text-[14px]"
+                          />
+                          {groupImage && (
+                            <img
+                              src={URL.createObjectURL(groupImage)}
+                              alt="Preview"
+                              className="w-32 h-32 object-cover rounded-lg mb-6 border border-[#333333]"
+                            />
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
                     <div className="flex flex-col md:flex-row justify-center items-center">
                       <button className="hover:bg-[#dddddd] hover:border-[#333333] hover:border  hover:rounded-lg  hover:text-[#333333] bg-accent bg-[#333333] text-[#F5C469] font-semibold capitalize border pt-2 pb-2 md:px-77 px-28 rounded-xl md:text-[17px] text-[17px]">
                         submit

@@ -36,7 +36,6 @@ class SubmitRegistrationForm(APIView):
             )
             shg_user.set_password(shg_password)
             shg_user.save()
-
             Shg_Group_Registration.objects.create(
                 shg=shg_user,
                 name_of_shg=serializer.validated_data['name_of_shg'],
@@ -47,7 +46,8 @@ class SubmitRegistrationForm(APIView):
                 taluka=serializer.validated_data['taluka'],
                 district=serializer.validated_data['district'],
                 type_of_shg=serializer.validated_data['type_of_shg'],
-                address=serializer.validated_data['address']
+                address=serializer.validated_data['address'],
+                image=serializer.validated_data.get('image')
             )
 
             # 🔑 JWT generation
@@ -148,10 +148,13 @@ def is_shipped(request):
         order_item = Order_Items.objects.get(order_id=order_id)
         order_item.order_status = 'SHIPPED'
         order_item.save()
-        distributer_email=Shg_Group_Registration.objects.filter(shg_id=request.user.id).values("email").first()
-        consumer_id=Order_Items.objects.filter(shg_group_id_id=request.user.id,order_id_id=order_id).values("customer_id_id").first()
-        customer_email=CustomerForm.objects.filter(customer_id=consumer_id).values("customer_email").first()
-        mail_sub="Your Order Has Been Shipped"
+        distributer_email = Shg_Group_Registration.objects.filter(
+            shg_id=request.user.id).values("email").first()
+        consumer_id = Order_Items.objects.filter(
+            shg_group_id_id=request.user.id, order_id_id=order_id).values("customer_id_id").first()
+        customer_email = CustomerForm.objects.filter(
+            customer_id=consumer_id).values("customer_email").first()
+        mail_sub = "Your Order Has Been Shipped"
         message = """
         Hello,
 
@@ -174,8 +177,9 @@ def is_shipped(request):
         Best regards,
         Customer Support Team
         """
-   
-        send_email(request,distributer_email,customer_email,message,mail_sub)
+
+        send_email(request, distributer_email,
+                   customer_email, message, mail_sub)
         return Response({"message": "Order marked as shipped successfully"}, status=status.HTTP_200_OK)
     except Order_Items.DoesNotExist:
         return Response({"message": "Order item not found"}, status=status.HTTP_404_NOT_FOUND)
@@ -184,11 +188,11 @@ def is_shipped(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_group_profile_data(request, format=None):
-    group_email=User.objects.filter(id=request.user.id).values("username")
-    print(group_email)
+    group_email = User.objects.filter(id=request.user.id).values("username")
     shg_grp_details = Shg_Group_Registration.objects.filter(shg_id=request.user.id).values(
-        "name_of_shg", "date_of_formation", "registration_number", "contact_number", "village", "taluka", "district", "type_of_shg", "address")
-    return Response({"group_email":group_email,"shg_grp_details": shg_grp_details})
+        "name_of_shg", "date_of_formation", "registration_number", "contact_number", "village", "taluka", "district", "type_of_shg", "address", "image")
+    return Response({"group_email": group_email, "shg_grp_details": shg_grp_details})
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -199,17 +203,18 @@ def update_group_profile_data(request):
     contact_number = request.data.get("contact_number")
     village = request.data.get("village")
     taluka = request.data.get("taluka")
-    district= request.data.get("district")
+    district = request.data.get("district")
     type_of_shg = request.data.get("type_of_shg")
     email = request.data.get("username")
-    address= request.data.get("address")
+    address = request.data.get("address")
+    group_image = request.FILES.get("image")
     group_id = User.objects.filter(
         id=request.user.id).values_list("id", flat=True)
     if Shg_Group_Registration.objects.filter(shg_id=group_id[0]).exists():
-        group_email=User.objects.get(id=request.user.id)
+        group_email = User.objects.get(id=request.user.id)
         group = Shg_Group_Registration.objects.get(shg_id=group_id[0])
-        group_email.username=email
-        group_email.email=email
+        group_email.username = email
+        group_email.email = email
         group.name_of_shg = name_of_shg
         group.date_of_formation = date_of_formation
         group.registration_number = registration_number
@@ -219,17 +224,26 @@ def update_group_profile_data(request):
         group.district = district
         group.type_of_shg = type_of_shg
         group.address = address
+        group.image = group_image
         group_email.save()
         group.save()
         return Response({"message": "profile updated"}, status=status.HTTP_200_OK)
     else:
         return Response({"message": "profile updation failed"},  status=status.HTTP_400_BAD_REQUEST)
-    
-    
+
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_group_products_data(request, format=None):
-    shg_group_id=Shg_Group_Registration.objects.get(shg_id=request.user.id)
+    shg_group_id = Shg_Group_Registration.objects.get(shg_id=request.user.id)
     products_list = Products.objects.filter(shg_group_id_id=shg_group_id).values("id",
-        "product_name", "category", "description", "image", "price", "stock_quantity")
+                                                                                 "product_name", "category", "description", "image", "price", "stock_quantity")
     return Response({"products_list": products_list, })
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def get_groups_data(request, format=None):
+    shg_grp_list = Shg_Group_Registration.objects.values(
+        "name_of_shg", "date_of_formation", "registration_number", "contact_number", "village", "taluka", "district", "type_of_shg", "address", "image")
+    return Response({"shg_grp_list": shg_grp_list})
