@@ -144,7 +144,7 @@ const UserProfile = () => {
               {/* Orders Preview Section (Original Grid) */}
               <section className="grid grid-cols-1 md:grid-cols-2 gap-10">
                 {/* Pending Orders Preview */}
-                <div className="bg-white rounded-3xl shadow-lg p-8 hover:shadow-xl transition-shadow duration-300">
+                {/* <div className="bg-white rounded-3xl shadow-lg p-8 hover:shadow-xl transition-shadow duration-300">
                   <div className="flex justify-between items-center mb-6">
                     <h3 className="text-2xl font-extrabold text-gray-900 tracking-wide">
                       Pending Orders
@@ -176,10 +176,10 @@ const UserProfile = () => {
                     )}
                   </ul>
                   <button onClick={() => setActiveTab("pending")} className="mt-6 text-[#bfa85f] font-bold text-sm uppercase tracking-widest hover:underline">View All</button>
-                </div>
+                </div> */}
 
                 {/* Delivered Orders Preview */}
-                <div className="bg-white rounded-3xl shadow-lg p-8 hover:shadow-xl transition-shadow duration-300">
+                {/* <div className="bg-white rounded-3xl shadow-lg p-8 hover:shadow-xl transition-shadow duration-300">
                   <div className="flex justify-between items-center mb-6">
                     <h3 className="text-2xl font-extrabold text-gray-900 tracking-wide">
                       Delivered Orders
@@ -211,7 +211,7 @@ const UserProfile = () => {
                     )}
                   </ul>
                   <button onClick={() => setActiveTab("delivered")} className="mt-6 text-[#bfa85f] font-bold text-sm uppercase tracking-widest hover:underline">View History</button>
-                </div>
+                </div> */}
               </section>
             </>
           )}
