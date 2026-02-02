@@ -4,12 +4,13 @@ import { useNavigate } from "react-router-dom";
 import AdminProductCard from "../components/AdminProductCard";
 import AddProductForm from "../components/AddProductForm.jsx";
 import GroupProfile from "./GroupProfile.jsx";
+import OrderManagement from "../components/OrderManagement.jsx"; // NEW IMPORT
 
 const AdminPanel = () => {
   const [productList, setProductList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingProduct, setEditingProduct] = useState(null); // NEW STATE
+  const [editingProduct, setEditingProduct] = useState(null);
   const [activeSection, setActiveSection] = useState("dashboard");
   const navigate = useNavigate();
 
@@ -80,6 +81,7 @@ const AdminPanel = () => {
           <nav className="flex-1 space-y-3 text-sm font-semibold tracking-wide">
             {[
               { key: "dashboard", label: "Dashboard" },
+              { key: "orders", label: "Manage Orders" }, // NEW LINK
               { key: "profile", label: "Profile" },
             ].map((item) => (
               <button
@@ -142,6 +144,8 @@ const AdminPanel = () => {
             </>
           )}
 
+          {activeSection === "orders" && <OrderManagement />} {/* NEW SECTION */}
+
           {activeSection === "profile" && <GroupProfile />}
         </main>
 
@@ -159,5 +163,4 @@ const AdminPanel = () => {
   );
 };
 
-// ... keep SHGProfilePanel as it was ...
 export default AdminPanel;

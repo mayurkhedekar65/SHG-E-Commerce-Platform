@@ -19,7 +19,7 @@ from django.urls import path,include
 from main.views import reset_password,set_new_password
 from Products.views import get_products_data,get_groups_data,delete_product,Update_Product
 from Customers.views import get_username,get_user_profile_data,update_user_profile
-from groups.views import get_group_profile_data,update_group_profile_data,get_group_products_data
+from groups.views import get_group_profile_data,update_group_profile_data,get_group_products_data , get_shg_orders, approve_or_reject_order, is_shipped
 from django.conf import settings 
 from django.conf.urls.static import static
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
@@ -46,6 +46,9 @@ urlpatterns = [
     path("reset_password/",set_new_password),
     path('payments/', include('payments.urls')),
     path('user_orders/', include('Customers.urls')),
+    path('get_shg_orders/', get_shg_orders),
+    path('approve_or_reject_order/',approve_or_reject_order),
+    path('is_shipped/',is_shipped),
 ]
 
 
