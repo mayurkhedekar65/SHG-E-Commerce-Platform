@@ -12,7 +12,7 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.tokens import RefreshToken
 from groups.models import Order_Items
-from Customers.models import CustomerForm
+from Customers.models import CustomerForm ,Customer_Orders
 from rest_framework.decorators import api_view, permission_classes
 from common.email import send_email
 from Products.models import Products
@@ -116,16 +116,39 @@ class AdminPanelView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_shg_orders(request):
+    try:
+        shg_group = Shg_Group_Registration.objects.get(shg_id=request.user.id)
+        orders = Order_Items.objects.filter(shg_groups_id=shg_group).values(
+            "id", 
+            "customer_id__customer_name", 
+            "product_id__product_name", 
+            "quantity", 
+            "price_at_time_of_order", 
+            "action", 
+            "shipped_order", 
+            "delivered_order"
+        ).order_by('-id')
+
+        return Response({"orders_list": list(orders)}, status=status.HTTP_200_OK)
+    
+    except Shg_Group_Registration.DoesNotExist:
+        return Response({"message": "SHG profile not found"}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return Response({"message": "Internal Server Error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def approve_or_reject_order(request):
-    user_id = CustomerForm.objects.get(customer_id=request.user.id)
     Shg_id = Shg_Group_Registration.objects.get(shg_id=request.user.id)
     order_id = request.data.get("order_id")
     action = request.data.get("action")
     try:
         order_item = Order_Items.objects.get(
-            id=order_id, shg_groups_id=Shg_id, user_id=user_id)
+            id=order_id, shg_groups_id=Shg_id)
         if action in ['APPROVED', 'REJECTED']:
             order_item.action = action
             order_item.save()
@@ -133,6 +156,8 @@ def approve_or_reject_order(request):
                 product = order_item.product_id
                 product.stock_quantity -= order_item.quantity
                 product.save()
+            order_item.action = action
+            order_item.save()
             return Response({"message": f"Order {action.lower()} successfully"}, status=status.HTTP_200_OK)
         else:
             return Response({"message": "Invalid action"}, status=status.HTTP_400_BAD_REQUEST)
@@ -145,16 +170,18 @@ def approve_or_reject_order(request):
 def is_shipped(request):
     order_id = request.data.get("order_id")
     try:
-        order_item = Order_Items.objects.get(order_id=order_id)
-        order_item.order_status = 'SHIPPED'
+        order_item = Order_Items.objects.get(order_id=order_id , shg_groups_id__shg_id=request.user.id)
+        order_item.shipped_order = True
         order_item.save()
-        distributer_email = Shg_Group_Registration.objects.filter(
-            shg_id=request.user.id).values("email").first()
-        consumer_id = Order_Items.objects.filter(
-            shg_group_id_id=request.user.id, order_id_id=order_id).values("customer_id_id").first()
-        customer_email = CustomerForm.objects.filter(
-            customer_id=consumer_id).values("customer_email").first()
-        mail_sub = "Your Order Has Been Shipped"
+
+        main_order = order_item.order_id 
+        main_order.order_status = 'Shipped'
+        main_order.save()
+        
+        distributer_email=Shg_Group_Registration.objects.filter(shg_id=request.user.id).values("email").first()
+        consumer_id=Order_Items.objects.filter(shg_group_id_id=request.user.id,order_id_id=order_id).values("customer_id_id").first()
+        customer_email=CustomerForm.objects.filter(customer_id=consumer_id).values("customer_email").first()
+        mail_sub="Your Order Has Been Shipped"
         message = """
         Hello,
 
@@ -237,9 +264,32 @@ def update_group_profile_data(request):
 def get_group_products_data(request, format=None):
     shg_group_id = Shg_Group_Registration.objects.get(shg_id=request.user.id)
     products_list = Products.objects.filter(shg_group_id_id=shg_group_id).values("id",
-                                                                                 "product_name", "category", "description", "image", "price", "stock_quantity")
+        "product_name", "category", "description", "image", "price", "stock_quantity")
     return Response({"products_list": products_list, })
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_shg_orders(request):
+    try:
+        shg_group = Shg_Group_Registration.objects.get(shg_id=request.user.id)
+        orders = Order_Items.objects.filter(shg_groups_id=shg_group).select_related('customer_id', 'product_id').values(
+            "id", 
+            "customer_id__customer_name", 
+            "product_id__product_name", 
+            "quantity", 
+            "price_at_time_of_order", 
+            "action", 
+            "shipped_order", 
+            "delivered_order"
+        ).order_by('-id')
+
+        return Response({"orders_list": list(orders)}, status=status.HTTP_200_OK)
+    
+    except Shg_Group_Registration.DoesNotExist:
+        return Response({"message": "SHG profile not found"}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return Response({"message": "Internal Server Error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
