@@ -359,3 +359,17 @@ def get_groups_data(request, format=None):
     shg_grp_list = Shg_Group_Registration.objects.values(
         "name_of_shg", "date_of_formation", "registration_number", "contact_number", "village", "taluka", "district", "type_of_shg", "address", "image")
     return Response({"shg_grp_list": shg_grp_list})
+
+
+
+
+
+
+
+
+# @api_view(['GET'])
+# @permission_classes([AllowAny])
+# def get_groups_data(request, format=None):
+#     shg_grp_list = Shg_Group_Registration.objects.values(
+#         "name_of_shg", "date_of_formation", "registration_number", "contact_number", "village", "taluka", "district", "type_of_shg", "address", "image")
+#     return Response({"shg_grp_list": shg_grp_list})
