@@ -53,6 +53,40 @@ class SubmitUserRegistrationForm(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+# class UserLogin(APIView):
+#     permission_classes = []
+
+#     def post(self, request, format=None):
+#         user_email = request.data.get("email")
+#         password = request.data.get("password")
+
+#         try:
+#             user_obj = User.objects.get(email=user_email)
+#         except User.DoesNotExist:
+#             return Response(
+#                 {'message': 'user not registered'},
+#                 status=status.HTTP_400_BAD_REQUEST
+#             )
+
+#         user = authenticate(username=user_obj.username, password=password)
+
+#         if user is None:
+#             return Response(
+#                 {'message': 'invalid credentials'},
+#                 status=status.HTTP_400_BAD_REQUEST
+#             )
+
+#         refresh = RefreshToken.for_user(user)
+
+#         return Response(
+#             {
+#                 'message': 'user logged in successfully',
+#                 'access': str(refresh.access_token),
+#                 'refresh': str(refresh)
+#             },
+#             status=status.HTTP_200_OK
+#         )
+
 class UserLogin(APIView):
     permission_classes = []
 
@@ -61,31 +95,41 @@ class UserLogin(APIView):
         password = request.data.get("password")
 
         try:
+            
             user_obj = User.objects.get(email=user_email)
+            user = authenticate(username=user_obj.username, password=password)
+
+            if user is not None:
+                
+                is_shg = Shg_Group_Registration.objects.filter(shg_id=user.id).exists()
+                if is_shg:
+                    return Response({'message': 'SHG admins must use the Admin Login portal'}, status=status.HTTP_403_FORBIDDEN)
+
+            
+                try:
+                    is_customer = CustomerForm.objects.filter(customer_email=user_email).exists()
+                    
+                    if not is_customer:
+                        return Response({'message': 'Access denied: No customer profile found'}, status=status.HTTP_403_FORBIDDEN)
+
+                    refresh = RefreshToken.for_user(user)
+                    return Response({
+                        'message': 'user logged in successfully',
+                        'access': str(refresh.access_token),
+                        'refresh': str(refresh)
+                    }, status=status.HTTP_200_OK)
+                
+                except Exception as model_err:
+                    print(f"Model Error: {str(model_err)}")
+                    return Response({'message': 'Database configuration error in Customer profile'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+            return Response({'message': 'invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
+
         except User.DoesNotExist:
-            return Response(
-                {'message': 'user not registered'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        user = authenticate(username=user_obj.username, password=password)
-
-        if user is None:
-            return Response(
-                {'message': 'invalid credentials'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        refresh = RefreshToken.for_user(user)
-
-        return Response(
-            {
-                'message': 'user logged in successfully',
-                'access': str(refresh.access_token),
-                'refresh': str(refresh)
-            },
-            status=status.HTTP_200_OK
-        )
+            return Response({'message': 'user not registered'}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            print(f"General Login Error: {str(e)}")
+            return Response({'message': 'Internal Server Error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @api_view(['GET'])
@@ -259,3 +303,4 @@ def update_user_profile(request):
         return Response({"message": "profile updated"}, status=status.HTTP_200_OK)
     else:
         return Response({"message": "profile updation failed"},  status=status.HTTP_400_BAD_REQUEST)
+
