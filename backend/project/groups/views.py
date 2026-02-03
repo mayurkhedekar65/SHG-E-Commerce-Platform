@@ -72,20 +72,30 @@ class AdminLogin(APIView):
         try:
             if '@' not in username:
                 return Response({'message': 'invalid email id'}, status=status.HTTP_400_BAD_REQUEST)
+            
+            user_obj = User.objects.get(email=username)
+            user = authenticate(username=user_obj.username, password=password)
+            
+            if user is not None:
+                # Role Check: Check if user is registered in the SHG table
+                is_shg = Shg_Group_Registration.objects.filter(shg_id=user.id).exists()
+                
+                if not is_shg:
+                    return Response({'message': 'Access denied: You are not registered as an SHG group'}, status=status.HTTP_403_FORBIDDEN)
+                
+                refresh = RefreshToken.for_user(user)
+                return Response({
+                    'message': 'shg logged in successfully', 
+                    'access': str(refresh.access_token), 
+                    'refresh': str(refresh)
+                }, status=status.HTTP_200_OK)
             else:
-                user_obj = User.objects.get(email=username)
-                if not user_obj:
-                    return Response({'message': 'email id not registered'}, status=status.HTTP_400_BAD_REQUEST)
-                else:
-                    user = authenticate(
-                        username=user_obj.username, password=password)
-                    if user is not None:
-                        refresh = RefreshToken.for_user(user)
-                        return Response({'message': 'shg logged in successfully',  'access': str(refresh.access_token), 'refresh': str(refresh)}, status=status.HTTP_201_CREATED)
-                    else:
-                        return Response({'message': 'invalid creditials'}, status=status.HTTP_400_BAD_REQUEST)
-        except:
+                return Response({'message': 'invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
+                
+        except User.DoesNotExist:
             return Response({'message': 'user not registered'}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({'message': f'Server error: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class AdminPanelView(APIView):
@@ -164,13 +174,12 @@ def approve_or_reject_order(request):
     except Order_Items.DoesNotExist:
         return Response({"message": "Order item not found"}, status=status.HTTP_404_NOT_FOUND)
 
-
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def is_shipped(request):
     order_id = request.data.get("order_id")
     try:
-        order_item = Order_Items.objects.get(order_id=order_id , shg_groups_id__shg_id=request.user.id)
+        order_item = Order_Items.objects.get(id=order_id, shg_groups_id__shg_id=request.user.id)
         order_item.shipped_order = True
         order_item.save()
 
@@ -178,40 +187,90 @@ def is_shipped(request):
         main_order.order_status = 'Shipped'
         main_order.save()
         
-        distributer_email=Shg_Group_Registration.objects.filter(shg_id=request.user.id).values("email").first()
-        consumer_id=Order_Items.objects.filter(shg_group_id_id=request.user.id,order_id_id=order_id).values("customer_id_id").first()
-        customer_email=CustomerForm.objects.filter(customer_id=consumer_id).values("customer_email").first()
-        mail_sub="Your Order Has Been Shipped"
-        message = """
-        Hello,
+        distributer_email = request.user.email 
+        customer_email = order_item.customer_id.customer_email 
+        
+        if customer_email and distributer_email:
+            mail_sub = "Your Order Has Been Shipped"
+            message = """
+            Hello,
 
-        We’re happy to let you know that your order has been shipped and is on its way to you.
+            We’re happy to let you know that your order has been shipped and is on its way to you.
 
-        Shipment details:
+            Shipment details:
 
-        Order Number: [Order Number]
+            Order Number: [Order Number]
 
-        Carrier: [Shipping Carrier]
+            Carrier: [Shipping Carrier]
 
-        Tracking Number: [Tracking Number]
+            Tracking Number: [Tracking Number]
 
-        Estimated Delivery Date: [Estimated Delivery Date]
+            Estimated Delivery Date: [Estimated Delivery Date]
 
-        You can track your shipment using the tracking number provided above. If you have any questions or need further assistance, feel free to contact us.
+            You can track your shipment using the tracking number provided above. If you have any questions or need further assistance, feel free to contact us.
 
-        Thank you for your business—we hope you enjoy your purchase!
+            Thank you for your business—we hope you enjoy your purchase!
 
-        Best regards,
-        Customer Support Team
-        """
+            Best regards,
+            Customer Support Team
+            """
+            
+            try:
+                send_email(request, distributer_email, customer_email, message, mail_sub)
+            except Exception as email_err:
+                print(f"Email delivery failed: {str(email_err)}")
 
-        send_email(request, distributer_email,
-                   customer_email, message, mail_sub)
         return Response({"message": "Order marked as shipped successfully"}, status=status.HTTP_200_OK)
+
     except Order_Items.DoesNotExist:
         return Response({"message": "Order item not found"}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({"message": f"Server Error: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def mark_delivered(request):
+    order_item_id = request.data.get("order_id")
+    try:
+        order_item = Order_Items.objects.get(id=order_item_id, shg_groups_id__shg_id=request.user.id)
+        
+        if not order_item.shipped_order:
+            return Response({"message": "Order must be marked as shipped before delivery confirmation."}, status=status.HTTP_400_BAD_REQUEST)
+            
+        order_item.delivered_order = True
+        order_item.save()
 
+        main_order = order_item.order_id
+        main_order.order_status = 'Delivered'
+        main_order.save()
+
+        distributer_email = request.user.email
+        customer_email = order_item.customer_id.customer_email
+
+        if customer_email and distributer_email:
+            mail_sub = "Your Order Has Been Delivered"
+            message = f"""
+            Hello,
+
+            Your order for {order_item.product_id.product_name} has been successfully delivered.
+
+            We hope you are satisfied with your purchase. Thank you for supporting our Self-Help Group!
+
+            Best regards,
+            Customer Support Team
+            """
+            try:
+                send_email(request, distributer_email, customer_email, message, mail_sub)
+            except Exception as email_err:
+                print(f"Email delivery failed: {str(email_err)}")
+
+        return Response({"message": "Order delivered successfully!"}, status=status.HTTP_200_OK)
+
+    except Order_Items.DoesNotExist:
+        return Response({"message": "Order record not found."}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({"message": "Internal Server Error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_group_profile_data(request, format=None):
