@@ -350,6 +350,9 @@ def get_shg_orders(request):
         print(f"Error: {str(e)}")
         return Response({"message": "Internal Server Error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
+
+
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def get_groups_data(request, format=None):
