@@ -279,6 +279,26 @@ def order_history(request):
     return Response({"order_items_list": order_items_list})
 
 
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def delivered_history(request):
+    customer_id = CustomerForm.objects.filter(
+        customer_id=request.user.id).values_list("id", flat=True)
+    delivered_items_list = Order_Items.objects.filter(customer_id_id=customer_id[0], delivered_order=True, shipped_order=True, action='APPROVED').select_related("product_id_id").values(
+        "product_id__id",
+        "product_id__product_name",
+        "product_id__image",
+        "product_id__category",
+        "product_id__description",
+        "quantity",
+        "price_at_time_of_order")
+    print(delivered_items_list)
+    if not delivered_items_list:
+        return Response({"message": "items not found"}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({"delivered_items_list": delivered_items_list})
+
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def update_user_profile(request):

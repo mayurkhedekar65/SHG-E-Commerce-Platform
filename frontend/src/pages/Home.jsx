@@ -56,7 +56,7 @@ const Home = () => {
 
   // 3. Initial Loading Timer (Matching your ContainerLoader logic)
   useEffect(() => {
-    const timer = setTimeout(() => setFetchLoader(false), 3500);
+    const timer = setTimeout(() => setFetchLoader(false), 500);
     return () => clearTimeout(timer);
   }, []);
 
@@ -111,11 +111,11 @@ const Home = () => {
       )}
 
       {/* --- Main UI Logic --- */}
-      {loading ? (
+      {/* {loading ? (
         <div className="flex justify-center items-center h-screen">
           <Loader />
         </div>
-      ) : (
+      ) : ( */}
         <>
           {/* Header & Hero Section */}
           <motion.div
@@ -171,7 +171,7 @@ const Home = () => {
 
               {fetchLoader ? (
                 <div className="py-10">
-                  <ContainerLoader />
+                  {/* <ContainerLoader /> */}
                 </div>
               ) : (
                 <div className="flex flex-col md:flex-row justify-center items-center gap-5 md:gap-10 text-center pt-10 px-4">
@@ -248,7 +248,8 @@ const Home = () => {
                 <div className="py-10">
                   <ContainerLoader />
                 </div>
-              ) : (
+              ) :
+               (
                 <div className="grid grid-col-1 md:grid-cols-4 items-stretch md:mx-20 md:gap-x-3 text-center pt-10">
                   {shgGroups.length > 0 ? (
                     shgGroups.slice(0, 4).map((item, index) => (
@@ -385,7 +386,7 @@ const Home = () => {
             <Footer setLoading={setLoading} />
           </motion.div>
         </>
-      )}
+      {/* )} */}
     </>
   );
 };

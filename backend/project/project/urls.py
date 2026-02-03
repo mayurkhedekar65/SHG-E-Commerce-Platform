@@ -46,6 +46,7 @@ urlpatterns = [
     path("reset_password/",set_new_password),
     path('payments/', include('payments.urls')),
     path('user_orders/', include('Customers.urls')),
+    path('user_delivered_orders/', include('Customers.urls')),
     path('get_shg_orders/', get_shg_orders),
     path('approve_or_reject_order/',approve_or_reject_order),
     path('is_shipped/',is_shipped),
