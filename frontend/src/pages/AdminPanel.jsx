@@ -65,6 +65,7 @@ const AdminPanel = () => {
 
   const logOut = () => {
     localStorage.removeItem("access_token");
+    alert("logged out successfully.")
     navigate("/");
   };
 
