@@ -9,6 +9,8 @@ const Signup = () => {
 
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [formData, setFormData] = useState({
     customer_name: "",
@@ -56,7 +58,7 @@ const Signup = () => {
     try {
       await axios.post(
         "http://127.0.0.1:8000/userform/user_registration_form/",
-        formData
+        formData,
       );
 
       alert("form submitted !");
@@ -117,22 +119,42 @@ const Signup = () => {
                   className="border bg-[#dddddd] border-[#333333] w-70 h-13 md:w-80 md:h-12 mb-6 rounded-xl pl-3"
                 />
 
-                <input
-                  name="password"
-                  type="password"
-                  placeholder="enter your password"
-                  onChange={handleChange}
-                  value={formData.password}
-                  className="border bg-[#dddddd] border-[#333333] w-70 h-13 md:w-80 md:h-12 mb-6 rounded-xl pl-3"
-                />
+                <div className="relative mb-6">
+                  <input
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="enter your password"
+                    onChange={handleChange}
+                    value={formData.password}
+                    className="border bg-[#dddddd] border-[#333333] w-70 h-13 md:w-80 md:h-12 rounded-xl pl-3 pr-12"
+                  />
 
-                <input
-                  type="password"
-                  placeholder="confirm your password"
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  value={confirmPassword}
-                  className="border bg-[#dddddd] border-[#333333] w-70 h-13 md:w-80 md:h-12 mb-10 rounded-xl pl-3"
-                />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-700"
+                  >
+                    {showPassword ? "Hide" : "Show"}
+                  </button>
+                </div>
+
+                <div className="relative mb-10">
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    placeholder="confirm your password"
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    value={confirmPassword}
+                    className="border bg-[#dddddd] border-[#333333] w-70 h-13 md:w-80 md:h-12 rounded-xl pl-3 pr-12"
+                  />
+
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-700"
+                  >
+                    {showConfirmPassword ? "Hide" : "Show"}
+                  </button>
+                </div>
 
                 <button className="bg-[#333333] text-[#F5C469] font-semibold border pt-2 pb-2 md:px-33 px-28 rounded-xl md:text-[17px] text-[17px]">
                   submit

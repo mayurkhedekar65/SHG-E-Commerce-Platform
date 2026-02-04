@@ -8,6 +8,7 @@ const RegistrationForm = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(null);
   const [groupImage, setGroupImage] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   const showLoader = () => {
     setLoading(true);
@@ -32,7 +33,7 @@ const RegistrationForm = () => {
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     if (name === "image") {
-      setGroupImage(files[0]); 
+      setGroupImage(files[0]);
     } else {
       setFormData({ ...formData, [name]: value });
     }
@@ -97,7 +98,6 @@ const RegistrationForm = () => {
           formDataToSend.append(key, value);
         });
 
-     
         formDataToSend.append("image", groupImage);
 
         await axios.post(
@@ -146,7 +146,6 @@ const RegistrationForm = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 3 }}
           >
-  
             <div className=" bg-[#dddddd]">
               <div className="text-center pt-35">
                 <h1 className="font-bold md:text-3xl text-2xl">
@@ -324,42 +323,48 @@ const RegistrationForm = () => {
                       </div>
                     </div>
 
-                    <div className="flex flex-col md:flex-row justify-center items-center md:gap-8">
+                    <div className="flex flex-col md:flex-row justify-center items-center md:gap-8 md:mb-6">
                       <div>
                         <div className="text-left mb-2">
-                          <label
-                            htmlFor="text"
-                            className="capitalize text-[#333333] md:text-[15px] text-[14px]"
-                          >
+                          <label className="capitalize text-[#333333] md:text-[15px] text-[14px]">
                             email*
                           </label>
                         </div>
                         <input
                           name="email"
-                          className="border bg-[#dddddd] border-[#333333] w-70 h-13 md:w-80 md:h-12 mb-6 rounded-xl pl-3 placeholder:capitalize placeholder:text-[14px] placeholder:text-[#585858]"
-                          type="text"
+                          className="border bg-[#dddddd] border-[#333333] w-70 h-13 md:w-80 md:h-12  rounded-xl pl-3  placeholder:text-[14px] placeholder:text-[#585858]"
+                          type="email"
                           placeholder="eg., shaktienterprises@gmail.com"
                           onChange={handleChange}
                           value={formData.email}
                         />
                       </div>
+
                       <div>
                         <div className="text-left mb-2">
-                          <label
-                            htmlFor="text"
-                            className="capitalize text-[#333333] md:text-[15px] text-[14px]"
-                          >
+                          <label className="capitalize text-[#333333] md:text-[15px] text-[14px]">
                             password*
                           </label>
                         </div>
-                        <input
-                          name="password"
-                          className="border bg-[#dddddd] border-[#333333] w-70 h-13 md:w-80 md:h-12 mb-6 rounded-xl pl-3 placeholder:capitalize placeholder:text-[14px] placeholder:text-[#585858]"
-                          type="password"
-                          placeholder="password"
-                          onChange={handleChange}
-                          value={formData.password}
-                        />
+
+                        <div className="relative">
+                          <input
+                            name="password"
+                            type={showPassword ? "text" : "password"}
+                            placeholder="enter your password"
+                            onChange={handleChange}
+                            value={formData.password}
+                            className="border bg-[#dddddd] border-[#333333] w-70 h-13 md:w-80 md:h-12  rounded-xl pl-3 pr-12 placeholder:capitalize placeholder:text-[14px] placeholder:text-[#585858]"
+                          />
+
+                          <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute right-3 top-0 h-full flex items-center text-sm text-gray-700"
+                          >
+                            {showPassword ? "Hide" : "Show"}
+                          </button>
+                        </div>
                       </div>
                     </div>
 
@@ -381,7 +386,6 @@ const RegistrationForm = () => {
                           name="address"
                         ></textarea>
                       </div>
-                    
                     </div>
                     <div>
                       <div className="text-left mb-2">

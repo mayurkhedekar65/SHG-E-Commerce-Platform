@@ -3,7 +3,6 @@ import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-
 function CheckoutForm({ amount }) {
   const stripe = useStripe();
   const elements = useElements();
@@ -11,46 +10,24 @@ function CheckoutForm({ amount }) {
 
   const [loading, setLoading] = useState(false);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState("CARD"); // CARD | COD
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      console.log("STEP 1: Creating payment intent");
+      const token = localStorage.getItem("access_token");
 
-      const res = await axios.post(
-        "http://127.0.0.1:8000/payments/create-payment-intent/",
-        { amount }
-      );
-
-      const { client_secret } = res.data;
-      console.log("Client secret received");
-
-      const result = await stripe.confirmCardPayment(client_secret, {
-        payment_method: {
-          card: elements.getElement(CardElement),
-        },
-      });
-
-      if (result.error) {
-        console.error("Stripe error:", result.error);
-        alert("Payment Failed: " + result.error.message);
-        setLoading(false);
-        return;
-      }
-
-      console.log("Stripe status:", result.paymentIntent.status);
-
-      if (result.paymentIntent.status === "succeeded") {
-        console.log("STEP 3: Confirming payment on backend");
-
-        const token = localStorage.getItem("access_token");
-
+      // =====================
+      // CASH ON DELIVERY
+      // =====================
+      if (paymentMethod === "COD") {
         await axios.post(
-          "http://127.0.0.1:8000/payments/purchase/",
+          "http://127.0.0.1:8000/payments/cash-purchase/",
           {
-            payment_intent_id: result.paymentIntent.id,
+            payment_method: "COD",
+            amount: amount,
           },
           {
             headers: {
@@ -59,7 +36,46 @@ function CheckoutForm({ amount }) {
           }
         );
 
-        console.log("Order created in DB");
+        setPaymentSuccess(true);
+        return;
+      }
+
+      // =====================
+      // STRIPE CARD PAYMENT
+      // =====================
+      const res = await axios.post(
+        "http://127.0.0.1:8000/payments/create-payment-intent/",
+        { amount }
+      );
+
+      const { client_secret } = res.data;
+
+      const result = await stripe.confirmCardPayment(client_secret, {
+        payment_method: {
+          card: elements.getElement(CardElement),
+        },
+      });
+
+      if (result.error) {
+        alert("Payment Failed: " + result.error.message);
+        setLoading(false);
+        return;
+      }
+
+      if (result.paymentIntent.status === "succeeded") {
+        await axios.post(
+          "http://127.0.0.1:8000/payments/purchase/",
+          {
+            payment_intent_id: result.paymentIntent.id,
+            payment_method: "CARD",
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
         setPaymentSuccess(true);
       }
     } catch (err) {
@@ -71,111 +87,134 @@ function CheckoutForm({ amount }) {
   };
 
   return (
-    <>
-      
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "linear-gradient(135deg, #2f2f2f, #caa24d)",
+        paddingTop: "120px",
+        paddingBottom: "60px",
+      }}
+    >
       <div
         style={{
-          minHeight: "100vh",
-          background: "linear-gradient(135deg, #2f2f2f, #caa24d)",
-          paddingTop: "120px",
-          paddingBottom: "60px",
+          width: "100%",
+          maxWidth: "900px",
+          margin: "0 auto",
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: "40px",
         }}
       >
+        {/* LEFT – ORDER SUMMARY */}
         <div
           style={{
-            width: "100%",
-            maxWidth: "900px",
-            margin: "0 auto",
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: "40px",
+            background: "#1f1f1f",
+            color: "#fff",
+            padding: "30px",
+            borderRadius: "24px",
+            boxShadow: "0 20px 50px rgba(0,0,0,0.4)",
           }}
         >
-        
-          <div
+          <button
+            onClick={() => navigate("/cart")}
             style={{
-              background: "#1f1f1f",
-              color: "#fff",
-              padding: "30px",
-              borderRadius: "24px",
-              boxShadow: "0 20px 50px rgba(0,0,0,0.4)",
+              background: "transparent",
+              border: "none",
+              color: "#f5c469",
+              marginBottom: "20px",
+              cursor: "pointer",
+              fontSize: "14px",
             }}
           >
-            <button
-              onClick={() => navigate("/cart")}
-              style={{
-                background: "transparent",
-                border: "none",
-                color: "#f5c469",
-                marginBottom: "20px",
-                cursor: "pointer",
-                fontSize: "14px",
-              }}
-            >
-              ← Back to Cart
-            </button>
+            ← Back to Cart
+          </button>
 
-            <h2 style={{ marginBottom: "20px", color: "#f5c469" }}>
-              Order Summary
-            </h2>
+          <h2 style={{ marginBottom: "20px", color: "#f5c469" }}>
+            Order Summary
+          </h2>
 
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <span>Shipping</span>
-              <span style={{ color: "#6ee7b7" }}>Free</span>
-            </div>
-
-            <hr style={{ borderColor: "#333", margin: "20px 0" }} />
-
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                fontSize: "20px",
-              }}
-            >
-              <strong>Total Payable</strong>
-              <strong style={{ color: "#f5c469" }}>₹{amount}</strong>
-            </div>
-
-            <p
-              style={{
-                marginTop: "25px",
-                fontSize: "13px",
-                color: "#aaa",
-                lineHeight: "1.6",
-              }}
-            >
-              🔒 Secure payment using Stripe <br />
-              💳 Card details are never stored <br />
-              🧪 Test Mode (No real money)
-            </p>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <span>Shipping</span>
+            <span style={{ color: "#6ee7b7" }}>Free</span>
           </div>
 
-       
+          <hr style={{ borderColor: "#333", margin: "20px 0" }} />
+
           <div
             style={{
-              background: "#ffffff",
-              padding: "35px",
-              borderRadius: "24px",
-              boxShadow: "0 20px 40px rgba(0,0,0,0.15)",
+              display: "flex",
+              justifyContent: "space-between",
+              fontSize: "20px",
             }}
           >
-            {!paymentSuccess ? (
-              <form onSubmit={handleSubmit}>
-                <h2 style={{ textAlign: "center", fontWeight: "800" }}>
-                  Secure Payment
-                </h2>
+            <strong>Total Payable</strong>
+            <strong style={{ color: "#f5c469" }}>₹{amount}</strong>
+          </div>
 
-                <p
-                  style={{
-                    textAlign: "center",
-                    marginBottom: "30px",
-                    color: "#666",
-                  }}
-                >
-                  Pay <strong>₹{amount}</strong>
-                </p>
+          <p
+            style={{
+              marginTop: "25px",
+              fontSize: "13px",
+              color: "#aaa",
+              lineHeight: "1.6",
+            }}
+          >
+            🔒 Secure checkout <br />
+            💳 Card payments via Stripe <br />
+            💵 Cash on Delivery available
+          </p>
+        </div>
 
+        {/* RIGHT – PAYMENT */}
+        <div
+          style={{
+            background: "#ffffff",
+            padding: "35px",
+            borderRadius: "24px",
+            boxShadow: "0 20px 40px rgba(0,0,0,0.15)",
+          }}
+        >
+          {!paymentSuccess ? (
+            <form onSubmit={handleSubmit}>
+              <h2 style={{ textAlign: "center", fontWeight: "800" }}>
+                Secure Payment
+              </h2>
+
+              <p
+                style={{
+                  textAlign: "center",
+                  marginBottom: "30px",
+                  color: "#666",
+                }}
+              >
+                Pay <strong>₹{amount}</strong>
+              </p>
+
+              {/* PAYMENT METHOD */}
+              <div style={{ marginBottom: "25px" }}>
+                <h4 style={{ marginBottom: "12px" }}>Payment Method</h4>
+
+                <label style={{ display: "flex", gap: "10px", marginBottom: "10px" }}>
+                  <input
+                    type="radio"
+                    checked={paymentMethod === "CARD"}
+                    onChange={() => setPaymentMethod("CARD")}
+                  />
+                  Debit / Credit Card
+                </label>
+
+                <label style={{ display: "flex", gap: "10px" }}>
+                  <input
+                    type="radio"
+                    checked={paymentMethod === "COD"}
+                    onChange={() => setPaymentMethod("COD")}
+                  />
+                  Cash on Delivery
+                </label>
+              </div>
+
+              {/* CARD INPUT */}
+              {paymentMethod === "CARD" && (
                 <div
                   style={{
                     padding: "16px",
@@ -186,67 +225,71 @@ function CheckoutForm({ amount }) {
                 >
                   <CardElement />
                 </div>
+              )}
 
-                <button
-                  type="submit"
-                  disabled={!stripe || loading}
-                  style={{
-                    width: "100%",
-                    padding: "16px",
-                    background: "#f5c469",
-                    color: "#1f1f1f",
-                    border: "none",
-                    borderRadius: "14px",
-                    fontSize: "16px",
-                    fontWeight: "800",
-                    cursor: "pointer",
-                  }}
-                >
-                  {loading ? "Processing..." : "Pay Now →"}
-                </button>
-              </form>
-            ) : (
-              <div style={{ textAlign: "center" }}>
-                <h2 style={{ color: "#16a34a" }}>✅ Payment Successful</h2>
+              <button
+                type="submit"
+                disabled={loading || (paymentMethod === "CARD" && !stripe)}
+                style={{
+                  width: "100%",
+                  padding: "16px",
+                  background: "#f5c469",
+                  color: "#1f1f1f",
+                  border: "none",
+                  borderRadius: "14px",
+                  fontSize: "16px",
+                  fontWeight: "800",
+                  cursor: "pointer",
+                }}
+              >
+                {loading
+                  ? "Processing..."
+                  : paymentMethod === "CARD"
+                  ? "Pay Now →"
+                  : "Place Order →"}
+              </button>
+            </form>
+          ) : (
+            <div style={{ textAlign: "center" }}>
+              <h2 style={{ color: "#16a34a" }}>✅ Order Placed</h2>
 
-                <p style={{ marginBottom: "30px", color: "#555" }}>
-                  Your order has been placed successfully.
-                </p>
+              <p style={{ marginBottom: "30px", color: "#555" }}>
+                Your order has been placed successfully.
+              </p>
 
-                <button
-                  onClick={() => navigate("/")}
-                  style={{
-                    width: "100%",
-                    padding: "14px",
-                    background: "#333",
-                    color: "#fff",
-                    borderRadius: "12px",
-                    marginBottom: "12px",
-                    fontWeight: "700",
-                  }}
-                >
-                  Continue Shopping
-                </button>
+              <button
+                onClick={() => navigate("/")}
+                style={{
+                  width: "100%",
+                  padding: "14px",
+                  background: "#333",
+                  color: "#fff",
+                  borderRadius: "12px",
+                  marginBottom: "12px",
+                  fontWeight: "700",
+                }}
+              >
+                Continue Shopping
+              </button>
 
-                <button
-                  onClick={() => navigate("/userprofile")}
-                  style={{
-                    width: "100%",
-                    padding: "14px",
-                    background: "#f5c469",
-                    color: "#1f1f1f",
-                    borderRadius: "12px",
-                    fontWeight: "700",
-                  }}
-                >
-                  View Orders
-                </button>
-              </div>
-            )}
-          </div>
+              <button
+                onClick={() => navigate("/userprofile")}
+                style={{
+                  width: "100%",
+                  padding: "14px",
+                  background: "#f5c469",
+                  color: "#1f1f1f",
+                  borderRadius: "12px",
+                  fontWeight: "700",
+                }}
+              >
+                View Orders
+              </button>
+            </div>
+          )}
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

@@ -6,6 +6,8 @@ import Loader from "../components/Loader";
 const Signin = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
+
   const showLoader = () => {
     setLoading(true);
     setTimeout(() => {
@@ -101,24 +103,25 @@ const Signin = () => {
                     value={FormData.email}
                   />
                 </div>
-                <div>
-                  <div className="text-left mb-2">
-                    <label
-                      htmlFor="password"
-                      className="capitalize text-[#333333]  md:text-[15px] text-[14px]"
-                    >
-                      password*
-                    </label>
-                  </div>
+                <div className="relative mb-6">
                   <input
                     name="password"
-                    className="border  bg-[#dddddd] border-[#333333]  w-70 h-13 md:w-80 md:h-12 mb-6 rounded-xl pl-3 placeholder:capitalize placeholder:text-[14px] placeholder:text-[#585858]"
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     placeholder="enter your password"
                     onChange={handleChange}
                     value={FormData.password}
+                    className="border bg-[#dddddd] border-[#333333] w-70 h-13 md:w-80 md:h-12 rounded-xl pl-3 pr-12 placeholder:capitalize placeholder:text-[14px] placeholder:text-[#585858]"
                   />
+
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-700"
+                  >
+                    {showPassword ? "Hide" : "Show"}
+                  </button>
                 </div>
+
                 <div>
                   <button className="hover:bg-[#dddddd] hover:border-[#333333] hover:border  hover:rounded-lg  hover:text-[#333333] bg-accent bg-[#333333] text-[#F5C469] font-semibold capitalize border pt-2 pb-2 md:px-33 px-28 rounded-xl md:text-[17px] text-[17px]">
                     submit
