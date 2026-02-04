@@ -64,7 +64,7 @@ The platform provides a smooth shopping experience for customers while giving **
 ### 1. Clone the Repository
 
 ```bash
-git clone <https://github.com/Abhiraj05/Self-Help-Group.git>
+git clone https://github.com/Abhiraj05/Self-Help-Group.git
 ```
 
 ---
