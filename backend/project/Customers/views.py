@@ -11,6 +11,8 @@ from rest_framework.decorators import api_view, permission_classes
 from Customers.models import CustomerForm
 from Products.models import Cart_Items, Products
 from groups.models import *
+from django.db.models import Q
+
 
 
 
@@ -233,7 +235,7 @@ def purchase_now(request):
 def order_history(request):
     customer_id = CustomerForm.objects.filter(
         customer_id=request.user.id).values_list("id", flat=True)
-    order_items_list = Order_Items.objects.filter(customer_id_id=customer_id[0], delivered_order=False, shipped_order=False).select_related("product_id_id").values(
+    order_items_list = Order_Items.objects.filter(customer_id_id=customer_id[0], delivered_order=False).filter( Q(shipped_order=True) | Q(shipped_order=False)).select_related("product_id_id").values(
         "product_id__id",
         "product_id__product_name",
         "product_id__image",
@@ -244,7 +246,7 @@ def order_history(request):
         "shipped_order",
         "delivered_order",
         "action",)
-    print(order_items_list)
+   
     if not order_items_list:
         return Response({"message": "items not found"}, status=status.HTTP_400_BAD_REQUEST)
     return Response({"order_items_list": order_items_list})
@@ -269,7 +271,7 @@ def delivered_history(request):
         "shipped_order",
         "delivered_order",
         "action",)
-    print(delivered_items_list)
+ 
     if not delivered_items_list:
         return Response({"message": "items not found"}, status=status.HTTP_400_BAD_REQUEST)
     return Response({"delivered_items_list": delivered_items_list})
@@ -289,7 +291,6 @@ def update_user_profile(request):
         id=request.user.id).values_list("id", flat=True)
     if CustomerForm.objects.filter(customer_id=customer_id[0]).exists():
         user_email = User.objects.get(id=request.user.id)
-        print(customer_email)
         customer = CustomerForm.objects.get(customer_id=customer_id[0])
         user_email.username = customer_email
         user_email.email = customer_email
