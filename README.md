@@ -182,6 +182,8 @@ http://127.0.0.1:5173
 
 ## Screenshots
 
+![Home Page](assets/screencapture-127-0-0-1-5173-2026-02-04-19_18_33.png)
+
 ### User Authentication
 ![User Signup](assets/screencapture-127-0-0-1-5173-signup-2026-02-04-19_22_24.png)
 ![User Login](assets/screencapture-127-0-0-1-5173-signin-2026-02-04-19_21_41.png)
@@ -236,20 +238,4 @@ http://127.0.0.1:5173
 ![Contact](assets/screencapture-127-0-0-1-5173-contact-2026-02-04-19_19_53.png)
 
 
----
 
-## Future Enhancements
-
-* Mobile app version
-* Advanced analytics for SHGs
-* Product reviews & ratings
-* Multi-language support
-* Integration with logistics APIs
-
----
-
-## Conclusion
-
-The **SHG E-Commerce Platform** provides a scalable and secure digital marketplace for Self Help Groups, helping them reach a wider audience while maintaining full control over products, orders, and customer interactions.
-
----
