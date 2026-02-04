@@ -42,7 +42,7 @@ const ShgGroups = () => {
           >
             <Navbar></Navbar>
             <section className="bg-[#f0f0f0] min-h-screen py-34">
-              {!loader && (
+              {!loader && Groups.length != 0 && (
                 <div className="text-center mb-12">
                   <h2 className="text-3xl md:text-4xl font-bold text-[#333333]">
                     SHG Groups
@@ -54,15 +54,27 @@ const ShgGroups = () => {
                 </div>
               )}
 
-        
               {loader && (
                 <div className="flex justify-center items-center h-40">
                   <ContainerLoader />
                 </div>
               )}
+              {!loader && Groups.length == 0 && (
+                <motion.div
+                  className="px-4 md:px-10"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 1.5 }}
+                >
+                  <div className="text-center mb-12">
+                    <p className="capitalize text-3xl md:text-4xl font-bold text-[#333333]">
+                      no shg groups found....
+                    </p>
+                  </div>
+                </motion.div>
+              )}
 
-     
-              {!loader && (
+              {!loader && Groups.length != 0 && (
                 <motion.div
                   className="px-4 md:px-10"
                   initial={{ opacity: 0 }}

@@ -7,10 +7,10 @@ import Loader from "../components/Loader";
 import { motion } from "framer-motion";
 import axios from "axios";
 import SigninPopup from "../components/SigninPopup";
-import SignupPopup from "../components/SignupPopup"; 
+import SignupPopup from "../components/SignupPopup";
 
 const Products = () => {
-  const [Product, setProduct] = useState([]);
+  const [Products, setProduct] = useState([]);
   const [loader, showLoader] = useState(true);
   const [loading, setLoading] = useState(false);
   const [showSigninPopup, setShowSigninPopup] = useState(false);
@@ -36,7 +36,7 @@ const Products = () => {
   const handleAuthSuccess = () => {
     setShowSigninPopup(false);
     setShowSignupPopup(false);
-    window.location.reload(); 
+    window.location.reload();
   };
 
   return (
@@ -72,30 +72,50 @@ const Products = () => {
           <Navbar />
 
           <section className="py-35 bg-[#dddddd] min-h-screen">
-            {!loader && (
+            {!loader && Products.length != 0 && (
               <h2 className="text-center text-3xl font-bold text-[#333333]">
                 Products
               </h2>
             )}
 
             {loader && <ContainerLoader />}
-
-            {!loader && (
-              <div className="grid grid-cols-1 md:grid-cols-4 md:mx-20 gap-y-8 pt-10">
-                {Product.map((item, index) => (
-                  <ProductCard
-                    key={index}
-                    productId={item["id"]}
-                    image={item["image"]}
-                    ProductName={item["product_name"]}
-                    Amount={item["price"]}
-                    Quantity={item["stock_quantity"]}
-                    Description={item["description"]}
-                    Category={item["category"]}
-                    onRequireLogin={() => setShowSigninPopup(true)}
-                  />
-                ))}
-              </div>
+            {!loader && Products.length == 0 && (
+              <motion.div
+                className="px-4 md:px-10"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1.5 }}
+              >
+                <div className="text-center mb-12">
+                  <p className="capitalize text-3xl md:text-4xl font-bold text-[#333333]">
+                    no products found....
+                  </p>
+                </div>
+              </motion.div>
+            )}
+            {!loader && Products.length != 0 && (
+              <motion.div
+                className="px-4 md:px-10"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1.5 }}
+              >
+                <div className="grid grid-cols-1 md:grid-cols-4 md:mx-20 gap-y-8 pt-10">
+                  {Products.map((item, index) => (
+                    <ProductCard
+                      key={index}
+                      productId={item["id"]}
+                      image={item["image"]}
+                      ProductName={item["product_name"]}
+                      Amount={item["price"]}
+                      Quantity={item["stock_quantity"]}
+                      Description={item["description"]}
+                      Category={item["category"]}
+                      onRequireLogin={() => setShowSigninPopup(true)}
+                    />
+                  ))}
+                </div>
+              </motion.div>
             )}
           </section>
 
