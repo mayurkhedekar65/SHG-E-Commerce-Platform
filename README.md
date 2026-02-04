@@ -181,7 +181,7 @@ http://127.0.0.1:5173
 ---
 
 ## Screenshots
-
+### Home
 ![Home Page](assets/screencapture-127-0-0-1-5173-2026-02-04-19_18_33.png)
 
 ### User Authentication
