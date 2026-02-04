@@ -7,7 +7,34 @@ const OrderItemCard = ({
   quantity,
   priceAtOrder,
   description,
+  delivered_order,
+  shipped_order,
+  action,
 }) => {
+ const getStatus = () => {
+  if (delivered_order && shipped_order && action === "APPROVED")
+    return "Delivered";
+
+  if (shipped_order && !delivered_order && action === "APPROVED")
+    return "Shipped";
+
+  if (!shipped_order && !delivered_order && action === "APPROVED")
+    return "Approved";
+
+  if (!shipped_order && !delivered_order && action === "REJECTED")
+    return "Rejected";
+
+  return "Pending";
+}
+
+  const statusColor = {
+  Delivered: "text-green-600",
+  Shipped: "text-blue-600",
+  Approved: "text-yellow-600",
+  Rejected: "text-red-600",
+  Pending: "text-gray-500",
+};
+
   return (
     <div className="flex gap-4 p-4 border-gray-700 rounded-lg shadow-sm bg-white hover:shadow-md transition">
       <img
@@ -32,9 +59,13 @@ const OrderItemCard = ({
             <strong>Total:</strong> ₹{quantity * priceAtOrder}
           </span>
         </div>
-        <div className="flex justify-start items-center gap-x-1.5">
+        <div className="flex items-center gap-x-1.5 mt-2">
           <span className="capitalize font-bold">description:</span>
-          <p className="text-gray-500"> {description}</p>
+          <p className="text-gray-500">{description}</p>
+        </div>
+        <div className="flex items-center gap-x-1.5 mt-1">
+          <span className="capitalize font-bold">status:</span>
+          <p className={`font-semibold text-sm ${statusColor[getStatus()]}`}>{getStatus()}</p>
         </div>
       </div>
     </div>

@@ -65,6 +65,9 @@ const PendingOrders = () => {
               quantity={order["quantity"]}
               priceAtOrder={order["price_at_time_of_order"]}
               description={order["product_id__description"]}
+              delivered_order={order["delivered_order"]}
+              shipped_order={order["shipped_order"]}
+              action={order["action"]}
             />
           ))}
         </div>

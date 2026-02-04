@@ -36,7 +36,7 @@ const OrderHistory = () => {
     );
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
+    <div className="space-y-8">
       <div className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100 flex justify-between items-center">
         <div>
           <h2 className="text-3xl font-black text-gray-900">Order History</h2>
@@ -69,6 +69,9 @@ const OrderHistory = () => {
               quantity={order["quantity"]}
               priceAtOrder={order["price_at_time_of_order"]}
               description={order["product_id__description"]}
+              delivered_order={order["delivered_order"]}
+              shipped_order={order["shipped_order"]}
+              action={order["action"]}
             />
           ))}
         </div>
