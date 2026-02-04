@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { redirect, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import PendingOrders from "../components/PendingOrders";
 import OrderHistory from "../components/OrderHistory";
@@ -8,8 +8,6 @@ import OrderHistory from "../components/OrderHistory";
 const UserProfile = () => {
   const [profileData, setProfileData] = useState({});
   const [activeTab, setActiveTab] = useState("profile");
-
-  // Edit profile modal state
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editData, setEditData] = useState({});
 
@@ -21,7 +19,7 @@ const UserProfile = () => {
     navigate("/");
   };
 
-  // Fetch profile data
+ 
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -38,13 +36,13 @@ const UserProfile = () => {
     fetchData();
   }, []);
 
-  // Open edit modal
+
   const openEditModal = () => {
     setEditData(profileData);
     setIsEditOpen(true);
   };
 
-  // Update profile
+  
   const handleUpdateProfile = async () => {
     try {
       const res = await axios.post(
@@ -70,7 +68,7 @@ const UserProfile = () => {
   return (
     <>
       <div className="min-h-screen bg-gray-50 flex font-sans">
-        {/* Sidebar */}
+    
         <aside className="w-64 bg-gray-900 text-[#bfa85f] hidden md:flex flex-col sticky top-0 h-screen">
           <div className="p-6 border-b border-[#bfa85f]">
             <h2 className="text-2xl font-semibold">User Profile</h2>
@@ -105,9 +103,8 @@ const UserProfile = () => {
           </nav>
         </aside>
 
-        {/* Main Content */}
         <main className="flex-1 p-8 max-w-7xl mx-auto space-y-8">
-          {/* Header */}
+        
           <div className="bg-white rounded-3xl shadow-lg p-8">
             <h1 className="text-4xl font-extrabold text-gray-900">
               Welcome, {profileData?.customer_name || "User"}
@@ -117,7 +114,7 @@ const UserProfile = () => {
             </p>
           </div>
 
-          {/* Profile */}
+ 
           {activeTab === "profile" && (
             <section className="bg-white rounded-3xl shadow-lg p-8">
               <div className="flex justify-between items-center mb-6">
@@ -164,7 +161,7 @@ const UserProfile = () => {
         </main>
       </div>
 
-      {/* EDIT PROFILE MODAL */}
+
       {isEditOpen && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white rounded-3xl p-8 w-full max-w-xl shadow-xl">

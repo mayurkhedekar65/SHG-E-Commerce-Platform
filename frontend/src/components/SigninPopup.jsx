@@ -28,7 +28,7 @@ const SigninPopup = ({ onClose, onSuccess, openSignup }) => {
 
       const response = await axios.post(
         "http://127.0.0.1:8000/loginform/user_login/",
-        formData
+        formData,
       );
 
       localStorage.setItem("access_token", response.data.access);
@@ -39,7 +39,7 @@ const SigninPopup = ({ onClose, onSuccess, openSignup }) => {
       setFormData({ email: "", password: "" });
       setLoading(false);
 
-      onSuccess(); // ✅ parent will refresh page
+      onSuccess();
     } catch (error) {
       setLoading(false);
       alert("Invalid credentials. Please try again.");
@@ -48,13 +48,11 @@ const SigninPopup = ({ onClose, onSuccess, openSignup }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      {/* BACKDROP */}
       <div
         className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"
         onClick={onClose}
       />
 
-      {/* MODAL */}
       <motion.div
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
@@ -69,7 +67,6 @@ const SigninPopup = ({ onClose, onSuccess, openSignup }) => {
             </h3>
 
             <form onSubmit={handleSubmit}>
-              {/* EMAIL */}
               <div className="mb-4">
                 <label className="block mb-1 text-[#333333]">Email*</label>
                 <input
@@ -82,7 +79,6 @@ const SigninPopup = ({ onClose, onSuccess, openSignup }) => {
                 />
               </div>
 
-              {/* PASSWORD */}
               <div className="mb-5">
                 <label className="block mb-1 text-[#333333]">Password*</label>
                 <input
@@ -95,7 +91,6 @@ const SigninPopup = ({ onClose, onSuccess, openSignup }) => {
                 />
               </div>
 
-              {/* BUTTONS */}
               <div className="flex gap-3 mb-4">
                 <button
                   type="submit"
@@ -113,7 +108,6 @@ const SigninPopup = ({ onClose, onSuccess, openSignup }) => {
                 </button>
               </div>
 
-              {/* SIGNUP LINK */}
               <div className="text-center text-sm">
                 <span className="text-[#333333]">
                   Don&apos;t have an account?
@@ -122,8 +116,8 @@ const SigninPopup = ({ onClose, onSuccess, openSignup }) => {
                   type="button"
                   className="text-blue-600 font-semibold hover:underline"
                   onClick={() => {
-                    onClose();     // close signin popup
-                    openSignup();  // ✅ open signup popup
+                    onClose();
+                    openSignup();
                   }}
                 >
                   Signup

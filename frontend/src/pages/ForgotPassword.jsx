@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import axios from "axios";
-import Signin from "./Signin";
 import { useNavigate } from "react-router-dom";
 import Loader from "../components/Loader";
 
@@ -16,6 +15,14 @@ const ForgotPassword = () => {
     setTimeout(() => {
       setLoading(false);
       navigate("/signin");
+    }, 1500);
+  };
+
+  const showLoader1 = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      navigate("/shglogin");
     }, 1500);
   };
 
@@ -77,15 +84,26 @@ const ForgotPassword = () => {
                 <span>Send Reset Link</span>
               </button>
             </form>
-            <p
-              onClick={showLoader}
-              className="text-center text-sm text-gray-600 mt-6"
-            >
-              Remembered your password?{" "}
-              <a className="text-[#F5C469] font-semibold hover:underline">
-                Sign in
-              </a>
-            </p>
+            <div className="flex justify-center items-center gap-x-1.5">
+              <p
+                onClick={showLoader}
+                className="text-center text-sm text-gray-600 mt-6"
+              >
+                Remembered your password?{" "}
+                <a className="text-[#F5C469] font-semibold hover:underline">
+                  Sign in
+                </a>
+              </p>
+              <p
+                onClick={showLoader1}
+                className="text-center text-sm text-gray-600 mt-6"
+              >
+                or{" "}
+                <a className="text-[#F5C469] font-semibold hover:underline">
+                  Shg login
+                </a>
+              </p>
+            </div>
           </div>
         </div>
       )}

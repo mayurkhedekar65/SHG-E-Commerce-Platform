@@ -1,14 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCircleCheck,
-  faDownload,
-  faStar,
-  faBagShopping,
-  faCalendarAlt,
-} from "@fortawesome/free-solid-svg-icons";
+import { faBagShopping } from "@fortawesome/free-solid-svg-icons";
 import OrderItemCard from "./OrderItemCard";
 
 const OrderHistory = () => {
@@ -19,7 +12,6 @@ const OrderHistory = () => {
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        // Replace with your actual endpoint for delivered/completed orders
         const response = await axios.get(
           "http://127.0.0.1:8000/user_delivered_orders/delivered_orders/",
           {
@@ -45,7 +37,6 @@ const OrderHistory = () => {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
-      {/* Section Header */}
       <div className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100 flex justify-between items-center">
         <div>
           <h2 className="text-3xl font-black text-gray-900">Order History</h2>

@@ -9,10 +9,7 @@ import {
 import { motion } from "motion/react";
 import axios from "axios";
 import ProductViewCard from "./ProductViewCard";
-/*
-  NEW PROP:
-  onRequireLogin → function passed from parent to open login popup
-*/
+
 const ProductCard = ({
   image,
   image1,
@@ -29,7 +26,7 @@ const ProductCard = ({
     price: Amount,
     unit: Quantity,
     image: image,
-    image1:image1,
+    image1: image1,
     category: Category,
     description: Description,
   };
@@ -38,9 +35,8 @@ const ProductCard = ({
     setOpen(false);
     const token = localStorage.getItem("access_token");
 
-    // 🔴 USER NOT LOGGED IN (no token at all)
     if (!token) {
-      onRequireLogin(); // open login popup
+      onRequireLogin();
       return;
     }
 
@@ -61,18 +57,13 @@ const ProductCard = ({
 
       alert(response.data.message || "Product added to cart successfully!");
     } catch (error) {
-      // 🔴 TOKEN EXPIRED / INVALID
       if (error.response?.status === 401) {
         onRequireLogin(); // open login popup
-      }
-      // 🔴 BACKEND MESSAGE
-      else if (error.response?.data?.message) {
+      } else if (error.response?.data?.message) {
         console.log("Sending productId:", productId);
 
         alert(error.response.data.message);
-      }
-      // 🔴 UNKNOWN ERROR
-      else {
+      } else {
         alert("Failed to add product to cart");
       }
     }
@@ -86,7 +77,6 @@ const ProductCard = ({
         className="w-full sm:w-72"
       >
         <div className="flex flex-col h-full bg-[#2F2F2F] rounded-2xl overflow-hidden">
-          {/* IMAGE */}
           <div className="h-44 bg-white">
             <img
               src={image1 || `http://127.0.0.1:8000/media/${image}`}
@@ -95,25 +85,20 @@ const ProductCard = ({
             />
           </div>
 
-          {/* CONTENT */}
           <div className="p-4 flex-1 text-left">
-            {/* CATEGORY */}
             <span className="inline-flex items-center gap-1 text-xs font-semibold text-[#2F2F2F] bg-[#F5C469] px-3 py-1 rounded-full">
               <FontAwesomeIcon icon={faTag} className="w-3 h-3" />
               {Category}
             </span>
 
-            {/* PRODUCT NAME */}
             <h3 className="mt-3 text-white font-semibold text-base leading-tight line-clamp-2">
               {ProductName}
             </h3>
 
-            {/* DESCRIPTION */}
             <p className="mt-2 text-sm text-gray-400 line-clamp-2">
               {Description}
             </p>
 
-            {/* STOCK */}
             <p className="mt-3 text-sm text-gray-400">
               Stock:{" "}
               <span
@@ -123,14 +108,12 @@ const ProductCard = ({
               </span>
             </p>
 
-            {/* PRICE */}
             <div className="mt-4 text-2xl font-bold text-[#F5C469] flex items-center gap-1">
               <FontAwesomeIcon icon={faIndianRupeeSign} className="w-4 h-4" />
               {Amount}
             </div>
           </div>
 
-          {/* ACTION */}
           <div className="p-4 pt-2">
             <button
               onClick={handleAddToCart}

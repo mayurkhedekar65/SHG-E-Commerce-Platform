@@ -236,7 +236,6 @@ const CartPage = () => {
                   </div>
                 </div>
 
-                {/* ✅ ONLY THIS BUTTON WAS CHANGED */}
                 <button
                   onClick={() =>
                     navigate("/payment", {

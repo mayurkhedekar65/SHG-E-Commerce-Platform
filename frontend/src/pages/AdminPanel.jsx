@@ -4,7 +4,8 @@ import { useNavigate } from "react-router-dom";
 import AdminProductCard from "../components/AdminProductCard";
 import AddProductForm from "../components/AddProductForm.jsx";
 import GroupProfile from "./GroupProfile.jsx";
-import OrderManagement from "../components/OrderManagement.jsx"; // NEW IMPORT
+import OrderManagement from "../components/OrderManagement.jsx"; 
+import AdminProductViewCard from "../components/AdminProductViewCard.jsx";
 
 const AdminPanel = () => {
   const [productList, setProductList] = useState([]);
@@ -13,6 +14,7 @@ const AdminPanel = () => {
   const [editingProduct, setEditingProduct] = useState(null);
   const [activeSection, setActiveSection] = useState("dashboard");
   const navigate = useNavigate();
+  const [viewProduct, setViewProduct] = useState(null);
 
   const fetchProducts = async () => {
     try {
@@ -63,9 +65,13 @@ const AdminPanel = () => {
     }
   };
 
+  const handleView = (product) => {
+    setViewProduct(product);
+  };
+
   const logOut = () => {
     localStorage.removeItem("access_token");
-    alert("logged out successfully.")
+    alert("logged out successfully.");
     navigate("/");
   };
 
@@ -133,6 +139,7 @@ const AdminPanel = () => {
                         {...product}
                         onDelete={() => handleDelete(product.id)}
                         onEdit={() => handleEdit(product)}
+                        onView={() => handleView(product)}
                       />
                     ))
                   ) : (
@@ -144,9 +151,8 @@ const AdminPanel = () => {
               )}
             </>
           )}
-
-          {activeSection === "orders" && <OrderManagement />} {/* NEW SECTION */}
-
+          {activeSection === "orders" && <OrderManagement />}{" "}
+          {/* NEW SECTION */}
           {activeSection === "profile" && <GroupProfile />}
         </main>
 
@@ -157,6 +163,21 @@ const AdminPanel = () => {
             initialData={editingProduct}
             onClose={handleCloseModal}
             onSubmit={fetchProducts}
+          />
+        )}
+
+        {viewProduct && (
+          <AdminProductViewCard
+            product={{
+              name: viewProduct.product_name,
+              category: viewProduct.category,
+              description: viewProduct.description,
+              price: viewProduct.price,
+              stock: viewProduct.stock_quantity,
+              status: viewProduct.is_active ? "Active" : "Inactive",
+              image: `http://127.0.0.1:8000/media/${viewProduct.image}`,
+            }}
+            onClose={() => setViewProduct(null)}
           />
         )}
       </div>

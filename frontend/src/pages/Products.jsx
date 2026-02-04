@@ -7,14 +7,12 @@ import Loader from "../components/Loader";
 import { motion } from "framer-motion";
 import axios from "axios";
 import SigninPopup from "../components/SigninPopup";
-import SignupPopup from "../components/SignupPopup"; // ✅ NEW
+import SignupPopup from "../components/SignupPopup"; 
 
 const Products = () => {
   const [Product, setProduct] = useState([]);
   const [loader, showLoader] = useState(true);
   const [loading, setLoading] = useState(false);
-
-  // 🔹 popup states
   const [showSigninPopup, setShowSigninPopup] = useState(false);
   const [showSignupPopup, setShowSignupPopup] = useState(false);
 
@@ -28,7 +26,6 @@ const Products = () => {
       try {
         const response = await axios.get("http://127.0.0.1:8000/get_products/");
         setProduct(response.data["products_list"]);
-        // console.log(response.data["products_list"])
       } catch (err) {
         console.error(err);
       }
@@ -36,16 +33,14 @@ const Products = () => {
     fetchData();
   }, []);
 
-  // 🔁 FULL PAGE REFRESH AFTER LOGIN / SIGNUP
   const handleAuthSuccess = () => {
     setShowSigninPopup(false);
     setShowSignupPopup(false);
-    window.location.reload(); // ✅ THIS IS WHAT YOU ASKED
+    window.location.reload(); 
   };
 
   return (
     <>
-      {/* 🔐 SIGNIN POPUP */}
       {showSigninPopup && (
         <SigninPopup
           onClose={() => setShowSigninPopup(false)}
@@ -57,7 +52,6 @@ const Products = () => {
         />
       )}
 
-      {/* 🆕 SIGNUP POPUP */}
       {showSignupPopup && (
         <SignupPopup
           onClose={() => setShowSignupPopup(false)}

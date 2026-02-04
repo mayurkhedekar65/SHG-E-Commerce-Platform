@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import Navbar from "../components/NavBar";
-import Footer from "../components/Footer";
 import Loader from "../components/Loader";
 import { motion } from "framer-motion";
 import axios from "axios";
@@ -34,7 +32,7 @@ const RegistrationForm = () => {
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     if (name === "image") {
-      setGroupImage(files[0]); // store file
+      setGroupImage(files[0]); 
     } else {
       setFormData({ ...formData, [name]: value });
     }
@@ -95,12 +93,11 @@ const RegistrationForm = () => {
       try {
         const formDataToSend = new FormData();
 
-        // keep your FormData object, just append it
         Object.entries(formData).forEach(([key, value]) => {
           formDataToSend.append(key, value);
         });
 
-        // append image
+     
         formDataToSend.append("image", groupImage);
 
         await axios.post(
@@ -149,7 +146,7 @@ const RegistrationForm = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 3 }}
           >
-            {/* <Navbar></Navbar> */}
+  
             <div className=" bg-[#dddddd]">
               <div className="text-center pt-35">
                 <h1 className="font-bold md:text-3xl text-2xl">
@@ -433,7 +430,6 @@ const RegistrationForm = () => {
                 </div>
               </div>
             </div>
-            {/* <Footer setLoading={setLoading} /> */}
           </motion.div>
         </>
       )}

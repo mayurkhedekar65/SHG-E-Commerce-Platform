@@ -57,7 +57,7 @@ const GroupProfile = () => {
       setProfileData(res.data.updated_group);
       setIsEditOpen(false);
       alert("Group profile updated successfully");
-      window.location.reload(); // keeping your logic
+      window.location.reload(); 
     } catch (error) {
       console.error(error);
       alert("Failed to update group profile");
@@ -67,7 +67,7 @@ const GroupProfile = () => {
   return (
     <>
       <div className="min-h-screen bg-gray-50 p-8 font-sans">
-        {/* Header */}
+    
         <header className="mb-8 bg-white rounded-3xl shadow-md p-8 flex justify-between items-center">
           <div>
             <h2 className="text-4xl font-extrabold text-gray-900">
@@ -86,7 +86,7 @@ const GroupProfile = () => {
           </button>
         </header>
 
-        {/* Profile Card */}
+      
         <section className="bg-white rounded-3xl shadow-lg p-10 max-w-5xl mx-auto">
           <h3 className="text-2xl font-semibold text-gray-900 mb-8">
             Group Details
@@ -140,7 +140,7 @@ const GroupProfile = () => {
         </section>
       </div>
 
-      {/* EDIT MODAL */}
+
       {isEditOpen && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white rounded-3xl p-8 w-full max-w-xl shadow-xl max-h-[90vh] overflow-y-auto">
@@ -191,7 +191,7 @@ const GroupProfile = () => {
                   className="mt-2 border bg-[#dddddd] border-[#333333] w-full rounded-xl p-2 text-[14px]"
                 />
 
-                {/* Image preview */}
+              
                 {editData.image && (
                   <img
                     src={

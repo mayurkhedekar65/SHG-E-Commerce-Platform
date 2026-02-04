@@ -11,6 +11,7 @@ const AdminProductCard = ({
   description,
   onEdit,
   onDelete,
+  onView
 }) => {
   const getStatusClass = (s) => {
     switch (s) {
@@ -83,7 +84,9 @@ const AdminProductCard = ({
             <Edit2 size={14} /> Edit
           </button>
 
-          <button className="flex items-center justify-center gap-1 px-2 py-2 text-xs font-semibold rounded-lg bg-gray-700 text-gray-200 hover:bg-gray-800 transition">
+          <button 
+            onClick={onView}
+          className="flex items-center justify-center gap-1 px-2 py-2 text-xs font-semibold rounded-lg bg-gray-700 text-gray-200 hover:bg-gray-800 transition">
             <Eye size={14} /> View
           </button>
 

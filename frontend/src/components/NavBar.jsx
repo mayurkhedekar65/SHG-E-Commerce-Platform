@@ -21,7 +21,6 @@ const Navbar = () => {
 
   const token = localStorage.getItem("access_token");
 
-  // Function to fetch count from backend
   const fetchCartCount = async () => {
     if (!token) return;
     try {
@@ -59,7 +58,6 @@ const Navbar = () => {
 
     fetchUsername();
 
-    // This listener lets the CartPage tell the Navbar to refresh the count
     window.addEventListener("cartUpdated", fetchCartCount);
     return () => window.removeEventListener("cartUpdated", fetchCartCount);
   }, [token]);
@@ -139,7 +137,7 @@ const Navbar = () => {
                     <span className="md:hidden">Cart</span>
                   </button>
                   <button
-                  w-40
+                    w-40
                     className="overflow-hidden   w-40 text-ellipsis  capitalize bg-[#F5C469] text-[#333333] md:bg-[#333333] md:text-[#dddddd] border border-[#dddddd] py-2 px-6 rounded-lg md:rounded-full "
                     onClick={() => showLoader("/userprofile")}
                   >

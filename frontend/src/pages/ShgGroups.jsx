@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import Navbar from "../components/NavBar";
 import Footer from "../components/Footer";
 import GroupCard from "../components/GroupCard";
-import image from "../assets/ChatGPT Image Oct 22, 2025, 06_20_44 PM.png";
 import ContainerLoader from "../components/ContainerLoader";
 import Loader from "../components/Loader";
 import { motion } from "framer-motion";
@@ -43,7 +42,6 @@ const ShgGroups = () => {
           >
             <Navbar></Navbar>
             <section className="bg-[#f0f0f0] min-h-screen py-34">
-              {/* Section Heading */}
               {!loader && (
                 <div className="text-center mb-12">
                   <h2 className="text-3xl md:text-4xl font-bold text-[#333333]">
@@ -56,14 +54,14 @@ const ShgGroups = () => {
                 </div>
               )}
 
-              {/* Loader */}
+        
               {loader && (
                 <div className="flex justify-center items-center h-40">
                   <ContainerLoader />
                 </div>
               )}
 
-              {/* Groups Grid */}
+     
               {!loader && (
                 <motion.div
                   className="px-4 md:px-10"

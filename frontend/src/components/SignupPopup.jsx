@@ -21,7 +21,6 @@ const SignupPopup = ({ onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // 🔴 VALIDATIONS (same as main signup)
     if (!formData.customer_name) {
       alert("Please enter your name!");
       return;
@@ -46,19 +45,17 @@ const SignupPopup = ({ onClose }) => {
     try {
       setLoading(true);
 
-      // 🔹 STEP 1: REGISTER USER
       await axios.post(
         "http://127.0.0.1:8000/userform/user_registration_form/",
-        formData
+        formData,
       );
 
-      // 🔹 STEP 2: AUTO LOGIN AFTER SIGNUP
       const loginResponse = await axios.post(
         "http://127.0.0.1:8000/loginform/user_login/",
         {
           email: formData.email,
           password: formData.password,
-        }
+        },
       );
 
       localStorage.setItem("access_token", loginResponse.data.access);
@@ -68,9 +65,7 @@ const SignupPopup = ({ onClose }) => {
 
       setLoading(false);
 
-      // 🔹 STEP 3: HARD REFRESH (navbar updates)
       window.location.reload();
-
     } catch (error) {
       setLoading(false);
       console.error(error);
@@ -80,14 +75,11 @@ const SignupPopup = ({ onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      
-      {/* BACKDROP (less blur as requested) */}
       <div
         className="absolute inset-0 bg-black/40 backdrop-blur-[1.5px]"
         onClick={onClose}
       />
 
-      {/* MODAL */}
       <motion.div
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
@@ -102,7 +94,6 @@ const SignupPopup = ({ onClose }) => {
             </h3>
 
             <form onSubmit={handleSubmit} className="text-center">
-              
               <input
                 name="customer_name"
                 placeholder="Enter your name"

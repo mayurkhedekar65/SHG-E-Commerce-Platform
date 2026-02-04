@@ -6,7 +6,7 @@ function PaymentPage() {
   const location = useLocation();
   const amount = location.state?.amount || 0;
 
-  const publishableKey = "pk_test_51SvjQ42NIyaeQkGBk4EwDYck55MHTzPLXyulClCQg43ic8DKPjOuYGRftF8jTLmVcFhVdunQEw2mXxt5uJttmra00065KQ1HL4"; // test key only
+  const publishableKey = "pk_test_51SvjQ42NIyaeQkGBk4EwDYck55MHTzPLXyulClCQg43ic8DKPjOuYGRftF8jTLmVcFhVdunQEw2mXxt5uJttmra00065KQ1HL4"; 
 
   return (
     <StripeProvider publishableKey={publishableKey}>

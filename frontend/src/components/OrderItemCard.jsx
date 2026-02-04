@@ -6,19 +6,16 @@ const OrderItemCard = ({
   image,
   quantity,
   priceAtOrder,
-  description
+  description,
 }) => {
   return (
     <div className="flex gap-4 p-4 border-gray-700 rounded-lg shadow-sm bg-white hover:shadow-md transition">
-      
-      {/* Product Image */}
       <img
         src={`http://127.0.0.1:8000/media/${image}`}
         alt={productName}
         className="w-24 h-24 object-cover rounded"
       />
 
-      {/* Product Details */}
       <div className="flex-1">
         <h3 className="text-lg font-semibold">{productName}</h3>
         <p className="text-sm text-gray-500">{category}</p>
@@ -36,7 +33,8 @@ const OrderItemCard = ({
           </span>
         </div>
         <div className="flex justify-start items-center gap-x-1.5">
-           <span className="capitalize font-bold">description:</span><p className="text-gray-500"> {description}</p>
+          <span className="capitalize font-bold">description:</span>
+          <p className="text-gray-500"> {description}</p>
         </div>
       </div>
     </div>
