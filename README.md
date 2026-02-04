@@ -67,7 +67,7 @@ Follow the steps below to run the project locally for development and testing.
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/Abhiraj05/Self-Help-Group.git
+git clone https://github.com/Abhiraj05/SHG-E-Commerce-Platform.git
 ```
 
 ---
