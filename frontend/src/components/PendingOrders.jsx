@@ -37,7 +37,7 @@ const PendingOrders = () => {
 
   return (
     <div className="space-y-8">
-      <div className="bg-white p-8 rounded-[2rem] shadow-sm border border-gray-100">
+      <div className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100">
         <h2 className="text-3xl font-black text-[#111827] mb-2">
           Pending Orders
         </h2>
@@ -47,7 +47,7 @@ const PendingOrders = () => {
       </div>
 
       {orders.length === 0 ? (
-        <div className="bg-white p-20 rounded-[2rem] text-center border border-dashed border-gray-200">
+        <div className="bg-white p-20 rounded-[2.5rem] text-center border border-dashed border-gray-200">
           <FontAwesomeIcon
             icon={faBox}
             className="text-gray-200 text-6xl mb-4"
