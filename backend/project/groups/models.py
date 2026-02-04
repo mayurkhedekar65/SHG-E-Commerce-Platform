@@ -3,11 +3,7 @@ from Customers.models import CustomerForm , Customer_Orders
 from Products.models import Products
 from django.contrib.auth.models import User
 
-# Create your models here.
-
-# SHG registration model
-
-
+# group model
 class Shg_Group_Registration(models.Model):
     class ShgType(models.TextChoices):
         WOMEN = 'Women', 'Women'
@@ -28,7 +24,7 @@ class Shg_Group_Registration(models.Model):
     address = models.CharField(max_length=500, null=False, blank=False)
     image = models.ImageField(upload_to='group_images/', null=True, blank=True)
     
-
+# order model
 class Order_Items(models.Model):
     customer_id = models.ForeignKey(CustomerForm, on_delete=models.CASCADE)
     product_id = models.ForeignKey(Products, on_delete=models.CASCADE)

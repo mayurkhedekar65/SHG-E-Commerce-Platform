@@ -1,33 +1,3 @@
-# import stripe
-# from django.conf import settings
-# from rest_framework.decorators import api_view, permission_classes
-# from rest_framework.response import Response
-# from rest_framework.permissions import IsAuthenticated, AllowAny
-# from groups.models import Order_Items
-# from Products.models import Cart_Items
-# from Customers.models import CustomerForm, Customer_Orders
-
-
-# stripe.api_key = settings.STRIPE_SECRET_KEY
-
-
-# @api_view(['POST'])
-# @permission_classes([AllowAny])
-# def create_payment_intent(request):
-#     amount = request.data.get('amount')
-
-#     intent = stripe.PaymentIntent.create(
-#         amount=int(amount) * 100,
-#         currency='inr',
-#         payment_method_types=['card'],
-#     )
-
-#     return Response({
-#         "client_secret": intent.client_secret,
-#         "publishable_key": settings.STRIPE_PUBLISHABLE_KEY
-#     })
-
-
 import stripe
 from django.conf import settings
 from rest_framework.decorators import api_view, permission_classes
@@ -38,9 +8,10 @@ from Products.models import Cart_Items
 from groups.models import Order_Items
 from common.email import send_email
 
+# secret key
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
-
+# creates an payment intent
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def create_payment_intent(request):
@@ -58,6 +29,9 @@ def create_payment_intent(request):
     })
 
 
+
+
+# confirms the card payment (online payment) & send payment confirmation mail
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def confirm_payment(request):
@@ -143,6 +117,9 @@ def confirm_payment(request):
     return Response({"status": "order_created"})
 
 
+
+
+# confirms the cash on delivery & send sends confirmation mail
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def cash_on_delivery(request):

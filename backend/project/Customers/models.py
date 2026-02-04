@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
-# Create your models here.
 
+# customer model
 class CustomerForm(models.Model):
     customer=models.ForeignKey(User,on_delete=models.CASCADE,null=False,blank=False)
     customer_name= models.CharField(max_length=30, null=False, blank=False)
@@ -10,7 +10,7 @@ class CustomerForm(models.Model):
     address = models.CharField(max_length=100, null=True, blank=True)
     
 
-
+# orders model
 class Customer_Orders(models.Model):
     customer_id= models.ForeignKey(CustomerForm, on_delete=models.CASCADE , null = True, blank = True)
     order_date = models.DateField(auto_now_add=True)

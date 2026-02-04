@@ -1,5 +1,6 @@
 from django.db import models
-# Create your models here.
+
+# product model
 class Products(models.Model):
     shg_group_id = models.ForeignKey('groups.Shg_Group_Registration', on_delete=models.CASCADE)
     product_name = models.CharField(max_length=100, null=False, blank=False)
@@ -9,12 +10,12 @@ class Products(models.Model):
     image = models.ImageField(upload_to='product_images/', null=True, blank=True)
     stock_quantity = models.PositiveIntegerField(default=0)
     
-
+# category model
 class Category(models.Model):
     category_name = models.CharField(max_length=50, null=False, blank=False, unique=True)
     description = models.TextField(null=True, blank=True)
 
-
+# cart model
 class Cart_Items(models.Model):
     user_id = models.ForeignKey('Customers.CustomerForm', on_delete=models.CASCADE,null=True,   blank=True)
     product_id = models.ForeignKey(Products, on_delete=models.CASCADE, null=True, blank=True)

@@ -1,18 +1,12 @@
-from django.shortcuts import render
 from rest_framework.response import Response
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
-from rest_framework.authentication import SessionAuthentication
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated , AllowAny
-from groups.models import Shg_Group_Registration
 from Products.models import Products
-from django.core import serializers
 from Products.serializers import UpdateProductSerializer
 from rest_framework import status
 
 
-# Create your views here.
-
-
+# fetches the products data from database
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def get_products_data(request, format=None):
@@ -22,9 +16,7 @@ def get_products_data(request, format=None):
 
 
 
-
-
-
+# deletes the particular product
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def delete_product(request,id,format=None):
@@ -33,6 +25,9 @@ def delete_product(request,id,format=None):
     return Response({"message":"product deleted successfully"})
 
 
+
+
+# updates the particular product data in database
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def Update_Product(request,id):

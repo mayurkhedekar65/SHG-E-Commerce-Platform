@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
@@ -7,18 +6,17 @@ from groups.serializers import ShgFormSerializer, AdminPanelSerializer
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from rest_framework.permissions import IsAuthenticated, AllowAny
-# --- FIX 1: CORRECTED TYPO AND IMPORTED PARSERS/AUTH ---
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.tokens import RefreshToken
 from groups.models import Order_Items
-from Customers.models import CustomerForm ,Customer_Orders
 from rest_framework.decorators import api_view, permission_classes
 from common.email import send_email
 from Products.models import Products
-# Create your views here.
 
 
+
+# registers a new group
 class SubmitRegistrationForm(APIView):
     permission_classes = [AllowAny]
 
@@ -50,7 +48,6 @@ class SubmitRegistrationForm(APIView):
                 image=serializer.validated_data.get('image')
             )
 
-            # 🔑 JWT generation
             refresh = RefreshToken.for_user(shg_user)
 
             return Response({
@@ -62,6 +59,9 @@ class SubmitRegistrationForm(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+
+
+# authenticate & logins a group
 class AdminLogin(APIView):
     permission_classes = []
     authentication_classes = []
@@ -72,34 +72,37 @@ class AdminLogin(APIView):
         try:
             if '@' not in username:
                 return Response({'message': 'invalid email id'}, status=status.HTTP_400_BAD_REQUEST)
-            
+
             user_obj = User.objects.get(email=username)
             user = authenticate(username=user_obj.username, password=password)
-            
+
             if user is not None:
                 # Role Check: Check if user is registered in the SHG table
-                is_shg = Shg_Group_Registration.objects.filter(shg_id=user.id).exists()
-                
+                is_shg = Shg_Group_Registration.objects.filter(
+                    shg_id=user.id).exists()
+
                 if not is_shg:
                     return Response({'message': 'Access denied: You are not registered as an SHG group'}, status=status.HTTP_403_FORBIDDEN)
-                
+
                 refresh = RefreshToken.for_user(user)
                 return Response({
-                    'message': 'shg logged in successfully', 
-                    'access': str(refresh.access_token), 
+                    'message': 'shg logged in successfully',
+                    'access': str(refresh.access_token),
                     'refresh': str(refresh)
                 }, status=status.HTTP_200_OK)
             else:
                 return Response({'message': 'invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
-                
+
         except User.DoesNotExist:
             return Response({'message': 'user not registered'}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({'message': f'Server error: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
+
+
+# create a new product of group
 class AdminPanelView(APIView):
-    # --- FIX 2: ADD AUTH, PERMISSIONS, AND PARSERS ---
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     parser_classes = [MultiPartParser, FormParser]
@@ -109,47 +112,22 @@ class AdminPanelView(APIView):
         serializer = AdminPanelSerializer(data=request.data)
 
         try:
-            # Get the SHG profile linked to the user
             shg_group = Shg_Group_Registration.objects.get(shg=user)
 
         except Shg_Group_Registration.DoesNotExist:
             return Response({'message': 'No SHG profile found for this user.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        # --- FIX 3: USE SERIALIZER TO VALIDATE AND SAVE ---
         if serializer.is_valid():
-            # Pass the shg_group object to the save() method
             serializer.save(shg_group_id=shg_group)
             return Response({'message': 'Product added Successfully'}, status=status.HTTP_201_CREATED)
         else:
-            # If the form is invalid, print the errors
             print("Serializer Errors:", serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def get_shg_orders(request):
-    try:
-        shg_group = Shg_Group_Registration.objects.get(shg_id=request.user.id)
-        orders = Order_Items.objects.filter(shg_groups_id=shg_group).values(
-            "id", 
-            "customer_id__customer_name", 
-            "product_id__product_name", 
-            "quantity", 
-            "price_at_time_of_order", 
-            "action", 
-            "shipped_order", 
-            "delivered_order"
-        ).order_by('-id')
 
-        return Response({"orders_list": list(orders)}, status=status.HTTP_200_OK)
-    
-    except Shg_Group_Registration.DoesNotExist:
-        return Response({"message": "SHG profile not found"}, status=status.HTTP_404_NOT_FOUND)
-    except Exception as e:
-        print(f"Error: {str(e)}")
-        return Response({"message": "Internal Server Error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+# approve or reject the order
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def approve_or_reject_order(request):
@@ -174,22 +152,27 @@ def approve_or_reject_order(request):
     except Order_Items.DoesNotExist:
         return Response({"message": "Order item not found"}, status=status.HTTP_404_NOT_FOUND)
 
+
+
+
+# checks if order is shipped or not & send mail ones shipped
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def is_shipped(request):
     order_id = request.data.get("order_id")
     try:
-        order_item = Order_Items.objects.get(id=order_id, shg_groups_id__shg_id=request.user.id)
+        order_item = Order_Items.objects.get(
+            id=order_id, shg_groups_id__shg_id=request.user.id)
         order_item.shipped_order = True
         order_item.save()
 
-        main_order = order_item.order_id 
+        main_order = order_item.order_id
         main_order.order_status = 'Shipped'
         main_order.save()
-        
-        distributer_email = request.user.email 
-        customer_email = order_item.customer_id.customer_email 
-        
+
+        distributer_email = request.user.email
+        customer_email = order_item.customer_id.customer_email
+
         if customer_email and distributer_email:
             mail_sub = "Your Order Has Been Shipped"
             message = """
@@ -214,9 +197,10 @@ def is_shipped(request):
             Best regards,
             Customer Support Team
             """
-            
+
             try:
-                send_email(request, distributer_email, customer_email, message, mail_sub)
+                send_email(request, distributer_email,
+                           customer_email, message, mail_sub)
             except Exception as email_err:
                 print(f"Email delivery failed: {str(email_err)}")
 
@@ -227,16 +211,20 @@ def is_shipped(request):
     except Exception as e:
         return Response({"message": f"Server Error: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
+
+# marks order as delivered
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def mark_delivered(request):
     order_item_id = request.data.get("order_id")
     try:
-        order_item = Order_Items.objects.get(id=order_item_id, shg_groups_id__shg_id=request.user.id)
-        
+        order_item = Order_Items.objects.get(
+            id=order_item_id, shg_groups_id__shg_id=request.user.id)
+
         if not order_item.shipped_order:
             return Response({"message": "Order must be marked as shipped before delivery confirmation."}, status=status.HTTP_400_BAD_REQUEST)
-            
+
         order_item.delivered_order = True
         order_item.save()
 
@@ -260,7 +248,8 @@ def mark_delivered(request):
             Customer Support Team
             """
             try:
-                send_email(request, distributer_email, customer_email, message, mail_sub)
+                send_email(request, distributer_email,
+                           customer_email, message, mail_sub)
             except Exception as email_err:
                 print(f"Email delivery failed: {str(email_err)}")
 
@@ -270,7 +259,11 @@ def mark_delivered(request):
         return Response({"message": "Order record not found."}, status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
         return Response({"message": "Internal Server Error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    
+
+
+
+
+# fetches the group profile data
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_group_profile_data(request, format=None):
@@ -280,6 +273,9 @@ def get_group_profile_data(request, format=None):
     return Response({"group_email": group_email, "shg_grp_details": shg_grp_details})
 
 
+
+
+# updates the group profile data in database
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def update_group_profile_data(request):
@@ -318,32 +314,39 @@ def update_group_profile_data(request):
         return Response({"message": "profile updation failed"},  status=status.HTTP_400_BAD_REQUEST)
 
 
+
+
+# fetches the product data of of a particular groups
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_group_products_data(request, format=None):
     shg_group_id = Shg_Group_Registration.objects.get(shg_id=request.user.id)
     products_list = Products.objects.filter(shg_group_id_id=shg_group_id).values("id",
-        "product_name", "category", "description", "image", "price", "stock_quantity")
+                                                                                 "product_name", "category", "description", "image", "price", "stock_quantity")
     return Response({"products_list": products_list, })
 
+
+
+
+# fetches the order items by customers of particular group
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_shg_orders(request):
     try:
         shg_group = Shg_Group_Registration.objects.get(shg_id=request.user.id)
         orders = Order_Items.objects.filter(shg_groups_id=shg_group).select_related('customer_id', 'product_id').values(
-            "id", 
-            "customer_id__customer_name", 
-            "product_id__product_name", 
-            "quantity", 
-            "price_at_time_of_order", 
-            "action", 
-            "shipped_order", 
+            "id",
+            "customer_id__customer_name",
+            "product_id__product_name",
+            "quantity",
+            "price_at_time_of_order",
+            "action",
+            "shipped_order",
             "delivered_order"
         ).order_by('-id')
 
         return Response({"orders_list": list(orders)}, status=status.HTTP_200_OK)
-    
+
     except Shg_Group_Registration.DoesNotExist:
         return Response({"message": "SHG profile not found"}, status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
@@ -351,19 +354,40 @@ def get_shg_orders(request):
         return Response({"message": "Internal Server Error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-# fetch data
 
+
+# fetches the order items by customers of particular group
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_shg_orders(request):
+    try:
+        shg_group = Shg_Group_Registration.objects.get(shg_id=request.user.id)
+        orders = Order_Items.objects.filter(shg_groups_id=shg_group).values(
+            "id",
+            "customer_id__customer_name",
+            "product_id__product_name",
+            "quantity",
+            "price_at_time_of_order",
+            "action",
+            "shipped_order",
+            "delivered_order"
+        ).order_by('-id')
+
+        return Response({"orders_list": list(orders)}, status=status.HTTP_200_OK)
+
+    except Shg_Group_Registration.DoesNotExist:
+        return Response({"message": "SHG profile not found"}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return Response({"message": "Internal Server Error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+
+# fetches the data of all groups
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def get_groups_data(request, format=None):
     shg_grp_list = Shg_Group_Registration.objects.values(
         "name_of_shg", "date_of_formation", "registration_number", "contact_number", "village", "taluka", "district", "type_of_shg", "address", "image")
     return Response({"shg_grp_list": shg_grp_list})
-
-
-
-
-
-
-
-

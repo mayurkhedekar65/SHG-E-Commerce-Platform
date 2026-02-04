@@ -1,15 +1,16 @@
-from django.shortcuts import render
 from rest_framework.response import Response 
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import AllowAny
 from rest_framework import status
 from django.contrib.auth.models import User
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes
 from common.email import send_email
-# Create your views here.
 
+
+
+# generates a reset link email & send to user
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def reset_password(request):
@@ -43,6 +44,10 @@ def reset_password(request):
 
     return Response({"message": "Reset link generated and sent to your email."})
 
+
+
+
+# sets a new password in database
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def set_new_password(request):
@@ -62,8 +67,7 @@ def set_new_password(request):
     if PasswordResetTokenGenerator().check_token(user, token):
         user.set_password(new_password)
         user.save()
-
-        # Send confirmation email that password was changed
+        
         default_email = "contact@shgbazar.org"
         mail_sub = "Your Password Has Been Changed"
         confirm_message = f"""

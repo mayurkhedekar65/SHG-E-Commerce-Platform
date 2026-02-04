@@ -13,6 +13,8 @@ from Products.models import Cart_Items, Products
 from groups.models import *
 
 
+
+# registers a new customer
 class SubmitUserRegistrationForm(APIView):
     permission_classes = [AllowAny]
 
@@ -53,40 +55,9 @@ class SubmitUserRegistrationForm(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# class UserLogin(APIView):
-#     permission_classes = []
 
-#     def post(self, request, format=None):
-#         user_email = request.data.get("email")
-#         password = request.data.get("password")
 
-#         try:
-#             user_obj = User.objects.get(email=user_email)
-#         except User.DoesNotExist:
-#             return Response(
-#                 {'message': 'user not registered'},
-#                 status=status.HTTP_400_BAD_REQUEST
-#             )
-
-#         user = authenticate(username=user_obj.username, password=password)
-
-#         if user is None:
-#             return Response(
-#                 {'message': 'invalid credentials'},
-#                 status=status.HTTP_400_BAD_REQUEST
-#             )
-
-#         refresh = RefreshToken.for_user(user)
-
-#         return Response(
-#             {
-#                 'message': 'user logged in successfully',
-#                 'access': str(refresh.access_token),
-#                 'refresh': str(refresh)
-#             },
-#             status=status.HTTP_200_OK
-#         )
-
+# authenticate & logins a customer
 class UserLogin(APIView):
     permission_classes = []
 
@@ -95,20 +66,21 @@ class UserLogin(APIView):
         password = request.data.get("password")
 
         try:
-            
+
             user_obj = User.objects.get(email=user_email)
             user = authenticate(username=user_obj.username, password=password)
 
             if user is not None:
-                
-                is_shg = Shg_Group_Registration.objects.filter(shg_id=user.id).exists()
+
+                is_shg = Shg_Group_Registration.objects.filter(
+                    shg_id=user.id).exists()
                 if is_shg:
                     return Response({'message': 'SHG admins must use the Admin Login portal'}, status=status.HTTP_403_FORBIDDEN)
 
-            
                 try:
-                    is_customer = CustomerForm.objects.filter(customer_email=user_email).exists()
-                    
+                    is_customer = CustomerForm.objects.filter(
+                        customer_email=user_email).exists()
+
                     if not is_customer:
                         return Response({'message': 'Access denied: No customer profile found'}, status=status.HTTP_403_FORBIDDEN)
 
@@ -118,11 +90,11 @@ class UserLogin(APIView):
                         'access': str(refresh.access_token),
                         'refresh': str(refresh)
                     }, status=status.HTTP_200_OK)
-                
+
                 except Exception as model_err:
                     print(f"Model Error: {str(model_err)}")
                     return Response({'message': 'Database configuration error in Customer profile'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-            
+
             return Response({'message': 'invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
 
         except User.DoesNotExist:
@@ -132,6 +104,9 @@ class UserLogin(APIView):
             return Response({'message': 'Internal Server Error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
+
+
+# fetches the username of customer
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_username(request):
@@ -139,6 +114,9 @@ def get_username(request):
     return Response({"username": username})
 
 
+
+
+# fetches the details of customer
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_user_profile_data(request):
@@ -147,6 +125,9 @@ def get_user_profile_data(request):
     return Response({"user_details": user_details})
 
 
+
+
+# adds the product to the customer cart
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def add_to_cart(request):
@@ -174,6 +155,9 @@ def add_to_cart(request):
                 return Response({"message": " Insufficient stock for the product"}, status=status.HTTP_400_BAD_REQUEST)
 
 
+
+
+# adds the product to the customer cart
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def remove_from_cart(request):
@@ -191,6 +175,9 @@ def remove_from_cart(request):
             return Response({"message": " Product not found in the Cart"}, status=status.HTTP_400_BAD_REQUEST)
 
 
+
+
+# fetches the cart data of customer
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def view_cart(request):
@@ -210,32 +197,9 @@ def view_cart(request):
     )
 
 
-# @api_view(['POST'])
-# @permission_classes([IsAuthenticated])
-# def purchase_from_cart(request):
-#     user_id = CustomerForm.objects.get(customer_id=request.user.id)
-#     product_id = request.data.get("product_id")
-#     if Cart_Items.objects.filter(user_id=user_id, product_id=product_id).exists():
-#         cart_item = Cart_Items.objects.get(user_id=user_id, product_id=product_id)
-#         product = Products.objects.get(id=product_id)
-#         if product.stock_quantity >= cart_item.quantity:
-#             product.stock_quantity -= cart_item.quantity
-#             product.save()
-#             Order_Items.objects.create(
-#                 customer_id = user_id,
-#                 product_id = product_id,
-#                 quantity = cart_item.quantity,
-#                 price_at_time_of_order = product.price,
-#                 shg_groups_id = product.shg_group_id
-#             )
-#             cart_item.delete()
-#             return Response({"message": " Purchase successful"}, status = status.HTTP_200_OK)
-#         else:
-#             return Response({"message": " Insufficient stock for the product"}, status = status.HTTP_400_BAD_REQUEST)
-#     else:
-#         return Response({"message": " Product not found in the Cart"}, status = status.HTTP_400_BAD_REQUEST)
 
 
+# creates an order of products which is purchased by customer
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def purchase_now(request):
@@ -261,6 +225,9 @@ def purchase_now(request):
         return Response({"message": " Products does not exists"}, status=status.HTTP_400_BAD_REQUEST)
 
 
+
+
+# fetches the order pending history of customer
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def order_history(request):
@@ -273,13 +240,19 @@ def order_history(request):
         "product_id__category",
         "product_id__description",
         "quantity",
-        "price_at_time_of_order")
+        "price_at_time_of_order",
+        "shipped_order",
+        "delivered_order",
+        "action",)
+    print(order_items_list)
     if not order_items_list:
         return Response({"message": "items not found"}, status=status.HTTP_400_BAD_REQUEST)
     return Response({"order_items_list": order_items_list})
 
 
 
+
+# fetches the delivered order history of customer
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def delivered_history(request):
@@ -292,13 +265,19 @@ def delivered_history(request):
         "product_id__category",
         "product_id__description",
         "quantity",
-        "price_at_time_of_order")
+        "price_at_time_of_order",
+        "shipped_order",
+        "delivered_order",
+        "action",)
     print(delivered_items_list)
     if not delivered_items_list:
         return Response({"message": "items not found"}, status=status.HTTP_400_BAD_REQUEST)
     return Response({"delivered_items_list": delivered_items_list})
 
 
+
+
+# updates the user profile data in database
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def update_user_profile(request):
@@ -323,4 +302,3 @@ def update_user_profile(request):
         return Response({"message": "profile updated"}, status=status.HTTP_200_OK)
     else:
         return Response({"message": "profile updation failed"},  status=status.HTTP_400_BAD_REQUEST)
-
