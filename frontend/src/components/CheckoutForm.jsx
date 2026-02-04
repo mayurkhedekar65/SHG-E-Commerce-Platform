@@ -10,7 +10,7 @@ function CheckoutForm({ amount }) {
 
   const [loading, setLoading] = useState(false);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState("CARD"); // CARD | COD
+  const [paymentMethod, setPaymentMethod] = useState("CARD"); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,9 +19,6 @@ function CheckoutForm({ amount }) {
     try {
       const token = localStorage.getItem("access_token");
 
-      // =====================
-      // CASH ON DELIVERY
-      // =====================
       if (paymentMethod === "COD") {
         await axios.post(
           "http://127.0.0.1:8000/payments/cash-purchase/",
@@ -40,9 +37,7 @@ function CheckoutForm({ amount }) {
         return;
       }
 
-      // =====================
-      // STRIPE CARD PAYMENT
-      // =====================
+    
       const res = await axios.post(
         "http://127.0.0.1:8000/payments/create-payment-intent/",
         { amount }
@@ -105,7 +100,7 @@ function CheckoutForm({ amount }) {
           gap: "40px",
         }}
       >
-        {/* LEFT – ORDER SUMMARY */}
+        
         <div
           style={{
             background: "#1f1f1f",
@@ -165,7 +160,6 @@ function CheckoutForm({ amount }) {
           </p>
         </div>
 
-        {/* RIGHT – PAYMENT */}
         <div
           style={{
             background: "#ffffff",
@@ -190,7 +184,6 @@ function CheckoutForm({ amount }) {
                 Pay <strong>₹{amount}</strong>
               </p>
 
-              {/* PAYMENT METHOD */}
               <div style={{ marginBottom: "25px" }}>
                 <h4 style={{ marginBottom: "12px" }}>Payment Method</h4>
 
@@ -213,7 +206,6 @@ function CheckoutForm({ amount }) {
                 </label>
               </div>
 
-              {/* CARD INPUT */}
               {paymentMethod === "CARD" && (
                 <div
                   style={{
