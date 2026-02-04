@@ -2,7 +2,7 @@ import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Navbar from "./Navbar";
+
 
 function CheckoutForm({ amount }) {
   const stripe = useStripe();
@@ -19,7 +19,6 @@ function CheckoutForm({ amount }) {
     try {
       console.log("STEP 1: Creating payment intent");
 
-      // 1️⃣ Create PaymentIntent
       const res = await axios.post(
         "http://127.0.0.1:8000/payments/create-payment-intent/",
         { amount }
@@ -28,7 +27,6 @@ function CheckoutForm({ amount }) {
       const { client_secret } = res.data;
       console.log("Client secret received");
 
-      // 2️⃣ Stripe confirmation
       const result = await stripe.confirmCardPayment(client_secret, {
         payment_method: {
           card: elements.getElement(CardElement),
@@ -44,7 +42,6 @@ function CheckoutForm({ amount }) {
 
       console.log("Stripe status:", result.paymentIntent.status);
 
-      // 3️⃣ Stripe SUCCESS → backend DB update
       if (result.paymentIntent.status === "succeeded") {
         console.log("STEP 3: Confirming payment on backend");
 
@@ -75,8 +72,7 @@ function CheckoutForm({ amount }) {
 
   return (
     <>
-      <Navbar />
-
+      
       <div
         style={{
           minHeight: "100vh",
@@ -95,7 +91,7 @@ function CheckoutForm({ amount }) {
             gap: "40px",
           }}
         >
-          {/* LEFT: ORDER SUMMARY */}
+        
           <div
             style={{
               background: "#1f1f1f",
@@ -155,7 +151,7 @@ function CheckoutForm({ amount }) {
             </p>
           </div>
 
-          {/* RIGHT: PAYMENT / SUCCESS */}
+       
           <div
             style={{
               background: "#ffffff",
